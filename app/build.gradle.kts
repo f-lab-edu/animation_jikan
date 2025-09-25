@@ -55,6 +55,7 @@ dependencies {
 
     implementation(libs.coil)
     implementation(libs.retrofit)
+    implementation(libs.androidx.navigation.compose.android)
 
     /*implementation(libs.hilt.android)
     ksp(libs.hilt.compiler)*/
