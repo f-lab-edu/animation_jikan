@@ -19,7 +19,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
@@ -29,7 +28,6 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.artem.animationjikan.R
 import com.artem.animationjikan.ui.theme.AnimationJikanTheme
-import kotlinx.coroutines.launch
 
 @Composable
 fun BottomNavigationBar(navController: NavController) {
@@ -39,9 +37,8 @@ fun BottomNavigationBar(navController: NavController) {
         BottomNavItem.Search,
     )
 
-    val backStackEntry by navController.currentBackStackEntryAsState()
-
-    val currentRoute = backStackEntry?.destination?.route
+    /*val backStackEntry by navController.currentBackStackEntryAsState()
+    val currentRoute = backStackEntry?.destination?.route*/
 
     NavigationBar(
         containerColor = Color.White,
@@ -55,7 +52,7 @@ fun BottomNavigationBar(navController: NavController) {
                 .padding(8.dp),
             horizontalArrangement = Arrangement.SpaceAround
         ) {
-            buttons.forEachIndexed { index, item ->
+            buttons.forEachIndexed { _, item ->
                 Box(Modifier.clickable {
                     navController.navigate(item.route) {
 
