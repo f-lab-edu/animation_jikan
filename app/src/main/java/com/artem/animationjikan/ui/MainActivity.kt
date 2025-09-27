@@ -11,9 +11,10 @@ import androidx.navigation.NavHost
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.artem.animationjikan.ui.screen.MainScreen
 import com.artem.animationjikan.ui.theme.AnimationJikanTheme
 import com.artem.animationjikan.util.router.NavRoutes
-
+/// 화면 관리자 역할
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,21 +37,37 @@ private fun MyApp() {
 
 @Composable
 fun MyNavHost(content: @Composable () -> Unit) {
+    
+    /// NavHost : 화면 전환 관리자
     NavHost(
         navController = LocalNavScreenController.current,
         startDestination = NavRoutes.Home.router
     ) {
+        /// Home 화면
         composable(NavRoutes.Home.router) {
+            MainScreen()
+        }
+
+        /// 애니메이션 상세화면
+        composable(NavRoutes.AnimationDetail.router) {
 
         }
 
-        composable(NavRoutes.Like.router) {
+        /// 만화 상세화면
+        composable(NavRoutes.MangaDetail.router) {
 
         }
 
-        composable(NavRoutes.Search.router) {
+        /// 캐릭터 상세화면
+        composable(NavRoutes.CharacterDetail.router) {
 
         }
+
+        /// 성우 상세화면
+        composable(NavRoutes.VoiceActorDetail.router) {
+
+        }
+
     }
     CompositionLocalProvider() {
         content()

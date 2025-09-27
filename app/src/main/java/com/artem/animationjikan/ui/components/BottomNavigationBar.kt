@@ -25,9 +25,38 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import androidx.navigation.compose.currentBackStackEntryAsState
+import androidx.navigation.NavGraph.Companion.findStartDestination
 import com.artem.animationjikan.R
 import com.artem.animationjikan.ui.theme.AnimationJikanTheme
+
+sealed class MainTab(
+    val iconOn: Int,
+    val iconOff: Int,
+    val label : String,
+    val route : String
+) {
+    data object Home : MainTab(
+        iconOn = R.drawable.ic_home_on,
+        iconOff = R.drawable.ic_home_off,
+        label = "홈",
+        route = "home"
+    )
+
+    data object Like : MainTab(
+        iconOn = R.drawable.ic_favorite_on,
+        iconOff = R.drawable.ic_favorite_off,
+        label = "보관함",
+        route = "like"
+    )
+
+    data object Search : MainTab(
+        iconOn = R.drawable.ic_search_on,
+        iconOff = R.drawable.ic_search_off,
+        label = "검색",
+        route = "search"
+    )
+
+}
 
 @Composable
 fun BottomNavigationBar(navController: NavController) {
@@ -55,6 +84,15 @@ fun BottomNavigationBar(navController: NavController) {
             buttons.forEachIndexed { _, item ->
                 Box(Modifier.clickable {
                     navController.navigate(item.route) {
+                        //Back Stack 초기화 후 화면이동
+                        popUpTo(id = navController.graph.findStartDestination().id) {
+                            saveState = true
+                        }
+                        // 단일 인스턴스 실행
+                        launchSingleTop = true
+
+                        // 저장된 상태 복원
+                        restoreState = true
 
                     }
                 }) {
