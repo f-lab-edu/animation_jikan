@@ -13,6 +13,8 @@ import androidx.navigation.compose.rememberNavController
 import com.artem.animationjikan.ui.components.BottomNavigationBar
 import com.artem.animationjikan.ui.components.MainTab
 import com.artem.animationjikan.ui.tab.HomeTab
+import com.artem.animationjikan.ui.tab.LikeTab
+import com.artem.animationjikan.ui.tab.SearchTab
 import com.artem.animationjikan.ui.theme.AnimationJikanTheme
 
 
@@ -45,15 +47,15 @@ fun MainScreenContent(
     ) {
 
         composable(MainTab.Home.route) {
-
+            HomeTab()
         }
 
         composable(MainTab.Like.route) {
-
+            LikeTab()
         }
 
         composable(MainTab.Search.route) {
-
+            SearchTab()
         }
 
     }
