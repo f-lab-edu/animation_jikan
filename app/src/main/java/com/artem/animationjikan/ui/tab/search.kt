@@ -1,2 +1,18 @@
 package com.artem.animationjikan.ui.tab
 
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.tooling.preview.Preview
+import com.artem.animationjikan.ui.MyNavHost
+
+@Composable
+fun SearchTab() {
+
+}
+
+@Composable
+@Preview
+fun SearchPreView() {
+    MyNavHost {
+        SearchTab()
+    }
+}
