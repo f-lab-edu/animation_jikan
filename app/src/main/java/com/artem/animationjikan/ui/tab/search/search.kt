@@ -1,4 +1,4 @@
-package com.artem.animationjikan.ui.tab
+package com.artem.animationjikan.ui.tab.search
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview

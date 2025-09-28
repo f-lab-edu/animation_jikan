@@ -1,6 +1,7 @@
 package com.artem.animationjikan.ui.screen
 
 import android.annotation.SuppressLint
+import android.content.res.Configuration
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
@@ -12,9 +13,9 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.artem.animationjikan.ui.components.BottomNavigationBar
 import com.artem.animationjikan.ui.components.MainTab
-import com.artem.animationjikan.ui.tab.HomeTab
-import com.artem.animationjikan.ui.tab.LikeTab
-import com.artem.animationjikan.ui.tab.SearchTab
+import com.artem.animationjikan.ui.tab.home.HomeTab
+import com.artem.animationjikan.ui.tab.like.LikeTab
+import com.artem.animationjikan.ui.tab.search.SearchTab
 import com.artem.animationjikan.ui.theme.AnimationJikanTheme
 
 
@@ -44,17 +45,18 @@ fun MainScreenContent(
     NavHost(
         navController = navController,
         startDestination = MainTab.Home.route,
+        modifier = modifier
     ) {
 
-        composable(MainTab.Home.route) {
+        composable(route = MainTab.Home.route) {
             HomeTab()
         }
 
-        composable(MainTab.Like.route) {
+        composable(route = MainTab.Like.route) {
             LikeTab()
         }
 
-        composable(MainTab.Search.route) {
+        composable(route = MainTab.Search.route) {
             SearchTab()
         }
 
@@ -63,6 +65,10 @@ fun MainScreenContent(
 
 }
 
+@Preview(
+    showBackground = true,
+    uiMode = Configuration.UI_MODE_NIGHT_YES
+)
 @Preview
 @Composable
 fun MainScreenPreview() {
