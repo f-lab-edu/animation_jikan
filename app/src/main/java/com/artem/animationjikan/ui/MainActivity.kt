@@ -11,6 +11,7 @@ import androidx.navigation.NavHost
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import com.artem.animationjikan.ui.screen.MainScreen
 import com.artem.animationjikan.ui.theme.AnimationJikanTheme
 import com.artem.animationjikan.util.router.NavRoutes
@@ -30,13 +31,17 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 private fun MyApp() {
-    MyNavHost {
+    val navController = rememberNavController()
 
+    CompositionLocalProvider(
+        LocalNavScreenController provides navController
+    ) {
+        MyNavHost()
     }
 }
 
 @Composable
-fun MyNavHost(content: @Composable () -> Unit) {
+fun MyNavHost() {
     
     /// NavHost : 화면 전환 관리자
     NavHost(
@@ -68,9 +73,6 @@ fun MyNavHost(content: @Composable () -> Unit) {
 
         }
 
-    }
-    CompositionLocalProvider() {
-        content()
     }
 }
 

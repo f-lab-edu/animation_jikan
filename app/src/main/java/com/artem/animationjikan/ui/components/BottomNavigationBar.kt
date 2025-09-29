@@ -1,5 +1,6 @@
 package com.artem.animationjikan.ui.components
 
+import androidx.annotation.StringRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -20,6 +21,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -28,34 +30,35 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import com.artem.animationjikan.R
 import com.artem.animationjikan.ui.theme.AnimationJikanTheme
+import com.artem.animationjikan.util.Route
 
 sealed class MainTab(
     val iconOn: Int,
     val iconOff: Int,
-    val label : String,
-    val route : String
+    val route: String,
+    @param:StringRes val label: Int,
 ) {
+
     data object Home : MainTab(
         iconOn = R.drawable.ic_home_on,
         iconOff = R.drawable.ic_home_off,
-        label = "홈",
-        route = "home"
+        label = R.string.home,
+        route = Route.HOME
     )
 
     data object Like : MainTab(
         iconOn = R.drawable.ic_favorite_on,
         iconOff = R.drawable.ic_favorite_off,
-        label = "보관함",
-        route = "like"
+        label = R.string.like,
+        route = Route.LIKE
     )
 
     data object Search : MainTab(
         iconOn = R.drawable.ic_search_on,
         iconOff = R.drawable.ic_search_off,
-        label = "검색",
-        route = "search"
+        label = R.string.search,
+        route = Route.SEARCH
     )
-
 }
 
 @Composable
@@ -65,9 +68,6 @@ fun BottomNavigationBar(navController: NavController) {
         BottomNavItem.Like,
         BottomNavItem.Search,
     )
-
-    /*val backStackEntry by navController.currentBackStackEntryAsState()
-    val currentRoute = backStackEntry?.destination?.route*/
 
     NavigationBar(
         containerColor = Color.White,

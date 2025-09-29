@@ -28,6 +28,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import com.artem.animationjikan.ui.tab.home.components.RecommendPager
+import com.artem.animationjikan.ui.theme.AnimationJikanTheme
 
 @Composable
 fun HomeTab(modifier: Modifier = Modifier) {
@@ -70,5 +71,7 @@ fun HomeTab(modifier: Modifier = Modifier) {
 @Composable
 @Preview
 fun HomePreView() {
-    HomeTab(Modifier.fillMaxSize())
+    AnimationJikanTheme {
+        HomeTab(Modifier.fillMaxSize())
+    }
 }
