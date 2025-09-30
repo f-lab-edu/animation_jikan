@@ -63,6 +63,7 @@ fun HomeTab(modifier: Modifier = Modifier) {
             }
 
             RecommendPager(pageCount = pageCount)
+
         }
     }
 }
