@@ -12,6 +12,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import coil3.util.CoilUtils
 import com.artem.animationjikan.ui.components.BottomNavigationBar
 import com.artem.animationjikan.ui.components.MainTab
 import com.artem.animationjikan.ui.tab.home.HomeTab
