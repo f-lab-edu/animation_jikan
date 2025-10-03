@@ -1,6 +1,7 @@
 package com.artem.animationjikan.ui.tab.home
 
 import android.provider.CalendarContract
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -107,7 +108,7 @@ fun HomeTab(modifier: Modifier = Modifier) {
                             .size(width = 110.dp, height = 159.dp)
                             .clip(RoundedCornerShape(4.dp))
                             .background(color = Color.LightGray),
-                        contentScale = ContentScale.Crop
+                        contentScale = ContentScale.Crop,
                     )
                 }
             }

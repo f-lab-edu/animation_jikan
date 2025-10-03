@@ -33,8 +33,7 @@ fun RecommendPager(pageCount: Int) {
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .fillMaxHeight(0.6f)
-                    .background(color = getPageColor(page)),
+                    .fillMaxHeight(0.6f),
                 contentAlignment = Alignment.Center
             ) {
                 AsyncImage(
@@ -43,7 +42,8 @@ fun RecommendPager(pageCount: Int) {
                     modifier = Modifier
                         .fillMaxHeight()
                         .aspectRatio(0.75f),
-                    contentScale = ContentScale.Crop
+                    contentScale = ContentScale.Fit
+
                 )
             }
         }
