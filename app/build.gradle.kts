@@ -1,5 +1,7 @@
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
+
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -62,6 +64,7 @@ dependencies {
 
 
     implementation(libs.coil)
+    //coilOkhttp
     implementation(libs.coilOkhttp)
     implementation(libs.retrofit)
     implementation(libs.androidx.navigation.compose.android)
