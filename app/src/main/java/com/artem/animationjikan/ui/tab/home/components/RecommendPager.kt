@@ -7,20 +7,24 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import com.artem.animationjikan.ui.theme.AnimationJikanTheme
+import com.artem.animationjikan.util.SAMPLE_IMG_URL
 
 @Composable
 fun RecommendPager(pageCount: Int) {
@@ -33,24 +37,27 @@ fun RecommendPager(pageCount: Int) {
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .fillMaxHeight(0.6f),
+                    .height(487.dp)
+                    .align(Alignment.Center),
                 contentAlignment = Alignment.Center
             ) {
                 AsyncImage(
-                    model = "https://cdn.myanimelist.net/images/anime/1015/138006.jpg",
+                    model = SAMPLE_IMG_URL,
                     contentDescription = "Poster",
                     modifier = Modifier
                         .fillMaxHeight()
-                        .aspectRatio(0.75f),
-                    contentScale = ContentScale.Fit
+                        .clip(RoundedCornerShape(12.dp)),
+                    contentScale = ContentScale.FillHeight
 
                 )
             }
         }
 
-        Box(modifier = Modifier
-            .fillMaxWidth()
-            .align(Alignment.BottomCenter)) {
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .align(Alignment.BottomCenter)
+        ) {
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -74,16 +81,6 @@ fun RecommendPager(pageCount: Int) {
         }
     }
 
-}
-
-private fun getPageColor(page: Int): Color {
-    return when (page % 5) {
-        0 -> Color(0xFFEF5350)
-        1 -> Color(0xFF66BB6A)
-        2 -> Color(0xFF26C6DA)
-        3 -> Color(0xFF7E57C2)
-        else -> Color(0xFFFFCA28)
-    }
 }
 
 @Composable
