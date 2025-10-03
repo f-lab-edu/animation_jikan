@@ -6,6 +6,13 @@
     <string name="like_en">like</string>
     <string name="search">검색</string>
     <string name="search_en">search</string>
+
+    <string name="section_recently_viewed">최근 본 내역</string>
+    <string name="section_upcoming_anime">개봉 예정 애니메이션</string>
+    <string name="section_top_anime">TOP 애니메이션</string>
+    <string name="section_top_manga">TOP 만화</string>
+    <string name="section_top_character">TOP 캐릭터</string>
+
     <string name="All">ALL</string>
     <string name="animation">애니메이션</string>
     <string name="manga">만화</string>
