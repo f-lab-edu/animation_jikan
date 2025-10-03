@@ -6,4 +6,9 @@
     <string name="like_en">like</string>
     <string name="search">검색</string>
     <string name="search_en">search</string>
+    <string name="All">ALL</string>
+    <string name="animation">애니메이션</string>
+    <string name="manga">만화</string>
+    <string name="actor">성우</string>
+    <string name="character">캐릭터</string>
 </resources>

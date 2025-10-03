@@ -62,6 +62,7 @@ dependencies {
 
 
     implementation(libs.coil)
+    implementation(libs.coilOkhttp)
     implementation(libs.retrofit)
     implementation(libs.androidx.navigation.compose.android)
 
