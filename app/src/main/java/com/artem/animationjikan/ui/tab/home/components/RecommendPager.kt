@@ -37,7 +37,7 @@ fun RecommendPager(pageCount: Int) {
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(487.dp)
+                    .aspectRatio(3f / 4f)
                     .align(Alignment.Center),
                 contentAlignment = Alignment.Center
             ) {

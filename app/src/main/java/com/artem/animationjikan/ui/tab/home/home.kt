@@ -1,49 +1,24 @@
 package com.artem.animationjikan.ui.tab.home
 
-import android.provider.CalendarContract
-import android.util.Log
-import androidx.compose.foundation.background
-import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.aspectRatio
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.pager.HorizontalPager
-import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.SuggestionChip
 import androidx.compose.material3.SuggestionChipDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import coil3.compose.AsyncImage
-import coil3.request.ImageRequest
-import coil3.request.crossfade
 import com.artem.animationjikan.R
 import com.artem.animationjikan.data.model.SampleContentSectionItem
 import com.artem.animationjikan.ui.tab.home.components.ContentSectionRow
@@ -93,7 +68,7 @@ fun HomeTab(modifier: Modifier = Modifier) {
             Spacer(modifier = Modifier.height(25.dp))
 
             ContentSectionRow(
-                stringResource(R.string.section_recently_viewed),
+                R.string.section_recently_viewed,
                 listOf(
                     SampleContentSectionItem(
                         idx = 1,
@@ -126,7 +101,7 @@ fun HomeTab(modifier: Modifier = Modifier) {
 
             //TODO Solution Hard coding
             ContentSectionRow(
-                stringResource(R.string.section_upcoming_anime),
+                R.string.section_upcoming_anime,
                 listOf(
                     SampleContentSectionItem(
                         idx = 1,
@@ -150,7 +125,7 @@ fun HomeTab(modifier: Modifier = Modifier) {
             Spacer(modifier = Modifier.height(16.dp))
 
             ContentSectionRow(
-                stringResource(R.string.section_top_anime),
+                R.string.section_top_anime,
                 listOf(
                     SampleContentSectionItem(
                         idx = 1,
@@ -173,7 +148,7 @@ fun HomeTab(modifier: Modifier = Modifier) {
             Spacer(modifier = Modifier.height(16.dp))
 
             ContentSectionRow(
-                stringResource(R.string.section_top_manga),
+                R.string.section_top_manga,
                 listOf(
                     SampleContentSectionItem(
                         idx = 1,
@@ -197,7 +172,7 @@ fun HomeTab(modifier: Modifier = Modifier) {
             Spacer(modifier = Modifier.height(16.dp))
 
             ContentSectionRow(
-                stringResource(R.string.section_top_character),
+                R.string.section_top_character,
                 listOf(
                     SampleContentSectionItem(
                         idx = 1,
