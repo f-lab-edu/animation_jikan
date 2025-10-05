@@ -7,3 +7,4 @@ object Route {
 }
 
 const val SAMPLE_IMG_URL = "https://cdn.myanimelist.net/images/anime/1015/138006.jpg"
+

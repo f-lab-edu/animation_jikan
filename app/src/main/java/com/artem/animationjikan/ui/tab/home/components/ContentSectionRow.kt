@@ -18,6 +18,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -26,12 +27,13 @@ import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
 import coil3.request.ImageRequest
 import coil3.request.crossfade
+import com.artem.animationjikan.R
 import com.artem.animationjikan.data.model.SampleContentSectionItem
 import com.artem.animationjikan.ui.theme.AnimationJikanTheme
 
 @Composable
 fun ContentSectionRow(
-    title: String,
+    title: Int,
     list: List<SampleContentSectionItem>,
     onItemClick: (Int) -> Unit
 ) {
@@ -42,7 +44,7 @@ fun ContentSectionRow(
                 .padding(vertical = 2.dp)
         ) {
             Text(
-                title,
+                stringResource(title),
                 style = TextStyle(
                     fontSize = 18.sp,
                     color = Color.White,
@@ -63,7 +65,7 @@ fun ContentSectionRow(
                     contentDescription = "Poster",
                     modifier = Modifier
                         .size(width = 110.dp, height = 159.dp)
-                        .clip(RoundedCornerShape(4  .dp))
+                        .clip(RoundedCornerShape(4.dp))
                         .background(color = Color.LightGray),
                     contentScale = ContentScale.Crop,
                 )
@@ -78,7 +80,7 @@ fun ContentSectionRow(
 fun ContentSectionRowPreview() {
     AnimationJikanTheme {
         ContentSectionRow(
-            title = "최근 본 내역",
+            title = R.string.section_recently_viewed,
             list = listOf(SampleContentSectionItem(idx = 0, url = "")),
             onItemClick = {
 
