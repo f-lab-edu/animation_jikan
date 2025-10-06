@@ -24,6 +24,7 @@ import com.artem.animationjikan.data.model.SampleContentSectionItem
 import com.artem.animationjikan.ui.tab.home.components.ContentSectionRow
 import com.artem.animationjikan.ui.tab.home.components.RecommendPager
 import com.artem.animationjikan.ui.theme.AnimationJikanTheme
+import com.artem.animationjikan.util.RECOMMEND_PAGE_COUNT
 import com.artem.animationjikan.util.SAMPLE_IMG_URL
 
 
@@ -33,8 +34,6 @@ fun HomeTab(modifier: Modifier = Modifier) {
         "Animation", "Manga", "Character", "Voice Actor"
     )
 
-    /// TODO  PageCount는 API 연동시 해당 Length에 맞게 변경하기
-    val pageCount = 5
 
     val scrollState = rememberScrollState()
 
@@ -63,7 +62,7 @@ fun HomeTab(modifier: Modifier = Modifier) {
                 }
             }
             Spacer(modifier = Modifier.height(16.dp))
-            RecommendPager(pageCount = pageCount)
+            RecommendPager(pageCount = RECOMMEND_PAGE_COUNT)
 
             Spacer(modifier = Modifier.height(25.dp))
 
