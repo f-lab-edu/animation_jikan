@@ -17,6 +17,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.artem.animationjikan.R
@@ -24,16 +25,14 @@ import com.artem.animationjikan.data.model.SampleContentSectionItem
 import com.artem.animationjikan.ui.tab.home.components.ContentSectionRow
 import com.artem.animationjikan.ui.tab.home.components.RecommendPager
 import com.artem.animationjikan.ui.theme.AnimationJikanTheme
+import com.artem.animationjikan.util.CATEGORIES_LIST
 import com.artem.animationjikan.util.RECOMMEND_PAGE_COUNT
 import com.artem.animationjikan.util.SAMPLE_IMG_URL
 
 
 @Composable
 fun HomeTab(modifier: Modifier = Modifier) {
-    val chipItems = listOf(
-        "Animation", "Manga", "Character", "Voice Actor"
-    )
-
+    val chipItems = CATEGORIES_LIST
 
     val scrollState = rememberScrollState()
 
@@ -52,7 +51,7 @@ fun HomeTab(modifier: Modifier = Modifier) {
                     SuggestionChip(
                         onClick = {},
                         label = {
-                            Text(item)
+                            Text(stringResource(item))
                         },
                         colors = SuggestionChipDefaults.suggestionChipColors(
                             containerColor = Color.Black,
@@ -98,7 +97,6 @@ fun HomeTab(modifier: Modifier = Modifier) {
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            //TODO Solution Hard coding
             ContentSectionRow(
                 R.string.section_upcoming_anime,
                 listOf(
