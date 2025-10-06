@@ -18,4 +18,11 @@
     <string name="manga">만화</string>
     <string name="actor">성우</string>
     <string name="character">캐릭터</string>
+    <string name="poster">Poster</string>
+
+    <string name="animation_en">Animation</string>
+    <string name="manga_en">Manga</string>
+    <string name="character_en">Character</string>
+    <string name="voice_actor_en">Voice Actor</string>
+
 </resources>

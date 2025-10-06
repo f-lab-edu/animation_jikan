@@ -1,5 +1,7 @@
 package com.artem.animationjikan.util
 
+import androidx.compose.ui.res.stringResource
+import com.artem.animationjikan.R
 import com.artem.animationjikan.data.model.LikeModel
 import com.artem.animationjikan.util.enums.FilterCategory
 
@@ -13,7 +15,12 @@ const val SAMPLE_IMG_URL = "https://cdn.myanimelist.net/images/anime/1015/138006
 
 const val RECOMMEND_PAGE_COUNT = 5
 
-
+val CATEGORIES_LIST = listOf(
+    R.string.animation_en,
+    R.string.manga_en,
+    R.string.character_en,
+    R.string.voice_actor_en,
+)
 
 val FILTER_OPTION: List<FilterCategory> = listOf(
     FilterCategory.ALL,

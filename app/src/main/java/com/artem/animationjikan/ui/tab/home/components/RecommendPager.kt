@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.pager.HorizontalPager
@@ -20,9 +19,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
+import com.artem.animationjikan.R
 import com.artem.animationjikan.ui.theme.AnimationJikanTheme
 import com.artem.animationjikan.util.SAMPLE_IMG_URL
 
@@ -43,12 +44,11 @@ fun RecommendPager(pageCount: Int) {
             ) {
                 AsyncImage(
                     model = SAMPLE_IMG_URL,
-                    contentDescription = "Poster",
+                    contentDescription = stringResource(R.string.poster),
                     modifier = Modifier
                         .fillMaxHeight()
                         .clip(RoundedCornerShape(12.dp)),
                     contentScale = ContentScale.FillHeight
-
                 )
             }
         }
