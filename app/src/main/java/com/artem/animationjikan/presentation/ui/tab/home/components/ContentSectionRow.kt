@@ -28,7 +28,7 @@ import coil3.compose.AsyncImage
 import coil3.request.ImageRequest
 import coil3.request.crossfade
 import com.artem.animationjikan.R
-import com.artem.animationjikan.data.model.SampleContentSectionItem
+import com.artem.animationjikan.data.dto.SampleContentSectionItem
 import com.artem.animationjikan.presentation.ui.theme.AnimationJikanTheme
 
 @Composable

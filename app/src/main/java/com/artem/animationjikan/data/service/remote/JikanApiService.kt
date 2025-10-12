@@ -1,5 +1,6 @@
 package com.artem.animationjikan.data.service.remote
 
+import com.artem.animationjikan.data.dto.AnimationResponse
 import retrofit2.http.GET
 
 interface JikanApiService {
@@ -7,7 +8,7 @@ interface JikanApiService {
     suspend fun getRecommendationsAnimations()
 
     @GET("top/anime")
-    suspend fun getTopAnimation()
+    suspend fun getTopAnimation() : AnimationResponse
 
     @GET("top/manga")
     suspend fun getTopManga()

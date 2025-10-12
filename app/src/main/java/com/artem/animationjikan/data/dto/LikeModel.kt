@@ -1,4 +1,4 @@
-package com.artem.animationjikan.data.model
+package com.artem.animationjikan.data.dto
 
 data class LikeModel(
     val idx : Int,

@@ -46,7 +46,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
 import com.artem.animationjikan.R
-import com.artem.animationjikan.data.model.LikeModel
+import com.artem.animationjikan.data.dto.LikeModel
 import com.artem.animationjikan.presentation.ui.theme.AnimationJikanTheme
 import com.artem.animationjikan.util.FILTER_OPTION
 import com.artem.animationjikan.util.enums.FilterCategory

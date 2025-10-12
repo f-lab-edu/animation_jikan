@@ -21,7 +21,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.artem.animationjikan.R
-import com.artem.animationjikan.data.model.SampleContentSectionItem
+import com.artem.animationjikan.data.dto.SampleContentSectionItem
 import com.artem.animationjikan.presentation.ui.tab.home.components.ContentSectionRow
 import com.artem.animationjikan.presentation.ui.tab.home.components.RecommendPager
 import com.artem.animationjikan.presentation.ui.theme.AnimationJikanTheme
