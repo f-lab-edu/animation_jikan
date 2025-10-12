@@ -1,4 +1,4 @@
-package com.artem.animationjikan.ui.theme
+package com.artem.animationjikan.presentation.ui.theme
 
 import androidx.compose.ui.graphics.Color
 

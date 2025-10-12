@@ -1,4 +1,4 @@
-package com.artem.animationjikan.ui
+package com.artem.animationjikan.presentation.ui
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -11,9 +11,10 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.artem.animationjikan.ui.screen.MainScreen
-import com.artem.animationjikan.ui.theme.AnimationJikanTheme
+import com.artem.animationjikan.presentation.ui.screen.MainScreen
+import com.artem.animationjikan.presentation.ui.theme.AnimationJikanTheme
 import com.artem.animationjikan.util.router.NavRoutes
+
 /// 화면 관리자 역할
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

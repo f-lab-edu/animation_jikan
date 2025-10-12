@@ -1,8 +1,8 @@
-package com.artem.animationjikan.ui.tab.search
+package com.artem.animationjikan.presentation.ui.tab.search
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
-import com.artem.animationjikan.ui.theme.AnimationJikanTheme
+import com.artem.animationjikan.presentation.ui.theme.AnimationJikanTheme
 
 
 @Composable

@@ -1,4 +1,4 @@
-package com.artem.animationjikan.ui.screen
+package com.artem.animationjikan.presentation.ui.screen
 
 import android.annotation.SuppressLint
 import android.content.res.Configuration
@@ -6,19 +6,17 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import coil3.util.CoilUtils
-import com.artem.animationjikan.ui.components.BottomNavigationBar
-import com.artem.animationjikan.ui.components.MainTab
-import com.artem.animationjikan.ui.tab.home.HomeTab
-import com.artem.animationjikan.ui.tab.like.LikeTab
-import com.artem.animationjikan.ui.tab.search.SearchTab
-import com.artem.animationjikan.ui.theme.AnimationJikanTheme
+import com.artem.animationjikan.presentation.ui.components.BottomNavigationBar
+import com.artem.animationjikan.presentation.ui.components.MainTab
+import com.artem.animationjikan.presentation.ui.tab.home.HomeTab
+import com.artem.animationjikan.presentation.ui.tab.like.LikeTab
+import com.artem.animationjikan.presentation.ui.tab.search.SearchTab
+import com.artem.animationjikan.presentation.ui.theme.AnimationJikanTheme
 import com.artem.animationjikan.util.Route
 
 

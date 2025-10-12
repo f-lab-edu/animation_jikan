@@ -1,4 +1,4 @@
-package com.artem.animationjikan.ui.tab.home
+package com.artem.animationjikan.presentation.ui.tab.home
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -22,9 +22,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.artem.animationjikan.R
 import com.artem.animationjikan.data.model.SampleContentSectionItem
-import com.artem.animationjikan.ui.tab.home.components.ContentSectionRow
-import com.artem.animationjikan.ui.tab.home.components.RecommendPager
-import com.artem.animationjikan.ui.theme.AnimationJikanTheme
+import com.artem.animationjikan.presentation.ui.tab.home.components.ContentSectionRow
+import com.artem.animationjikan.presentation.ui.tab.home.components.RecommendPager
+import com.artem.animationjikan.presentation.ui.theme.AnimationJikanTheme
 import com.artem.animationjikan.util.CATEGORIES_LIST
 import com.artem.animationjikan.util.RECOMMEND_PAGE_COUNT
 import com.artem.animationjikan.util.SAMPLE_IMG_URL

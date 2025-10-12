@@ -1,4 +1,4 @@
-package com.artem.animationjikan.ui.theme
+package com.artem.animationjikan.presentation.ui.theme
 
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle

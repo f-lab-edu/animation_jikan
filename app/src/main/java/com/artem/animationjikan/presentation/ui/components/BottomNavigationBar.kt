@@ -1,4 +1,4 @@
-package com.artem.animationjikan.ui.components
+package com.artem.animationjikan.presentation.ui.components
 
 import androidx.annotation.StringRes
 import androidx.compose.foundation.Image
@@ -21,7 +21,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -29,7 +28,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import com.artem.animationjikan.R
-import com.artem.animationjikan.ui.theme.AnimationJikanTheme
+import com.artem.animationjikan.presentation.ui.theme.AnimationJikanTheme
 import com.artem.animationjikan.util.Route
 
 sealed class MainTab(

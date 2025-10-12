@@ -1,4 +1,4 @@
-package com.artem.animationjikan.ui.tab.home.components
+package com.artem.animationjikan.presentation.ui.tab.home.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -29,7 +29,7 @@ import coil3.request.ImageRequest
 import coil3.request.crossfade
 import com.artem.animationjikan.R
 import com.artem.animationjikan.data.model.SampleContentSectionItem
-import com.artem.animationjikan.ui.theme.AnimationJikanTheme
+import com.artem.animationjikan.presentation.ui.theme.AnimationJikanTheme
 
 @Composable
 fun ContentSectionRow(

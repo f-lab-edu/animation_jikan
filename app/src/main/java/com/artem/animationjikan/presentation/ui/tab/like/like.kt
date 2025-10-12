@@ -1,4 +1,4 @@
-package com.artem.animationjikan.ui.tab.like
+package com.artem.animationjikan.presentation.ui.tab.like
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -47,7 +47,7 @@ import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
 import com.artem.animationjikan.R
 import com.artem.animationjikan.data.model.LikeModel
-import com.artem.animationjikan.ui.theme.AnimationJikanTheme
+import com.artem.animationjikan.presentation.ui.theme.AnimationJikanTheme
 import com.artem.animationjikan.util.FILTER_OPTION
 import com.artem.animationjikan.util.enums.FilterCategory
 import com.artem.animationjikan.util.likeList
