@@ -3,7 +3,6 @@ package com.artem.animationjikan.data.service.remote
 import com.artem.animationjikan.data.dto.AnimationResponse
 import com.artem.animationjikan.util.network.RetrofitClient
 import retrofit2.Retrofit
-import retrofit2.create
 import retrofit2.http.GET
 
 interface JikanApiService {
