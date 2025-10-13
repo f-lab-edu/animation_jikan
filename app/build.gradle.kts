@@ -68,6 +68,7 @@ dependencies {
     implementation(libs.coilOkhttp)
     implementation(libs.retrofit)
     implementation(libs.androidx.navigation.compose.android)
+    implementation(libs.converter.gson)
 
     /*implementation(libs.hilt.android)
     ksp(libs.hilt.compiler)*/

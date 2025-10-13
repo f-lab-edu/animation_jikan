@@ -12,9 +12,11 @@ class HomeTabViewModel(
     private val mangaRepository: MangaRepository,
     private val characterRepository: CharacterRepository,
 ) : ViewModel() {
+
     fun execute() {
         viewModelScope.launch {
             animationRepository.fetchTopAnimation()
         }
     }
+
 }

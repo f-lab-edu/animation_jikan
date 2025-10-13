@@ -20,18 +20,49 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.artem.animationjikan.R
 import com.artem.animationjikan.data.dto.SampleContentSectionItem
+import com.artem.animationjikan.data.repository.AnimationRepository
+import com.artem.animationjikan.data.repository.AnimationRepositoryImpl
+import com.artem.animationjikan.data.repository.CharacterRepository
+import com.artem.animationjikan.data.repository.CharacterRepositoryImpl
+import com.artem.animationjikan.data.repository.MangaRepository
+import com.artem.animationjikan.data.repository.MangaRepositoryImpl
+import com.artem.animationjikan.data.service.remote.JikanApiClient
+import com.artem.animationjikan.data.service.remote.JikanApiService
+import com.artem.animationjikan.data.service.remote.createJikanApiService
+import com.artem.animationjikan.presentation.factory.HomeTabViewModelFactory
 import com.artem.animationjikan.presentation.ui.tab.home.components.ContentSectionRow
 import com.artem.animationjikan.presentation.ui.tab.home.components.RecommendPager
 import com.artem.animationjikan.presentation.ui.theme.AnimationJikanTheme
+import com.artem.animationjikan.presentation.viewmodel.HomeTabViewModel
 import com.artem.animationjikan.util.CATEGORIES_LIST
 import com.artem.animationjikan.util.RECOMMEND_PAGE_COUNT
 import com.artem.animationjikan.util.SAMPLE_IMG_URL
 
+fun createHomeTabViewModelFactory() : HomeTabViewModelFactory {
+    val service : JikanApiService = createJikanApiService()
+    val client = JikanApiClient(service)
+    val animRepository : AnimationRepository = AnimationRepositoryImpl(client)
+    val mangaRepository : MangaRepository = MangaRepositoryImpl(client)
+    val characterRepository : CharacterRepository = CharacterRepositoryImpl(client)
+
+    return HomeTabViewModelFactory(
+        animationRepository = animRepository,
+        mangaRepository = mangaRepository,
+        characterRepository = characterRepository
+    )
+}
 
 @Composable
-fun HomeTab(modifier: Modifier = Modifier) {
+fun HomeTab(
+    modifier: Modifier = Modifier
+) {
+    val factory = createHomeTabViewModelFactory()
+
+    val viewModel : HomeTabViewModel = viewModel(factory = factory)
+
     val chipItems = CATEGORIES_LIST
 
     val scrollState = rememberScrollState()
