@@ -16,7 +16,6 @@ import com.artem.animationjikan.data.service.remote.JikanApiClient
 import com.artem.animationjikan.data.service.remote.JikanApiService
 import com.artem.animationjikan.data.service.remote.createJikanApiService
 import com.artem.animationjikan.presentation.factory.HomeTabViewModelFactory
-import com.artem.animationjikan.presentation.model.AnimationModel
 import com.artem.animationjikan.presentation.model.CommonHomeContentModel
 import kotlinx.coroutines.launch
 

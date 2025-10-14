@@ -26,7 +26,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.artem.animationjikan.R
-import com.artem.animationjikan.data.dto.SampleContentSectionItem
 import com.artem.animationjikan.presentation.ui.tab.home.components.ContentSectionRow
 import com.artem.animationjikan.presentation.ui.tab.home.components.RecommendPager
 import com.artem.animationjikan.presentation.ui.theme.AnimationJikanTheme
@@ -35,7 +34,6 @@ import com.artem.animationjikan.presentation.viewmodel.ViewModelState
 import com.artem.animationjikan.presentation.viewmodel.createHomeTabViewModelFactory
 import com.artem.animationjikan.util.CATEGORIES_LIST
 import com.artem.animationjikan.util.RECOMMEND_PAGE_COUNT
-import com.artem.animationjikan.util.SAMPLE_IMG_URL
 
 
 @Composable

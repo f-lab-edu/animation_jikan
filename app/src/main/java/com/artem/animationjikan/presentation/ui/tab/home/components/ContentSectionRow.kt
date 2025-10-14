@@ -29,7 +29,6 @@ import coil3.compose.AsyncImage
 import coil3.request.ImageRequest
 import coil3.request.crossfade
 import com.artem.animationjikan.R
-import com.artem.animationjikan.presentation.model.AnimationModel
 import com.artem.animationjikan.presentation.model.CommonHomeContentModel
 import com.artem.animationjikan.presentation.ui.theme.AnimationJikanTheme
 import com.artem.animationjikan.util.enums.FilterCategory
