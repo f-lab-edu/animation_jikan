@@ -20,7 +20,7 @@ data class PageNation(
 @Serializable
 data class AnimeDto(
     @SerializedName("mal_id")
-    val mal_id: Int = -1, // JSON에 Int로 들어옵니다.
+    val malId: Int = -1, // JSON에 Int로 들어옵니다.
     val url: String?,
     @SerializedName("images")
     val images: ImagesDto?, // 이미지 정보는 항상 중첩됩니다.

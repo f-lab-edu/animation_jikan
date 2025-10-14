@@ -7,15 +7,18 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.SuggestionChip
 import androidx.compose.material3.SuggestionChipDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
@@ -28,6 +31,7 @@ import com.artem.animationjikan.presentation.ui.tab.home.components.ContentSecti
 import com.artem.animationjikan.presentation.ui.tab.home.components.RecommendPager
 import com.artem.animationjikan.presentation.ui.theme.AnimationJikanTheme
 import com.artem.animationjikan.presentation.viewmodel.HomeTabViewModel
+import com.artem.animationjikan.presentation.viewmodel.ViewModelState
 import com.artem.animationjikan.presentation.viewmodel.createHomeTabViewModelFactory
 import com.artem.animationjikan.util.CATEGORIES_LIST
 import com.artem.animationjikan.util.RECOMMEND_PAGE_COUNT
@@ -48,174 +52,103 @@ fun HomeTab(
 
     val scrollState = rememberScrollState()
 
-    Box(
-        modifier
-            .fillMaxSize()
-            .verticalScroll(scrollState)
-            .padding(horizontal = 10.dp)
-    ) {
-        Column {
-            Spacer(modifier = Modifier.height(6.dp))
-            LazyRow(
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
-            ) {
-                items(chipItems) { item ->
-                    SuggestionChip(
-                        onClick = {},
-                        label = {
-                            Text(stringResource(item))
-                        },
-                        colors = SuggestionChipDefaults.suggestionChipColors(
-                            containerColor = Color.Black,
-                            labelColor = Color.White
+    when (viewModel.state) {
+        ViewModelState.Idle, ViewModelState.Loading, ViewModelState.Error -> Box(
+            Modifier.fillMaxSize(),
+            contentAlignment = Alignment.Center
+        ) {
+            CircularProgressIndicator(
+                modifier = Modifier.size(35.dp)
+            )
+        }
+
+        ViewModelState.Success -> Box(
+            modifier
+                .fillMaxSize()
+                .verticalScroll(scrollState)
+                .padding(horizontal = 10.dp)
+        ) {
+            Column {
+                Spacer(modifier = Modifier.height(6.dp))
+                LazyRow(
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    items(chipItems) { item ->
+                        SuggestionChip(
+                            onClick = {},
+                            label = {
+                                Text(stringResource(item))
+                            },
+                            colors = SuggestionChipDefaults.suggestionChipColors(
+                                containerColor = Color.Black,
+                                labelColor = Color.White
+                            )
                         )
-                    )
+                    }
                 }
+                Spacer(modifier = Modifier.height(16.dp))
+                RecommendPager(pageCount = RECOMMEND_PAGE_COUNT)
+
+                Spacer(modifier = Modifier.height(25.dp))
+
+                ContentSectionRow(
+                    R.string.section_recently_viewed,
+                    viewModel.topAnimationList,
+                    onItemClick = { idx ->
+
+                    }
+                )
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                ContentSectionRow(
+                    R.string.section_upcoming_anime,
+                    viewModel.topAnimationList,
+                    onItemClick = { idx ->
+
+                    }
+                )
+
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+
+                ContentSectionRow(
+                    R.string.section_top_anime,
+                    viewModel.topAnimationList,
+                    onItemClick = { idx ->
+
+                    }
+                )
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                ContentSectionRow(
+                    R.string.section_top_manga,
+                    viewModel.topAnimationList,
+                    onItemClick = { idx ->
+
+                    }
+                )
+
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                ContentSectionRow(
+                    R.string.section_top_character,
+                    viewModel.topAnimationList,
+                    onItemClick = { idx ->
+
+                    }
+                )
+
+                Spacer(modifier = Modifier.height(30.dp))
+
+
             }
-            Spacer(modifier = Modifier.height(16.dp))
-            RecommendPager(pageCount = RECOMMEND_PAGE_COUNT)
-
-            Spacer(modifier = Modifier.height(25.dp))
-
-            ContentSectionRow(
-                R.string.section_recently_viewed,
-                listOf(
-                    SampleContentSectionItem(
-                        idx = 1,
-                        url = SAMPLE_IMG_URL
-                    ),
-                    SampleContentSectionItem(
-                        idx = 2,
-                        url = SAMPLE_IMG_URL
-                    ),
-                    SampleContentSectionItem(
-                        idx = 3,
-                        url = SAMPLE_IMG_URL
-                    ),
-                    SampleContentSectionItem(
-                        idx = 4,
-                        url = SAMPLE_IMG_URL
-                    ),
-                    SampleContentSectionItem(
-                        idx = 5,
-                        url = SAMPLE_IMG_URL
-                    ),
-
-                    ),
-                onItemClick = { idx ->
-
-                }
-            )
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            ContentSectionRow(
-                R.string.section_upcoming_anime,
-                listOf(
-                    SampleContentSectionItem(
-                        idx = 1,
-                        url = SAMPLE_IMG_URL
-                    ),
-                    SampleContentSectionItem(
-                        idx = 2,
-                        url = SAMPLE_IMG_URL
-                    ),
-                    SampleContentSectionItem(
-                        idx = 3,
-                        url = SAMPLE_IMG_URL
-                    ),
-                ),
-                onItemClick = { idx ->
-
-                }
-            )
-
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            ContentSectionRow(
-                R.string.section_top_anime,
-                listOf(
-                    SampleContentSectionItem(
-                        idx = 1,
-                        url = SAMPLE_IMG_URL
-                    ),
-                    SampleContentSectionItem(
-                        idx = 2,
-                        url = SAMPLE_IMG_URL
-                    ),
-                    SampleContentSectionItem(
-                        idx = 3,
-                        url = SAMPLE_IMG_URL
-                    ),
-                ),
-                onItemClick = { idx ->
-
-                }
-            )
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            ContentSectionRow(
-                R.string.section_top_manga,
-                listOf(
-                    SampleContentSectionItem(
-                        idx = 1,
-                        url = SAMPLE_IMG_URL
-                    ),
-                    SampleContentSectionItem(
-                        idx = 1,
-                        url = SAMPLE_IMG_URL
-                    ),
-                    SampleContentSectionItem(
-                        idx = 1,
-                        url = SAMPLE_IMG_URL
-                    ),
-                ),
-                onItemClick = { idx ->
-
-                }
-            )
-
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            ContentSectionRow(
-                R.string.section_top_character,
-                listOf(
-                    SampleContentSectionItem(
-                        idx = 1,
-                        url = SAMPLE_IMG_URL,
-                    ),
-                    SampleContentSectionItem(
-                        idx = 1,
-                        url = SAMPLE_IMG_URL
-                    ),
-                    SampleContentSectionItem(
-                        idx = 1,
-                        url = SAMPLE_IMG_URL
-                    ),
-                    SampleContentSectionItem(
-                        idx = 1,
-                        url = SAMPLE_IMG_URL
-                    ),
-                    SampleContentSectionItem(
-                        idx = 1,
-                        url = SAMPLE_IMG_URL
-                    ),
-
-
-                    ),
-                onItemClick = { idx ->
-
-                }
-            )
-
-            Spacer(modifier = Modifier.height(30.dp))
-
-
         }
     }
+
 }
 
 

@@ -1,6 +1,7 @@
 package com.artem.animationjikan.presentation.ui.tab.home.components
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -28,13 +29,15 @@ import coil3.compose.AsyncImage
 import coil3.request.ImageRequest
 import coil3.request.crossfade
 import com.artem.animationjikan.R
-import com.artem.animationjikan.data.dto.SampleContentSectionItem
+import com.artem.animationjikan.presentation.model.AnimationModel
+import com.artem.animationjikan.presentation.model.CommonHomeContentModel
 import com.artem.animationjikan.presentation.ui.theme.AnimationJikanTheme
+import com.artem.animationjikan.util.enums.FilterCategory
 
 @Composable
 fun ContentSectionRow(
     title: Int,
-    list: List<SampleContentSectionItem>,
+    list: List<CommonHomeContentModel>,
     onItemClick: (Int) -> Unit
 ) {
     Column {
@@ -56,16 +59,20 @@ fun ContentSectionRow(
         LazyRow(
             horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            items(list.size) {
+            items(list.size) { index ->
+                val model = list[index]
                 AsyncImage(
                     model = ImageRequest.Builder(LocalContext.current)
-                        .data(list[it].url)
+                        .data(model.imageUrl)
                         .crossfade(true)
                         .build(),
                     contentDescription = "Poster",
                     modifier = Modifier
                         .size(width = 110.dp, height = 159.dp)
                         .clip(RoundedCornerShape(4.dp))
+                        .clickable {
+                            onItemClick(model.id)
+                        }
                         .background(color = Color.LightGray),
                     contentScale = ContentScale.Crop,
                 )
@@ -81,7 +88,13 @@ fun ContentSectionRowPreview() {
     AnimationJikanTheme {
         ContentSectionRow(
             title = R.string.section_recently_viewed,
-            list = listOf(SampleContentSectionItem(idx = 0, url = "")),
+            list = listOf(
+                CommonHomeContentModel(
+                    id = 0,
+                    type = FilterCategory.ANIMATION,
+                    imageUrl = ""
+                )
+            ),
             onItemClick = {
 
             }

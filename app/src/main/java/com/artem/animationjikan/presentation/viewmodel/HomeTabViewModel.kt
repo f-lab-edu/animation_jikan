@@ -17,6 +17,7 @@ import com.artem.animationjikan.data.service.remote.JikanApiService
 import com.artem.animationjikan.data.service.remote.createJikanApiService
 import com.artem.animationjikan.presentation.factory.HomeTabViewModelFactory
 import com.artem.animationjikan.presentation.model.AnimationModel
+import com.artem.animationjikan.presentation.model.CommonHomeContentModel
 import kotlinx.coroutines.launch
 
 fun createHomeTabViewModelFactory(): HomeTabViewModelFactory {
@@ -33,25 +34,43 @@ fun createHomeTabViewModelFactory(): HomeTabViewModelFactory {
     )
 }
 
+enum class ViewModelState {
+    Idle,
+    Loading,
+    Success,
+    Error
+}
+
 
 class HomeTabViewModel(
     private val animationRepository: AnimationRepository,
     private val mangaRepository: MangaRepository,
     private val characterRepository: CharacterRepository,
 ) : ViewModel() {
-    var list by mutableStateOf<List<AnimationModel>>(emptyList())
+    var topAnimationList by mutableStateOf<List<CommonHomeContentModel>>(emptyList())
+        private set
+
+    var topMangaList by mutableStateOf<List<CommonHomeContentModel>>(emptyList())
+        private set
+
+    var topCharacterList by mutableStateOf<List<CommonHomeContentModel>>(emptyList())
+        private set
+
+
+
+    var state by mutableStateOf(ViewModelState.Idle)
         private set
 
     fun execute() {
-        Log.d("HomeTabViewModel" , "execute")
+        Log.d("HomeTabViewModel", "execute")
         viewModelScope.launch {
             try {
-                Log.d("HomeTabViewModel" , "viewModelScope")
+                state = ViewModelState.Loading
                 val result = animationRepository.fetchTopAnimation()
-                list = result
-
-                Log.d("result" , "result is $result")
-            } catch(e : Exception) {
+                topAnimationList = result
+                state = ViewModelState.Success
+            } catch (e: Exception) {
+                state = ViewModelState.Error
                 e.printStackTrace()
             }
 
