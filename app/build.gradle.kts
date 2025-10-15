@@ -24,6 +24,12 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
+    packaging {
+        resources {
+            pickFirsts.add("META-INF/versions/**/OSGI-INF/MANIFEST.MF")
+        }
+    }
+
     buildTypes {
         release {
             isMinifyEnabled = true
@@ -70,12 +76,7 @@ dependencies {
     implementation(libs.androidx.navigation.compose.android)
     implementation(libs.converter.gson)
     implementation(libs.logging.interceptor)
-
-    /*implementation(libs.hilt.android)
-    ksp(libs.hilt.compiler)*/
-
-
-
+    implementation(libs.hilt.android)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

@@ -15,6 +15,7 @@ ksp = "2.2.20"
 navigationComposeAndroid = "2.9.5"
 converterGson = "3.0.0"
 loggingInterceptor = "4.12.0"
+comGoogleDaggerHiltAndroidGradlePlugin = "2.56.2"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -40,11 +41,12 @@ coilOkhttp = { group = "io.coil-kt.coil3", name = "coil-network-okhttp", version
 retrofit = { group = "com.squareup.retrofit2", name = "retrofit", version.ref = "retrofit" }
 
 #hilt
-hilt-android = { group = "com.google.dagger", name = "hilt-android", version.ref = "hilt" }
-hilt-compiler = { group = "com.google.dagger", name = "hilt-compiler", version.ref = "hilt" }
+#hilt-android = { group = "com.google.dagger", name = "hilt-android", version.ref = "hilt" }
+#hilt-compiler = { group = "com.google.dagger", name = "hilt-compiler", version.ref = "hilt" }
 androidx-navigation-compose-android = { group = "androidx.navigation", name = "navigation-compose-android", version.ref = "navigationComposeAndroid" }
 converter-gson = { group = "com.squareup.retrofit2", name = "converter-gson", version.ref = "converterGson" }
-logging-interceptor = { group = "com.squareup.okhttp3", name = "logging-interceptor", version.ref = "loggingInterceptor" }
+logging-interceptor = { group = "com.squareup.okhttp3", name = "logging-interceptor", version = "5.2.1" }
+hilt-android = { group = "com.google.dagger.hilt.android", name = "com.google.dagger.hilt.android.gradle.plugin", version = "2.57.2" }
 
 
 [plugins]
