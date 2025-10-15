@@ -1,8 +1,7 @@
 package com.artem.animationjikan.util
 
-import androidx.compose.ui.res.stringResource
 import com.artem.animationjikan.R
-import com.artem.animationjikan.data.model.LikeModel
+import com.artem.animationjikan.data.dto.LikeModel
 import com.artem.animationjikan.util.enums.FilterCategory
 
 object Route {
