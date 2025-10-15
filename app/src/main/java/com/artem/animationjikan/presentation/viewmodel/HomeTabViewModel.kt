@@ -40,7 +40,6 @@ enum class ViewModelState {
     Error
 }
 
-
 class HomeTabViewModel(
     private val animationRepository: AnimationRepository,
     private val mangaRepository: MangaRepository,
