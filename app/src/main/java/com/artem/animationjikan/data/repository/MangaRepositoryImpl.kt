@@ -8,5 +8,4 @@ class MangaRepositoryImpl(
     override suspend fun fetchTopManga() {
         client.getTopManga()
     }
-
 }

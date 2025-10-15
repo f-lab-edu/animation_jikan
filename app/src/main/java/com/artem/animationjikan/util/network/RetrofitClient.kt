@@ -25,7 +25,6 @@ object RetrofitClient {
     val client: Retrofit?
         get() {
             if (retrofit == null) {
-
                 retrofit = Retrofit.Builder()
                     .baseUrl(BASE_URL)
                     .client(okHttpClient)

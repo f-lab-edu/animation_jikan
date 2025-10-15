@@ -17,7 +17,6 @@ interface JikanApiService {
 
     @GET("top/characters")
     suspend fun getTopCharacters()
-
 }
 
 fun createJikanApiService(): JikanApiService {

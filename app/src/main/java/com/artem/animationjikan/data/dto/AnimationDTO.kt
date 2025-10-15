@@ -6,7 +6,7 @@ import com.google.gson.annotations.SerializedName
 @Serializable
 data class AnimationResponse(
     val pagination : PageNation,
-    val data : List<AnimeDto>?
+    val data : List<AnimeDto>?,
 )
 
 @Serializable
@@ -20,30 +20,30 @@ data class PageNation(
 @Serializable
 data class AnimeDto(
     @SerializedName("mal_id")
-    val malId: Int = -1, // JSON에 Int로 들어옵니다.
+    val malId: Int = -1,
     val url: String?,
     @SerializedName("images")
-    val images: ImagesDto?, // 이미지 정보는 항상 중첩됩니다.
+    val images: ImagesDto?,
     val title: String?,
-    val synopsis: String? = null // 필요한 경우 추가
+    val synopsis: String? = null,
 )
 
 @Serializable
 data class ImagesDto(
     @SerializedName("jpg")
-    val jpg : JpgImageDto?,
+    val jpg: JpgImageDto?,
     @SerializedName("webp")
-    val webp : WebpImageDto?
+    val webp: WebpImageDto?,
 )
 
 @Serializable
 data class JpgImageDto(
     @SerializedName("image_url")
-    val imageUrl : String?,
+    val imageUrl: String?,
     @SerializedName("small_image_url")
-    val smallImageUrl : String?,
+    val smallImageUrl: String?,
     @SerializedName("large_image_url")
-    val largeImageUrl : String?
+    val largeImageUrl: String?,
 )
 
 @Serializable

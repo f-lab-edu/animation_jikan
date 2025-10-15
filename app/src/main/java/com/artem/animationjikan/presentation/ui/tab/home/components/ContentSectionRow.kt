@@ -91,7 +91,6 @@ fun ContentSectionRowPreview() {
                 CommonHomeContentModel(
                     id = 0,
                     type = FilterCategory.ANIMATION,
-                    imageUrl = ""
                 )
             ),
             onItemClick = {

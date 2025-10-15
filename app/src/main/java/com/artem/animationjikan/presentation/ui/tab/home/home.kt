@@ -41,7 +41,6 @@ fun HomeTab(
     modifier: Modifier = Modifier,
     viewModel: HomeTabViewModel = viewModel(factory = createHomeTabViewModelFactory())
 ) {
-
     LaunchedEffect(Unit) {
         viewModel.execute()
     }
@@ -92,7 +91,7 @@ fun HomeTab(
                 ContentSectionRow(
                     R.string.section_recently_viewed,
                     viewModel.topAnimationList,
-                    onItemClick = { idx ->
+                    onItemClick = { _ ->
 
                     }
                 )
@@ -102,8 +101,7 @@ fun HomeTab(
                 ContentSectionRow(
                     R.string.section_upcoming_anime,
                     viewModel.topAnimationList,
-                    onItemClick = { idx ->
-
+                    onItemClick = { _ ->
                     }
                 )
 
