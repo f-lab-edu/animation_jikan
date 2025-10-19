@@ -6,8 +6,8 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
-    /*alias(libs.plugins.hilt)
-    alias(libs.plugins.kotlin.ksp)*/
+    alias(libs.plugins.kotlin.ksp)
+    alias(libs.plugins.hilt)
 }
 
 android {
@@ -77,6 +77,7 @@ dependencies {
     implementation(libs.converter.gson)
     implementation(libs.logging.interceptor)
     implementation(libs.hilt.android)
+    ksp(libs.hiltAndroidCompiler)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
