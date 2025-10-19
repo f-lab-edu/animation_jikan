@@ -2,15 +2,14 @@ package com.artem.animationjikan.data.service.remote
 
 import android.util.Log
 import com.artem.animationjikan.data.dto.AnimationResponse
-import com.artem.animationjikan.presentation.model.AnimationModel
+import javax.inject.Inject
 
-class JikanApiClient(
+class JikanApiClient @Inject constructor(
     private val jikanApiService: JikanApiService
 ) {
     suspend fun getRecommendationsAnimations() {
         jikanApiService.getRecommendationsAnimations()
     }
-
 
     suspend fun getTopAnimation(): AnimationResponse {
         val response : AnimationResponse = jikanApiService.getTopAnimation()

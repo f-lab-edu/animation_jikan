@@ -1,5 +1,7 @@
 package com.artem.animationjikan
 
+import android.app.Application
+import dagger.hilt.android.HiltAndroidApp
 
-class AnimationJikanApp {
-}
+@HiltAndroidApp
+class AnimationJikanApp : Application()

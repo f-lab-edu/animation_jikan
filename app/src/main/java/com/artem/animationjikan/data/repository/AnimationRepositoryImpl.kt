@@ -1,12 +1,11 @@
 package com.artem.animationjikan.data.repository
 
-import android.util.Log
 import com.artem.animationjikan.data.service.remote.JikanApiClient
-import com.artem.animationjikan.presentation.model.AnimationModel
 import com.artem.animationjikan.presentation.model.CommonHomeContentModel
 import com.artem.animationjikan.util.enums.FilterCategory
+import javax.inject.Inject
 
-class AnimationRepositoryImpl(
+class AnimationRepositoryImpl @Inject constructor(
     private val client: JikanApiClient
 ) : AnimationRepository {
     override suspend fun fetchTopAnimation(): List<CommonHomeContentModel> {
