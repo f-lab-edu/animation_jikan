@@ -67,22 +67,7 @@ fun HomeTab(
         ) {
             Column {
                 Spacer(modifier = Modifier.height(6.dp))
-                LazyRow(
-                    horizontalArrangement = Arrangement.spacedBy(8.dp)
-                ) {
-                    items(chipItems) { item ->
-                        SuggestionChip(
-                            onClick = {},
-                            label = {
-                                Text(stringResource(item))
-                            },
-                            colors = SuggestionChipDefaults.suggestionChipColors(
-                                containerColor = Color.Black,
-                                labelColor = Color.White
-                            )
-                        )
-                    }
-                }
+                ChipSection()
                 Spacer(modifier = Modifier.height(16.dp))
                 RecommendPager(pageCount = RECOMMEND_PAGE_COUNT)
 
@@ -145,6 +130,26 @@ fun HomeTab(
         }
     }
 
+}
+
+@Composable
+fun ChipSection() {
+    LazyRow(
+        horizontalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
+        items(CATEGORIES_LIST) { item ->
+            SuggestionChip(
+                onClick = {},
+                label = {
+                    Text(stringResource(item))
+                },
+                colors = SuggestionChipDefaults.suggestionChipColors(
+                    containerColor = Color.Black,
+                    labelColor = Color.White
+                )
+            )
+        }
+    }
 }
 
 
