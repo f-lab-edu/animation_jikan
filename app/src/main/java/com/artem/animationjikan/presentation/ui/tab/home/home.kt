@@ -103,7 +103,7 @@ fun HomeTab(
 
                 ContentSectionRow(
                     R.string.section_top_manga,
-                    viewModel.topAnimationList,
+                    viewModel.topMangaList,
                     onItemClick = { idx ->
 
                     }
@@ -114,7 +114,7 @@ fun HomeTab(
 
                 ContentSectionRow(
                     R.string.section_top_character,
-                    viewModel.topAnimationList,
+                    viewModel.topCharacterList,
                     onItemClick = { idx ->
 
                     }
