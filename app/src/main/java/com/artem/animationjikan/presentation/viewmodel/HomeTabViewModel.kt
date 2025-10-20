@@ -7,31 +7,12 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.artem.animationjikan.data.repository.AnimationRepository
-import com.artem.animationjikan.data.repository.AnimationRepositoryImpl
 import com.artem.animationjikan.data.repository.CharacterRepository
-import com.artem.animationjikan.data.repository.CharacterRepositoryImpl
 import com.artem.animationjikan.data.repository.MangaRepository
-import com.artem.animationjikan.data.repository.MangaRepositoryImpl
-import com.artem.animationjikan.data.service.remote.JikanApiClient
-import com.artem.animationjikan.data.service.remote.JikanApiService
-import com.artem.animationjikan.data.service.remote.createJikanApiService
-import com.artem.animationjikan.presentation.factory.HomeTabViewModelFactory
 import com.artem.animationjikan.presentation.model.CommonHomeContentModel
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
-
-fun createHomeTabViewModelFactory(): HomeTabViewModelFactory {
-    val service: JikanApiService = createJikanApiService()
-    val client = JikanApiClient(service)
-    val animRepository: AnimationRepository = AnimationRepositoryImpl(client)
-    val mangaRepository: MangaRepository = MangaRepositoryImpl(client)
-    val characterRepository: CharacterRepository = CharacterRepositoryImpl(client)
-
-    return HomeTabViewModelFactory(
-        animationRepository = animRepository,
-        mangaRepository = mangaRepository,
-        characterRepository = characterRepository
-    )
-}
+import javax.inject.Inject
 
 enum class ViewModelState {
     Idle,
@@ -40,8 +21,10 @@ enum class ViewModelState {
     Error
 }
 
-class HomeTabViewModel(
+@HiltViewModel
+class HomeTabViewModel @Inject constructor(
     private val animationRepository: AnimationRepository,
+    //TODO mangaRepository, characterRepository 사용으로 각 API 호출 코드 적용하기
     private val mangaRepository: MangaRepository,
     private val characterRepository: CharacterRepository,
 ) : ViewModel() {
@@ -53,7 +36,6 @@ class HomeTabViewModel(
 
     var topCharacterList by mutableStateOf<List<CommonHomeContentModel>>(emptyList())
         private set
-
 
 
     var state by mutableStateOf(ViewModelState.Idle)
@@ -74,5 +56,4 @@ class HomeTabViewModel(
 
         }
     }
-
 }

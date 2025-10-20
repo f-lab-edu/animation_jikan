@@ -1,13 +1,12 @@
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
-
-
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
-    /*alias(libs.plugins.hilt)
-    alias(libs.plugins.kotlin.ksp)*/
+    alias(libs.plugins.kotlin.ksp)
+    alias(libs.plugins.hilt)
+//    kotlin("kapt")
 }
 
 android {
@@ -22,6 +21,12 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    packaging {
+        resources {
+            pickFirsts.add("META-INF/versions/**/OSGI-INF/MANIFEST.MF")
+        }
     }
 
     buildTypes {
@@ -49,6 +54,9 @@ android {
     buildFeatures {
         compose = true
     }
+    hilt {
+        enableAggregatingTask = false
+    }
 }
 
 dependencies {
@@ -64,6 +72,7 @@ dependencies {
 
 
     implementation(libs.coil)
+
     //coilOkhttp
     implementation(libs.coilOkhttp)
     implementation(libs.retrofit)
@@ -71,11 +80,10 @@ dependencies {
     implementation(libs.converter.gson)
     implementation(libs.logging.interceptor)
 
-    /*implementation(libs.hilt.android)
-    ksp(libs.hilt.compiler)*/
-
-
-
+    // hilt
+    implementation(libs.hilt.android)
+    ksp(libs.hilt.android.compiler)
+    implementation(libs.hilt.navigation.compose)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

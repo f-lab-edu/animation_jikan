@@ -14,8 +14,10 @@ import androidx.navigation.compose.rememberNavController
 import com.artem.animationjikan.presentation.ui.screen.MainScreen
 import com.artem.animationjikan.presentation.ui.theme.AnimationJikanTheme
 import com.artem.animationjikan.util.router.NavRoutes
+import dagger.hilt.android.AndroidEntryPoint
 
 /// 화면 관리자 역할
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

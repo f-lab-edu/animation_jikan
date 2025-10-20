@@ -24,6 +24,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.artem.animationjikan.R
 import com.artem.animationjikan.presentation.ui.tab.home.components.ContentSectionRow
@@ -31,7 +32,6 @@ import com.artem.animationjikan.presentation.ui.tab.home.components.RecommendPag
 import com.artem.animationjikan.presentation.ui.theme.AnimationJikanTheme
 import com.artem.animationjikan.presentation.viewmodel.HomeTabViewModel
 import com.artem.animationjikan.presentation.viewmodel.ViewModelState
-import com.artem.animationjikan.presentation.viewmodel.createHomeTabViewModelFactory
 import com.artem.animationjikan.util.CATEGORIES_LIST
 import com.artem.animationjikan.util.RECOMMEND_PAGE_COUNT
 
@@ -39,7 +39,7 @@ import com.artem.animationjikan.util.RECOMMEND_PAGE_COUNT
 @Composable
 fun HomeTab(
     modifier: Modifier = Modifier,
-    viewModel: HomeTabViewModel = viewModel(factory = createHomeTabViewModelFactory())
+    viewModel: HomeTabViewModel = hiltViewModel()
 ) {
     LaunchedEffect(Unit) {
         viewModel.execute()

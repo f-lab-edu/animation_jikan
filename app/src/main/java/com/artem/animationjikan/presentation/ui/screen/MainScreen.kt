@@ -36,7 +36,6 @@ fun MainScreen() {
     )
 }
 
-
 @Composable
 fun MainScreenContent(
     navController: NavHostController,
@@ -62,8 +61,6 @@ fun MainScreenContent(
         }
 
     }
-
-
 }
 
 @Preview(
