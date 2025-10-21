@@ -50,27 +50,27 @@ class HomeTabViewModel @Inject constructor(
             try {
                 state = ViewModelState.Loading
 
-                val (animationList, mangaList, characterList) = coroutineScope {
-
-                    val animationDeferred = async {
-                        animationRepository.fetchTopAnimation()
-                    }
-
-                    val mangaDeferred = async {
-                        mangaRepository.fetchTopManga()
-                    }
-
-                    val characterDeferred = async {
-                        characterRepository.fetchTopCharacters()
-                    }
-
-                    awaitAll(animationDeferred, mangaDeferred, characterDeferred)
-
+                val animationDeferred = async {
+                    animationRepository.fetchTopAnimation()
                 }
 
-                topAnimationList = animationList
-                topMangaList = mangaList
-                topCharacterList = characterList
+                val mangaDeferred = async {
+                    mangaRepository.fetchTopManga()
+                }
+
+                val characterDeferred = async {
+                    characterRepository.fetchTopCharacters()
+                }
+
+                val (animation, manga, character) = awaitAll(
+                    animationDeferred,
+                    mangaDeferred,
+                    characterDeferred
+                )
+
+                topAnimationList = animation
+                topMangaList = manga
+                topCharacterList = character
 
                 state = ViewModelState.Success
             } catch (e: Exception) {

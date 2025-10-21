@@ -13,16 +13,14 @@ data class Pagination(
 
 @Serializable
 data class ImagesDto(
-    @SerializedName("jpg")
-    val jpg: JpgImageDto?,
-    @SerializedName("webp")
-    val webp: WebpImageDto?,
+    val jpg: JpgImageDto,
+    val webp: WebpImageDto,
 )
 
 @Serializable
 data class JpgImageDto(
     @SerializedName("image_url")
-    val imageUrl: String?,
+    val imageUrl: String,
     @SerializedName("small_image_url")
     val smallImageUrl: String?,
     @SerializedName("large_image_url")

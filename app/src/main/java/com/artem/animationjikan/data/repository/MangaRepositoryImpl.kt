@@ -13,7 +13,7 @@ class MangaRepositoryImpl @Inject constructor(
             CommonHomeContentModel(
                 id = mangaDTO.malId,
                 type = FilterCategory.MANGA,
-                imageUrl = mangaDTO.images?.jpg?.imageUrl ?: ""
+                imageUrl = mangaDTO.images.jpg.imageUrl,
             )
         } ?: emptyList()
     }
