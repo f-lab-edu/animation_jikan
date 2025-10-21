@@ -64,8 +64,11 @@ fun HomeTab(
         ) {
             Column {
                 Spacer(modifier = Modifier.height(6.dp))
+
                 ChipSection()
+
                 Spacer(modifier = Modifier.height(16.dp))
+
                 RecommendPager(pageCount = RECOMMEND_PAGE_COUNT)
 
                 Spacer(modifier = Modifier.height(25.dp))
@@ -87,9 +90,7 @@ fun HomeTab(
                     }
                 )
 
-
                 Spacer(modifier = Modifier.height(16.dp))
-
 
                 ContentSectionRow(
                     R.string.section_top_anime,
