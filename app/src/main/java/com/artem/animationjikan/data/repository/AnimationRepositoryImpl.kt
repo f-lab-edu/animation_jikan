@@ -9,17 +9,27 @@ class AnimationRepositoryImpl @Inject constructor(
     private val client: JikanApiClient
 ) : AnimationRepository {
     override suspend fun fetchTopAnimation(): List<CommonHomeContentModel> {
-        return client.getTopAnimation().data?.map { animeDto ->
+        return client.getTopAnimation().data.map { animeDto ->
             CommonHomeContentModel(
                 id = animeDto.malId,
                 type = FilterCategory.ANIMATION,
-                imageUrl = animeDto.images?.jpg?.imageUrl ?: ""
+                imageUrl = animeDto.images.jpg.imageUrl
             )
-        } ?: emptyList()
+        }
     }
 
     override suspend fun fetchRecommendationsAnimations() {
         client.getRecommendationsAnimations()
+    }
+
+    override suspend fun fetchUpcoming(): List<CommonHomeContentModel> {
+        return client.getUpcoming().data.map { upcomingDTO ->
+            CommonHomeContentModel(
+                id = upcomingDTO.malId,
+                type = FilterCategory.ANIMATION,
+                imageUrl = upcomingDTO.images.jpg.imageUrl
+            )
+        }
     }
 
 }
