@@ -82,7 +82,7 @@ fun HomeTab(
 
                 ContentSectionRow(
                     R.string.section_upcoming_anime,
-                    viewModel.topAnimationList,
+                    viewModel.upcomingList,
                     onItemClick = { _ ->
                     }
                 )
@@ -108,7 +108,6 @@ fun HomeTab(
 
                     }
                 )
-
 
                 Spacer(modifier = Modifier.height(16.dp))
 

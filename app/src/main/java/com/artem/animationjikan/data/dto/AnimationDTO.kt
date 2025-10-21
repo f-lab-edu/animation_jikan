@@ -6,16 +6,14 @@ import com.google.gson.annotations.SerializedName
 @Serializable
 data class AnimationResponse(
     val pagination: Pagination,
-    val data: List<AnimeDto>?,
+    val data: List<AnimeDto>,
 )
 
 @Serializable
 data class AnimeDto(
     @SerializedName("mal_id")
     val malId: Int = -1,
-    val url: String?,
     @SerializedName("images")
-    val images: ImagesDto?,
-    val title: String?,
-    val synopsis: String? = null,
+    val images: ImagesDto,
+    val title: String,
 )

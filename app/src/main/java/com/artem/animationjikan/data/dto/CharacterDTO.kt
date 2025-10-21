@@ -6,7 +6,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class CharacterResponse(
     val pagination: Pagination,
-    val data: List<CharacterDTO>?,
+    val data: List<CharacterDTO>,
 )
 
 @Serializable

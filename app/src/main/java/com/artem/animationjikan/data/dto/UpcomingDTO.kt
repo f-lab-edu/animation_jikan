@@ -5,15 +5,15 @@ import kotlinx.serialization.Serializable
 
 
 @Serializable
-data class MangaResponse(
+data class UpcomingResponse(
     val pagination: Pagination,
-    val data: List<MangaDTO>,
+    val data: List<UpcomingDTO>
 )
 
 @Serializable
-data class MangaDTO(
+data class UpcomingDTO(
     @SerializedName("mal_id")
     val malId: Int = -1,
+    val url: String,
     val images: ImagesDto,
-    val title: String,
 )

@@ -9,12 +9,12 @@ class CharacterRepositoryImpl @Inject constructor(
     private val client: JikanApiClient
 ) : CharacterRepository {
     override suspend fun fetchTopCharacters(): List<CommonHomeContentModel>{
-        return client.getTopCharacters().data?.map { characterDTO ->
+        return client.getTopCharacters().data.map { characterDTO ->
             CommonHomeContentModel(
                 id = characterDTO.malId,
                 type = FilterCategory.CHARACTER,
                 imageUrl = characterDTO.images.jpg.imageUrl
             )
-        } ?: emptyList()
+        }
     }
 }

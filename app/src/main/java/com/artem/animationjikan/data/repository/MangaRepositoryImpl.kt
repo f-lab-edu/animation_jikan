@@ -9,12 +9,12 @@ class MangaRepositoryImpl @Inject constructor(
     private val client: JikanApiClient
 ) : MangaRepository {
     override suspend fun fetchTopManga(): List<CommonHomeContentModel> {
-        return client.getTopManga().data?.map { mangaDTO ->
+        return client.getTopManga().data.map { mangaDTO ->
             CommonHomeContentModel(
                 id = mangaDTO.malId,
                 type = FilterCategory.MANGA,
                 imageUrl = mangaDTO.images.jpg.imageUrl,
             )
-        } ?: emptyList()
+        }
     }
 }
