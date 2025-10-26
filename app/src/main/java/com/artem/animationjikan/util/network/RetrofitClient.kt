@@ -24,6 +24,7 @@ object RetrofitClient {
         }
         return OkHttpClient.Builder()
             .addInterceptor(logging)
+            .addInterceptor(RateLimitInterceptor())
             .build()
     }
 

@@ -1,19 +1,19 @@
 package com.artem.animationjikan.data.dto
 
-import kotlinx.serialization.Serializable
 import com.google.gson.annotations.SerializedName
+import kotlinx.serialization.Serializable
+
 
 @Serializable
-data class AnimationResponse(
+data class MangaResponse(
     val pagination: Pagination,
-    val data: List<AnimeDto>,
+    val data: List<MangaDTO>,
 )
 
 @Serializable
-data class AnimeDto(
+data class MangaDTO(
     @SerializedName("mal_id")
     val malId: Int = -1,
-    @SerializedName("images")
     val images: ImagesDto,
     val title: String,
 )

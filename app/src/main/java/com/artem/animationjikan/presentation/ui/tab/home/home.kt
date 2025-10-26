@@ -25,7 +25,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.artem.animationjikan.R
 import com.artem.animationjikan.presentation.ui.tab.home.components.ContentSectionRow
 import com.artem.animationjikan.presentation.ui.tab.home.components.RecommendPager
@@ -44,8 +43,6 @@ fun HomeTab(
     LaunchedEffect(Unit) {
         viewModel.execute()
     }
-
-    val chipItems = CATEGORIES_LIST
 
     val scrollState = rememberScrollState()
 
@@ -67,24 +64,12 @@ fun HomeTab(
         ) {
             Column {
                 Spacer(modifier = Modifier.height(6.dp))
-                LazyRow(
-                    horizontalArrangement = Arrangement.spacedBy(8.dp)
-                ) {
-                    items(chipItems) { item ->
-                        SuggestionChip(
-                            onClick = {},
-                            label = {
-                                Text(stringResource(item))
-                            },
-                            colors = SuggestionChipDefaults.suggestionChipColors(
-                                containerColor = Color.Black,
-                                labelColor = Color.White
-                            )
-                        )
-                    }
-                }
+
+                ChipSection()
+
                 Spacer(modifier = Modifier.height(16.dp))
-                RecommendPager(pageCount = RECOMMEND_PAGE_COUNT)
+
+                RecommendPager(recommendationAnimations = viewModel.recommendationAnimationList)
 
                 Spacer(modifier = Modifier.height(25.dp))
 
@@ -100,14 +85,12 @@ fun HomeTab(
 
                 ContentSectionRow(
                     R.string.section_upcoming_anime,
-                    viewModel.topAnimationList,
+                    viewModel.upcomingList,
                     onItemClick = { _ ->
                     }
                 )
 
-
                 Spacer(modifier = Modifier.height(16.dp))
-
 
                 ContentSectionRow(
                     R.string.section_top_anime,
@@ -121,18 +104,17 @@ fun HomeTab(
 
                 ContentSectionRow(
                     R.string.section_top_manga,
-                    viewModel.topAnimationList,
+                    viewModel.topMangaList,
                     onItemClick = { idx ->
 
                     }
                 )
 
-
                 Spacer(modifier = Modifier.height(16.dp))
 
                 ContentSectionRow(
                     R.string.section_top_character,
-                    viewModel.topAnimationList,
+                    viewModel.topCharacterList,
                     onItemClick = { idx ->
 
                     }
@@ -145,6 +127,26 @@ fun HomeTab(
         }
     }
 
+}
+
+@Composable
+fun ChipSection() {
+    LazyRow(
+        horizontalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
+        items(CATEGORIES_LIST) { item ->
+            SuggestionChip(
+                onClick = {},
+                label = {
+                    Text(stringResource(item))
+                },
+                colors = SuggestionChipDefaults.suggestionChipColors(
+                    containerColor = Color.Black,
+                    labelColor = Color.White
+                )
+            )
+        }
+    }
 }
 
 
