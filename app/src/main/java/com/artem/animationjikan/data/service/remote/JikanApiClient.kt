@@ -9,8 +9,8 @@ import javax.inject.Inject
 class JikanApiClient @Inject constructor(
     private val jikanApiService: JikanApiService
 ) {
-    suspend fun getRecommendationsAnimations() =
-        jikanApiService.getRecommendationsAnimations()
+    suspend fun fetchRecommendationAnimations() =
+        jikanApiService.getRecommendationAnimations()
 
     suspend fun getTopAnimation(): AnimationResponse = jikanApiService.getTopAnimation()
 

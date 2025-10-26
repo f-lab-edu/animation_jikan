@@ -36,4 +36,3 @@ data class WebpImageDto(
     @SerializedName("large_image_url")
     val largeImageUrl: String?,
 )
-

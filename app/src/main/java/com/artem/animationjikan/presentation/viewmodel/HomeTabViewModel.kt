@@ -33,6 +33,10 @@ class HomeTabViewModel @Inject constructor(
     private val mangaRepository: MangaRepository,
     private val characterRepository: CharacterRepository,
 ) : ViewModel() {
+
+    var recommendationAnimationList by mutableStateOf<List<CommonHomeContentModel>>(emptyList())
+        private set
+
     var topAnimationList by mutableStateOf<List<CommonHomeContentModel>>(emptyList())
         private set
 
@@ -54,21 +58,29 @@ class HomeTabViewModel @Inject constructor(
             try {
                 state = ViewModelState.Loading
 
+                val recommendationDeferred = async {
+                    animationRepository.fetchRecommendationAnimations()
+                }
+                delay(500)
                 val animationDeferred = async {
                     animationRepository.fetchTopAnimation()
                 }
+
                 delay(500)
                 val mangaDeferred = async {
                     mangaRepository.fetchTopManga()
                 }
-                delay(500)
+                delay(1000)
                 val characterDeferred = async {
                     characterRepository.fetchTopCharacters()
                 }
-                delay(500)
+
+                delay(2000)
                 val upcomingDeferred = async {
                     animationRepository.fetchUpcoming()
                 }
+
+                val recommendAnimations = recommendationDeferred.await()
 
                 val animation = animationDeferred.await()
 
@@ -78,6 +90,7 @@ class HomeTabViewModel @Inject constructor(
 
                 val upcoming = upcomingDeferred.await()
 
+                recommendationAnimationList = recommendAnimations
                 topAnimationList = animation
                 topMangaList = manga
                 topCharacterList = character

@@ -69,7 +69,7 @@ fun HomeTab(
 
                 Spacer(modifier = Modifier.height(16.dp))
 
-                RecommendPager(pageCount = RECOMMEND_PAGE_COUNT)
+                RecommendPager(recommendationAnimations = viewModel.recommendationAnimationList)
 
                 Spacer(modifier = Modifier.height(25.dp))
 

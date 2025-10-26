@@ -24,12 +24,14 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import com.artem.animationjikan.R
+import com.artem.animationjikan.presentation.model.CommonHomeContentModel
 import com.artem.animationjikan.presentation.ui.theme.AnimationJikanTheme
 import com.artem.animationjikan.util.SAMPLE_IMG_URL
+import com.artem.animationjikan.util.enums.FilterCategory
 
 @Composable
-fun RecommendPager(pageCount: Int) {
-    val pagerState = rememberPagerState(pageCount = { pageCount })
+fun RecommendPager(recommendationAnimations: List<CommonHomeContentModel>) {
+    val pagerState = rememberPagerState(pageCount = { recommendationAnimations.size })
 
     Box {
         HorizontalPager(
@@ -43,7 +45,7 @@ fun RecommendPager(pageCount: Int) {
                 contentAlignment = Alignment.Center
             ) {
                 AsyncImage(
-                    model = SAMPLE_IMG_URL,
+                    model = recommendationAnimations[page].imageUrl,
                     contentDescription = stringResource(R.string.poster),
                     modifier = Modifier
                         .fillMaxHeight()
@@ -66,7 +68,7 @@ fun RecommendPager(pageCount: Int) {
                     ),
                 horizontalArrangement = Arrangement.Center
             ) {
-                repeat(pageCount) { iteration ->
+                repeat(recommendationAnimations.size) { iteration ->
                     val color = if (pagerState.currentPage == iteration)
                         Color(0xFFE50913) else Color.LightGray
 
@@ -87,6 +89,14 @@ fun RecommendPager(pageCount: Int) {
 @Preview
 fun RecommendPagerPreview() {
     AnimationJikanTheme {
-        RecommendPager(3)
+        RecommendPager(
+            listOf(
+                CommonHomeContentModel(
+                    id = 0,
+                    type = FilterCategory.ANIMATION,
+                    imageUrl = ""
+                )
+            )
+        )
     }
 }
