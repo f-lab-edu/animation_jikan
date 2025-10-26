@@ -25,6 +25,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.artem.animationjikan.R
 import com.artem.animationjikan.presentation.ui.tab.home.components.ContentSectionRow
 import com.artem.animationjikan.presentation.ui.tab.home.components.RecommendPager
@@ -33,6 +34,7 @@ import com.artem.animationjikan.presentation.viewmodel.HomeTabViewModel
 import com.artem.animationjikan.presentation.viewmodel.ViewModelState
 import com.artem.animationjikan.util.CATEGORIES_LIST
 import com.artem.animationjikan.util.RECOMMEND_PAGE_COUNT
+import androidx.compose.runtime.collectAsState
 
 
 @Composable
@@ -40,11 +42,9 @@ fun HomeTab(
     modifier: Modifier = Modifier,
     viewModel: HomeTabViewModel = hiltViewModel()
 ) {
-    LaunchedEffect(Unit) {
-        viewModel.execute()
-    }
 
     val scrollState = rememberScrollState()
+    val recommendAnimationList = viewModel.recommendationAnimationList.collectAsStateWithLifecycle()
 
     when (viewModel.state) {
         ViewModelState.Idle, ViewModelState.Loading, ViewModelState.Error -> Box(
@@ -69,13 +69,13 @@ fun HomeTab(
 
                 Spacer(modifier = Modifier.height(16.dp))
 
-                RecommendPager(recommendationAnimations = viewModel.recommendationAnimationList)
+                RecommendPager(recommendationAnimations = recommendAnimationList.value)
 
                 Spacer(modifier = Modifier.height(25.dp))
 
                 ContentSectionRow(
                     R.string.section_recently_viewed,
-                    viewModel.topAnimationList,
+                    viewModel.topAnimationList.collectAsStateWithLifecycle().value,
                     onItemClick = { _ ->
 
                     }
@@ -85,7 +85,7 @@ fun HomeTab(
 
                 ContentSectionRow(
                     R.string.section_upcoming_anime,
-                    viewModel.upcomingList,
+                    viewModel.upcomingList.collectAsStateWithLifecycle().value,
                     onItemClick = { _ ->
                     }
                 )
@@ -94,7 +94,7 @@ fun HomeTab(
 
                 ContentSectionRow(
                     R.string.section_top_anime,
-                    viewModel.topAnimationList,
+                    viewModel.topAnimationList.collectAsStateWithLifecycle().value,
                     onItemClick = { idx ->
 
                     }
@@ -104,7 +104,7 @@ fun HomeTab(
 
                 ContentSectionRow(
                     R.string.section_top_manga,
-                    viewModel.topMangaList,
+                    viewModel.topMangaList.collectAsStateWithLifecycle().value,
                     onItemClick = { idx ->
 
                     }
@@ -114,14 +114,13 @@ fun HomeTab(
 
                 ContentSectionRow(
                     R.string.section_top_character,
-                    viewModel.topCharacterList,
+                    viewModel.topCharacterList.collectAsStateWithLifecycle().value,
                     onItemClick = { idx ->
 
                     }
                 )
 
                 Spacer(modifier = Modifier.height(30.dp))
-
 
             }
         }
