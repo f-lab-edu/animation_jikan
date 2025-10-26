@@ -4,18 +4,12 @@ import android.util.Log
 import com.artem.animationjikan.data.dto.AnimationResponse
 import com.artem.animationjikan.data.dto.AnimeDto
 import com.artem.animationjikan.data.dto.RecommendationAnimationDTO
-import com.artem.animationjikan.data.dto.RecommendationAnimationResponse
 import com.artem.animationjikan.data.dto.UpcomingDTO
 import com.artem.animationjikan.data.dto.UpcomingResponse
-import com.artem.animationjikan.data.mapper.toHomeCommonModel
 import com.artem.animationjikan.data.service.remote.JikanApiClient
 import com.artem.animationjikan.domain.repository.AnimationRepository
-import com.artem.animationjikan.presentation.model.CommonHomeContentModel
-import com.artem.animationjikan.util.enums.FilterCategory
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.flowOn
 import javax.inject.Inject
 
 class AnimationRepositoryImpl @Inject constructor(

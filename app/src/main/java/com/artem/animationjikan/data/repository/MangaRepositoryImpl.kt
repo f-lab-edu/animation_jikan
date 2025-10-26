@@ -1,11 +1,8 @@
 package com.artem.animationjikan.data.repository
 
 import com.artem.animationjikan.data.dto.MangaDTO
-import com.artem.animationjikan.data.mapper.toHomeCommonModel
 import com.artem.animationjikan.data.service.remote.JikanApiClient
 import com.artem.animationjikan.domain.repository.MangaRepository
-import com.artem.animationjikan.presentation.model.CommonHomeContentModel
-import com.artem.animationjikan.util.enums.FilterCategory
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject

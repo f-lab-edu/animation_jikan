@@ -17,7 +17,6 @@ import androidx.compose.material3.SuggestionChip
 import androidx.compose.material3.SuggestionChipDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -33,8 +32,6 @@ import com.artem.animationjikan.presentation.ui.theme.AnimationJikanTheme
 import com.artem.animationjikan.presentation.viewmodel.HomeTabViewModel
 import com.artem.animationjikan.presentation.viewmodel.ViewModelState
 import com.artem.animationjikan.util.CATEGORIES_LIST
-import com.artem.animationjikan.util.RECOMMEND_PAGE_COUNT
-import androidx.compose.runtime.collectAsState
 
 
 @Composable

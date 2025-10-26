@@ -6,16 +6,12 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.artem.animationjikan.data.repository.AnimationRepositoryImpl
-import com.artem.animationjikan.domain.repository.AnimationRepository
-import com.artem.animationjikan.domain.repository.CharacterRepository
-import com.artem.animationjikan.domain.repository.MangaRepository
+import com.artem.animationjikan.domain.entities.HomeCommonEntity
 import com.artem.animationjikan.domain.usecase.GetRecommendAnimationUsecase
 import com.artem.animationjikan.domain.usecase.GetTopAnimationUsecase
 import com.artem.animationjikan.domain.usecase.GetTopCharacterUsecase
 import com.artem.animationjikan.domain.usecase.GetTopMangaUsecase
 import com.artem.animationjikan.domain.usecase.GetUpcomingUsecase
-import com.artem.animationjikan.presentation.model.CommonHomeContentModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -43,20 +39,15 @@ class HomeTabViewModel @Inject constructor(
         const val NO_ERROR_MESSAGE = "empty Error message"
     }
 
-    val recommendationAnimationList = MutableStateFlow<List<CommonHomeContentModel>>(emptyList())
+    val recommendationAnimationList = MutableStateFlow<List<HomeCommonEntity>>(emptyList())
 
-    val topAnimationList = MutableStateFlow<List<CommonHomeContentModel>>(emptyList())
-        private set
+    val topAnimationList = MutableStateFlow<List<HomeCommonEntity>>(emptyList())
 
-    val topMangaList = MutableStateFlow<List<CommonHomeContentModel>>(emptyList())
-        private set
+    val topMangaList = MutableStateFlow<List<HomeCommonEntity>>(emptyList())
 
-    val topCharacterList = MutableStateFlow<List<CommonHomeContentModel>>(emptyList())
-        private set
+    val topCharacterList = MutableStateFlow<List<HomeCommonEntity>>(emptyList())
 
-    val upcomingList = MutableStateFlow<List<CommonHomeContentModel>>(emptyList())
-        private set
-
+    val upcomingList = MutableStateFlow<List<HomeCommonEntity>>(emptyList())
 
     var state by mutableStateOf(ViewModelState.Idle)
         private set
