@@ -24,13 +24,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import com.artem.animationjikan.R
-import com.artem.animationjikan.presentation.model.CommonHomeContentModel
+import com.artem.animationjikan.domain.entities.HomeCommonEntity
 import com.artem.animationjikan.presentation.ui.theme.AnimationJikanTheme
-import com.artem.animationjikan.util.SAMPLE_IMG_URL
 import com.artem.animationjikan.util.enums.FilterCategory
 
 @Composable
-fun RecommendPager(recommendationAnimations: List<CommonHomeContentModel>) {
+fun RecommendPager(recommendationAnimations: List<HomeCommonEntity>) {
     val pagerState = rememberPagerState(pageCount = { recommendationAnimations.size })
 
     Box {
@@ -91,7 +90,7 @@ fun RecommendPagerPreview() {
     AnimationJikanTheme {
         RecommendPager(
             listOf(
-                CommonHomeContentModel(
+                HomeCommonEntity(
                     id = 0,
                     type = FilterCategory.ANIMATION,
                     imageUrl = ""

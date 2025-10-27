@@ -29,14 +29,14 @@ import coil3.compose.AsyncImage
 import coil3.request.ImageRequest
 import coil3.request.crossfade
 import com.artem.animationjikan.R
-import com.artem.animationjikan.presentation.model.CommonHomeContentModel
+import com.artem.animationjikan.domain.entities.HomeCommonEntity
 import com.artem.animationjikan.presentation.ui.theme.AnimationJikanTheme
 import com.artem.animationjikan.util.enums.FilterCategory
 
 @Composable
 fun ContentSectionRow(
     title: Int,
-    list: List<CommonHomeContentModel>,
+    list: List<HomeCommonEntity>,
     onItemClick: (Int) -> Unit
 ) {
     Column {
@@ -87,7 +87,7 @@ fun ContentSectionRowPreview() {
         ContentSectionRow(
             title = R.string.section_recently_viewed,
             list = listOf(
-                CommonHomeContentModel(
+                HomeCommonEntity(
                     id = 0,
                     type = FilterCategory.ANIMATION,
                 )

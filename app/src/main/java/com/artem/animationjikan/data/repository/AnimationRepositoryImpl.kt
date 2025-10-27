@@ -1,48 +1,62 @@
 package com.artem.animationjikan.data.repository
 
 import android.util.Log
+import com.artem.animationjikan.data.dto.AnimationResponse
+import com.artem.animationjikan.data.dto.AnimeDto
+import com.artem.animationjikan.data.dto.RecommendationAnimationDTO
+import com.artem.animationjikan.data.dto.UpcomingDTO
+import com.artem.animationjikan.data.dto.UpcomingResponse
 import com.artem.animationjikan.data.service.remote.JikanApiClient
-import com.artem.animationjikan.presentation.model.CommonHomeContentModel
-import com.artem.animationjikan.util.enums.FilterCategory
+import com.artem.animationjikan.domain.repository.AnimationRepository
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
 class AnimationRepositoryImpl @Inject constructor(
     private val client: JikanApiClient
 ) : AnimationRepository {
-    override suspend fun fetchTopAnimation(): List<CommonHomeContentModel> {
-        return client.getTopAnimation().data.map { animeDto ->
-            CommonHomeContentModel(
-                id = animeDto.malId,
-                type = FilterCategory.ANIMATION,
-                imageUrl = animeDto.images.jpg.imageUrl
-            )
-        }
-    }
 
-    override suspend fun fetchRecommendationAnimations(): List<CommonHomeContentModel> {
-        val maxItemCount = 5
-        val response = client.fetchRecommendationAnimations().data
-        val originList = response.flatMap { recommendationData ->
-            recommendationData.entry.map { recommendationDTO ->
-                CommonHomeContentModel(
-                    id = recommendationDTO.malId,
-                    type = FilterCategory.ANIMATION,
-                    imageUrl = recommendationDTO.images.jpg.imageUrl
+    override suspend fun fetchRecommendationAnimations(): Flow<Result<List<RecommendationAnimationDTO>>> =
+        flow {
+            Log.d("AnimationRepositoryImpl", "fetchRecommendationAnimations")
+            val response = try {
+                Log.d("AnimationRepositoryImpl", "fetchRecommendationAnimations try")
+                val result: List<RecommendationAnimationDTO> =
+                    client.fetchRecommendationAnimations().data.flatMap { it.entry }
+                Result.success(result)
+            } catch (e: Exception) {
+                Log.d(
+                    "AnimationRepositoryImpl",
+                    "fetchRecommendationAnimations try error ${e.message}"
                 )
+                Result.failure(e)
             }
+
+            emit(response)
         }
-        //List를 섞으며, 최대 출력을 5개로 줄인다.
-        return originList.shuffled().take(maxItemCount)
+
+    override suspend fun fetchTopAnimation(): Flow<Result<List<AnimeDto>>> = flow {
+        val response = try {
+            val response: AnimationResponse = client.getTopAnimation()
+            val result = response.data
+            Result.success(result)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+        emit(response)
     }
 
-    override suspend fun fetchUpcoming(): List<CommonHomeContentModel> {
-        return client.getUpcoming().data.map { upcomingDTO ->
-            CommonHomeContentModel(
-                id = upcomingDTO.malId,
-                type = FilterCategory.ANIMATION,
-                imageUrl = upcomingDTO.images.jpg.imageUrl
-            )
+
+    override suspend fun fetchUpcoming(): Flow<Result<List<UpcomingDTO>>> = flow {
+        val response = try {
+            val response: UpcomingResponse = client.getUpcoming()
+            val result = response.data
+            Result.success(result)
+        } catch (e: Exception) {
+            Result.failure(e)
         }
+
+        emit(response)
     }
 
 }

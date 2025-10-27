@@ -6,17 +6,16 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import coil3.util.CoilUtils.result
-import com.artem.animationjikan.data.repository.AnimationRepository
-import com.artem.animationjikan.data.repository.CharacterRepository
-import com.artem.animationjikan.data.repository.MangaRepository
-import com.artem.animationjikan.presentation.model.CommonHomeContentModel
+import com.artem.animationjikan.domain.entities.HomeCommonEntity
+import com.artem.animationjikan.domain.usecase.GetRecommendAnimationUsecase
+import com.artem.animationjikan.domain.usecase.GetTopAnimationUsecase
+import com.artem.animationjikan.domain.usecase.GetTopCharacterUsecase
+import com.artem.animationjikan.domain.usecase.GetTopMangaUsecase
+import com.artem.animationjikan.domain.usecase.GetUpcomingUsecase
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.async
-import kotlinx.coroutines.awaitAll
-import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -29,80 +28,93 @@ enum class ViewModelState {
 
 @HiltViewModel
 class HomeTabViewModel @Inject constructor(
-    private val animationRepository: AnimationRepository,
-    private val mangaRepository: MangaRepository,
-    private val characterRepository: CharacterRepository,
+    private val recommendAnimationUsecase: GetRecommendAnimationUsecase,
+    private val topAnimationUseCase: GetTopAnimationUsecase,
+    private val topTopMangaUseCase: GetTopMangaUsecase,
+    private val topCharacterUseCase: GetTopCharacterUsecase,
+    private val upcomingUsecase: GetUpcomingUsecase,
 ) : ViewModel() {
+    companion object {
+        val TAG: String? = HomeTabViewModel::class.simpleName
+        const val NO_ERROR_MESSAGE = "empty Error message"
+    }
 
-    var recommendationAnimationList by mutableStateOf<List<CommonHomeContentModel>>(emptyList())
-        private set
+    val recommendationAnimationList = MutableStateFlow<List<HomeCommonEntity>>(emptyList())
 
-    var topAnimationList by mutableStateOf<List<CommonHomeContentModel>>(emptyList())
-        private set
+    val topAnimationList = MutableStateFlow<List<HomeCommonEntity>>(emptyList())
 
-    var topMangaList by mutableStateOf<List<CommonHomeContentModel>>(emptyList())
-        private set
+    val topMangaList = MutableStateFlow<List<HomeCommonEntity>>(emptyList())
 
-    var topCharacterList by mutableStateOf<List<CommonHomeContentModel>>(emptyList())
-        private set
+    val topCharacterList = MutableStateFlow<List<HomeCommonEntity>>(emptyList())
 
-    var upcomingList by mutableStateOf<List<CommonHomeContentModel>>(emptyList())
-        private set
-
+    val upcomingList = MutableStateFlow<List<HomeCommonEntity>>(emptyList())
 
     var state by mutableStateOf(ViewModelState.Idle)
         private set
 
+    init {
+        execute()
+    }
+
     fun execute() {
-        viewModelScope.launch {
-            try {
-                state = ViewModelState.Loading
+        state = ViewModelState.Loading
+        val initialDelayMs = 300L
 
-                val recommendationDeferred = async {
-                    animationRepository.fetchRecommendationAnimations()
+        viewModelScope.launch(Dispatchers.IO) {
+            recommendAnimationUsecase.execute().collect { result ->
+                result.onSuccess { list ->
+                    Log.d("HomeTabViewModel", "onSuccess")
+                    recommendationAnimationList.value = list
+
+                    state = ViewModelState.Success
+                }.onFailure { error ->
+                    Log.e(TAG, error.message ?: NO_ERROR_MESSAGE)
                 }
-                delay(500)
-                val animationDeferred = async {
-                    animationRepository.fetchTopAnimation()
-                }
-
-                delay(500)
-                val mangaDeferred = async {
-                    mangaRepository.fetchTopManga()
-                }
-                delay(1000)
-                val characterDeferred = async {
-                    characterRepository.fetchTopCharacters()
-                }
-
-                delay(2000)
-                val upcomingDeferred = async {
-                    animationRepository.fetchUpcoming()
-                }
-
-                val recommendAnimations = recommendationDeferred.await()
-
-                val animation = animationDeferred.await()
-
-                val manga = mangaDeferred.await()
-
-                val character = characterDeferred.await()
-
-                val upcoming = upcomingDeferred.await()
-
-                recommendationAnimationList = recommendAnimations
-                topAnimationList = animation
-                topMangaList = manga
-                topCharacterList = character
-                upcomingList = upcoming
-
-
-                state = ViewModelState.Success
-            } catch (e: Exception) {
-                state = ViewModelState.Error
-                e.printStackTrace()
             }
+        }
 
+        viewModelScope.launch(Dispatchers.IO) {
+            delay(initialDelayMs)
+            upcomingUsecase.execute().collect { result ->
+                result.onSuccess { list ->
+                    upcomingList.value = list
+                }.onFailure { error ->
+                    Log.e(TAG, error.message ?: NO_ERROR_MESSAGE)
+                }
+            }
+        }
+
+        viewModelScope.launch(Dispatchers.IO) {
+            delay(initialDelayMs * 2)
+            topAnimationUseCase.execute().collect { result ->
+                result.onSuccess { list ->
+                    topAnimationList.value = list
+                }.onFailure { error ->
+                    Log.e(TAG, error.message ?: NO_ERROR_MESSAGE)
+                }
+            }
+        }
+
+        viewModelScope.launch(Dispatchers.IO) {
+            delay(initialDelayMs * 3)
+            topTopMangaUseCase.execute().collect { result ->
+                result.onSuccess { list ->
+                    topMangaList.value = list
+                }.onFailure { error ->
+                    Log.e(TAG, error.message ?: NO_ERROR_MESSAGE)
+                }
+            }
+        }
+
+        viewModelScope.launch(Dispatchers.IO) {
+            delay(initialDelayMs * 4)
+            topCharacterUseCase.execute().collect { result ->
+                result.onSuccess { list ->
+                    topCharacterList.value = list
+                }.onFailure { error ->
+                    Log.e(TAG, error.message ?: NO_ERROR_MESSAGE)
+                }
+            }
         }
 
     }

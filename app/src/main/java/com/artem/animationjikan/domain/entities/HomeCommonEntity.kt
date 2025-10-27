@@ -1,8 +1,8 @@
-package com.artem.animationjikan.presentation.model
+package com.artem.animationjikan.domain.entities
 
 import com.artem.animationjikan.util.enums.FilterCategory
 
-data class CommonHomeContentModel(
+data class HomeCommonEntity(
     val id: Int,
     val type: FilterCategory,
     val imageUrl: String = "",

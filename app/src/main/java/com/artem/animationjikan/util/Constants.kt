@@ -10,10 +10,6 @@ object Route {
     const val SEARCH = "search"
 }
 
-const val SAMPLE_IMG_URL = "https://cdn.myanimelist.net/images/anime/1015/138006.jpg"
-
-const val RECOMMEND_PAGE_COUNT = 5
-
 val CATEGORIES_LIST = listOf(
     R.string.animation_en,
     R.string.manga_en,
