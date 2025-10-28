@@ -1,16 +1,32 @@
 package com.artem.animationjikan.presentation.ui.tab.like
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.artem.animationjikan.domain.entities.LikeEntity
 import com.artem.animationjikan.domain.usecase.LikeUsecase
+import com.artem.animationjikan.util.enums.FilterCategory
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
 import javax.inject.Inject
 
 @HiltViewModel
 class LikeViewModel @Inject constructor(
-    private val likeUsecase: LikeUsecase
+    likeUsecase: LikeUsecase
 ) : ViewModel() {
 
-    private fun getLikes() {
-        //likeUsecase.getLikeOfType()
-    }
+    val likeAnimeList: StateFlow<List<LikeEntity>> =
+        likeUsecase.execute(mediaType = FilterCategory.ANIMATION.name)
+            .map { result ->
+                result.getOrElse { error ->
+                    emptyList()
+                }
+            }.stateIn(
+                scope = viewModelScope,
+                started = SharingStarted.WhileSubscribed(5000),
+                initialValue = emptyList()
+            )
 }

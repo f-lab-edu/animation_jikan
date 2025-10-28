@@ -44,9 +44,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import coil3.compose.AsyncImage
 import com.artem.animationjikan.R
 import com.artem.animationjikan.data.dto.LikeModel
+import com.artem.animationjikan.domain.entities.LikeEntity
 import com.artem.animationjikan.presentation.ui.theme.AnimationJikanTheme
 import com.artem.animationjikan.util.FILTER_OPTION
 import com.artem.animationjikan.util.enums.FilterCategory
@@ -55,7 +57,10 @@ import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun LikeTab() {
+fun LikeTab(
+    modifier: Modifier = Modifier,
+    viewModel: LikeViewModel = hiltViewModel()
+) {
     val sheetState = rememberModalBottomSheetState()
     val scope = rememberCoroutineScope()
     val openSheet: () -> Unit = {
@@ -67,7 +72,7 @@ fun LikeTab() {
     Scaffold(
         containerColor = Color.Black,
         content = { padding ->
-            Box(modifier = Modifier.padding(horizontal = 16.dp)) {
+            Box(modifier = modifier.padding(horizontal = 16.dp)) {
                 Column {
                     Box(
                         modifier = Modifier.padding(vertical = 6.dp)
@@ -93,7 +98,6 @@ fun LikeTab() {
                         )
                     }
 
-
                     Spacer(modifier = Modifier.height(22.dp))
 
                     LazyVerticalGrid(
@@ -103,7 +107,7 @@ fun LikeTab() {
                         contentPadding = PaddingValues(bottom = 25.dp),
                         modifier = Modifier.fillMaxSize()
                     ) {
-                        items(likeList) { item ->
+                        items(viewModel.likeAnimeList.value) { item ->
                             GridItem(item)
                         }
                     }
@@ -151,7 +155,7 @@ fun FilterBottomSheetContent(list: List<FilterCategory>, onItemClick: (FilterCat
 }
 
 @Composable
-fun GridItem(model: LikeModel) {
+fun GridItem(model: LikeEntity) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
