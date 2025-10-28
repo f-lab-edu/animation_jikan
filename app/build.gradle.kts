@@ -1,3 +1,6 @@
+@file:OptIn(KspExperimental::class)
+
+import com.google.devtools.ksp.KspExperimental
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
@@ -6,6 +9,13 @@ plugins {
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.kotlin.ksp)
     alias(libs.plugins.hilt)
+}
+
+configurations {
+    all {
+        // 중복 클래스 원인인 com.intellij:annotations 그룹 제외
+        exclude(group = "com.intellij", module = "annotations")
+    }
 }
 
 android {
@@ -52,6 +62,9 @@ android {
     }
     buildFeatures {
         compose = true
+    }
+    ksp {
+        useKsp2 = false // 아직까지는 ksp2 에 버그가 있는 것으로 보임.
     }
     hilt {
         enableAggregatingTask = false

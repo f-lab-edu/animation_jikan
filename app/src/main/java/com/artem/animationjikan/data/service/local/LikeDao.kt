@@ -18,7 +18,7 @@ interface LikeDao {
     @Query("SELECT EXISTS(SELECT 1 FROM `like` WHERE mediaId = :mediaId)")
     fun isLike(mediaId: Int): Flow<Boolean>
 
-    @Query("SELECT * FROM `like` WHERE mediaType = :type")
+    @Query("SELECT mediaId FROM `like` WHERE mediaType = :type")
     fun getAllLikeOfType(type: String): Flow<List<Int>>
 
 }
