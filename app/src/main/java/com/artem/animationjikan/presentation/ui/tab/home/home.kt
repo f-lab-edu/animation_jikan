@@ -29,8 +29,6 @@ import com.artem.animationjikan.R
 import com.artem.animationjikan.presentation.ui.tab.home.components.ContentSectionRow
 import com.artem.animationjikan.presentation.ui.tab.home.components.RecommendPager
 import com.artem.animationjikan.presentation.ui.theme.AnimationJikanTheme
-import com.artem.animationjikan.presentation.viewmodel.HomeTabViewModel
-import com.artem.animationjikan.presentation.viewmodel.ViewModelState
 import com.artem.animationjikan.util.CATEGORIES_LIST
 
 

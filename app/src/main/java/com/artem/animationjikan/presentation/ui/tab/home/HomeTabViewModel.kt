@@ -1,4 +1,4 @@
-package com.artem.animationjikan.presentation.viewmodel
+package com.artem.animationjikan.presentation.ui.tab.home
 
 import android.util.Log
 import androidx.compose.runtime.getValue
