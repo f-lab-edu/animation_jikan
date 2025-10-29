@@ -6,7 +6,6 @@ import com.artem.animationjikan.domain.entities.LikeEntity
 import com.artem.animationjikan.domain.usecase.LikeUsecase
 import com.artem.animationjikan.util.enums.FilterCategory
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
