@@ -6,12 +6,9 @@ import javax.inject.Inject
 class RemoveLikeUsecase @Inject constructor(
     private val likeRepository: LikeRepository
 ) {
-    suspend fun execute(mediaId: Int, imageUrl: String, mediaType: String) {
-        likeRepository.updateLikeStatus(
-            mediaId = mediaId,
-            imageUrl = imageUrl,
-            mediaType = mediaType,
-            isLiked = true,
+    suspend fun execute(mediaId: Int) {
+        likeRepository.removeLike(
+            mediaId = mediaId
         )
     }
 }
