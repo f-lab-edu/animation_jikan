@@ -30,7 +30,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.artem.animationjikan.R
-import com.artem.animationjikan.domain.entities.LikeEntity
+import com.artem.animationjikan.domain.entities.LikeData
 import com.artem.animationjikan.presentation.ui.tab.home.components.ContentSectionRow
 import com.artem.animationjikan.presentation.ui.tab.home.components.RecommendPager
 import com.artem.animationjikan.presentation.ui.theme.AnimationJikanTheme
@@ -52,6 +52,8 @@ fun HomeTab(
                 is UiEvent.ShowToast -> {
                     Toast.makeText(context, event.message, Toast.LENGTH_SHORT).show()
                 }
+
+                else -> Unit
             }
         }
     }
@@ -103,7 +105,7 @@ fun HomeTab(
                     viewModel.upcomingList.collectAsStateWithLifecycle().value,
                     onItemClick = { entity ->
                         viewModel.addLike(
-                            LikeEntity(
+                            LikeData(
                                 mediaId = entity.id,
                                 imageUrl = entity.imageUrl,
                                 mediaType = entity.type.name
@@ -119,7 +121,7 @@ fun HomeTab(
                     viewModel.topAnimationList.collectAsStateWithLifecycle().value,
                     onItemClick = { entity ->
                         viewModel.addLike(
-                            LikeEntity(
+                            LikeData(
                                 mediaId = entity.id,
                                 imageUrl = entity.imageUrl,
                                 mediaType = entity.type.name
@@ -135,7 +137,7 @@ fun HomeTab(
                     viewModel.topMangaList.collectAsStateWithLifecycle().value,
                     onItemClick = { entity ->
                         viewModel.addLike(
-                            LikeEntity(
+                            LikeData(
                                 mediaId = entity.id,
                                 imageUrl = entity.imageUrl,
                                 mediaType = entity.type.name
@@ -151,7 +153,7 @@ fun HomeTab(
                     viewModel.topCharacterList.collectAsStateWithLifecycle().value,
                     onItemClick = { entity ->
                         viewModel.addLike(
-                            LikeEntity(
+                            LikeData(
                                 mediaId = entity.id,
                                 imageUrl = entity.imageUrl,
                                 mediaType = entity.type.name

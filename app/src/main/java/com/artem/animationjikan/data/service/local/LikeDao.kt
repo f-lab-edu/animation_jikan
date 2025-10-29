@@ -4,13 +4,13 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import com.artem.animationjikan.domain.entities.LikeEntity
+import com.artem.animationjikan.domain.entities.LikeData
 import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface LikeDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insert(entity: LikeEntity)
+    suspend fun insert(entity: LikeData)
 
     @Query("DELETE FROM `like` WHERE mediaId = :mediaId")
     suspend fun delete(mediaId: Int)
@@ -19,6 +19,6 @@ interface LikeDao {
     fun isLike(mediaId: Int): Flow<Boolean>
 
     @Query("SELECT * FROM `like` WHERE mediaType = :type")
-    fun getAllLikeOfType(type: String): Flow<List<LikeEntity>>
+    fun getAllLikeOfType(type: String): Flow<List<LikeData>>
 
 }

@@ -1,7 +1,7 @@
 package com.artem.animationjikan.domain.usecase
 
 import android.util.Log
-import com.artem.animationjikan.domain.entities.LikeEntity
+import com.artem.animationjikan.domain.entities.LikeData
 import com.artem.animationjikan.domain.repository.LikeRepository
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
@@ -15,7 +15,7 @@ class LikeUsecase @Inject constructor(
         return response
     }*/
 
-    fun execute(mediaType: String): Flow<Result<List<LikeEntity>>> {
+    fun execute(mediaType: String): Flow<Result<List<LikeData>>> {
         Log.e("LikeUsecase", "execute")
         return likeRepository.getAllLikeOfType(mediaType = mediaType)
     }

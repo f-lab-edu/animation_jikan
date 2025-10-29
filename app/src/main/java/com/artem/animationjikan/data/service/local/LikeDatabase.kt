@@ -2,10 +2,10 @@ package com.artem.animationjikan.data.service.local
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
-import com.artem.animationjikan.domain.entities.LikeEntity
+import com.artem.animationjikan.domain.entities.LikeData
 
 @Database(
-    entities = [LikeEntity::class], // 좋아요 엔티티 목록
+    entities = [LikeData::class], // 좋아요 엔티티 목록
     version = 1,
     exportSchema = false
 )

@@ -4,9 +4,9 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 @Entity(tableName = "like")
-data class LikeEntity(
+data class LikeData(
     @PrimaryKey
     val mediaId: Int,
     val imageUrl: String,
-    val mediaType: String
+    val mediaType: String,
 )

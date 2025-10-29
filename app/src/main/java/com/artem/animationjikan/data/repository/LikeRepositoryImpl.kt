@@ -2,7 +2,7 @@ package com.artem.animationjikan.data.repository
 
 import android.util.Log
 import com.artem.animationjikan.data.service.local.LikeDao
-import com.artem.animationjikan.domain.entities.LikeEntity
+import com.artem.animationjikan.domain.entities.LikeData
 import com.artem.animationjikan.domain.repository.LikeRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -16,7 +16,7 @@ class LikeRepositoryImpl @Inject constructor(
     private val dao: LikeDao
 ) : LikeRepository {
 
-    override fun getAllLikeOfType(mediaType: String): Flow<Result<List<LikeEntity>>> =
+    override fun getAllLikeOfType(mediaType: String): Flow<Result<List<LikeData>>> =
         dao.getAllLikeOfType(type = mediaType)
             .onStart {
                 Log.e("LikeRepositoryImpl", "dao..onStart")
@@ -27,9 +27,9 @@ class LikeRepositoryImpl @Inject constructor(
                 emit(Result.failure(it))
             }.flowOn(Dispatchers.IO)
 
-    override suspend fun addLike(likeEntity: LikeEntity): Result<Unit> =
+    override suspend fun addLike(likeData: LikeData): Result<Unit> =
         try {
-            dao.insert(likeEntity)
+            dao.insert(likeData)
             Result.success(Unit)
         } catch (e: Exception) {
             Result.failure(e)
