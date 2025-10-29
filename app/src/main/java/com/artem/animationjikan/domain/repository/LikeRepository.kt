@@ -1,6 +1,6 @@
 package com.artem.animationjikan.domain.repository
 
-import com.artem.animationjikan.domain.entities.LikeData
+import com.artem.animationjikan.data.dto.LikeData
 import kotlinx.coroutines.flow.Flow
 
 interface LikeRepository {

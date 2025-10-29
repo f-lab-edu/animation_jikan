@@ -7,7 +7,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.artem.animationjikan.domain.entities.HomeCommonEntity
-import com.artem.animationjikan.domain.entities.LikeData
+import com.artem.animationjikan.data.dto.LikeData
 import com.artem.animationjikan.domain.usecase.AddLikeUsecase
 import com.artem.animationjikan.domain.usecase.GetRecommendAnimationUsecase
 import com.artem.animationjikan.domain.usecase.GetTopAnimationUsecase

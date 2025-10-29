@@ -1,6 +1,6 @@
 package com.artem.animationjikan.domain.usecase
 
-import com.artem.animationjikan.domain.entities.LikeData
+import com.artem.animationjikan.data.dto.LikeData
 import com.artem.animationjikan.domain.repository.LikeRepository
 import javax.inject.Inject
 

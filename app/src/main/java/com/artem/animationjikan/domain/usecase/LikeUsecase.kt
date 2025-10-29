@@ -1,7 +1,7 @@
 package com.artem.animationjikan.domain.usecase
 
 import android.util.Log
-import com.artem.animationjikan.domain.entities.LikeData
+import com.artem.animationjikan.data.dto.LikeData
 import com.artem.animationjikan.domain.repository.LikeRepository
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject

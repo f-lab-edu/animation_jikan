@@ -1,4 +1,4 @@
-package com.artem.animationjikan.domain.entities
+package com.artem.animationjikan.data.dto
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
