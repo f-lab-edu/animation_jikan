@@ -7,15 +7,20 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.artem.animationjikan.domain.entities.HomeCommonEntity
+import com.artem.animationjikan.domain.entities.LikeEntity
+import com.artem.animationjikan.domain.usecase.AddLikeUsecase
 import com.artem.animationjikan.domain.usecase.GetRecommendAnimationUsecase
 import com.artem.animationjikan.domain.usecase.GetTopAnimationUsecase
 import com.artem.animationjikan.domain.usecase.GetTopCharacterUsecase
 import com.artem.animationjikan.domain.usecase.GetTopMangaUsecase
 import com.artem.animationjikan.domain.usecase.GetUpcomingUsecase
+import com.artem.animationjikan.util.event.UiEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -33,6 +38,7 @@ class HomeTabViewModel @Inject constructor(
     private val topTopMangaUseCase: GetTopMangaUsecase,
     private val topCharacterUseCase: GetTopCharacterUsecase,
     private val upcomingUsecase: GetUpcomingUsecase,
+    private val addLikeUsecase: AddLikeUsecase
 ) : ViewModel() {
     companion object {
         val TAG: String? = HomeTabViewModel::class.simpleName
@@ -51,6 +57,9 @@ class HomeTabViewModel @Inject constructor(
 
     var state by mutableStateOf(ViewModelState.Idle)
         private set
+
+    private val _eventFlow = MutableSharedFlow<UiEvent>()
+    val eventFlow = _eventFlow.asSharedFlow()
 
     init {
         execute()
@@ -116,6 +125,20 @@ class HomeTabViewModel @Inject constructor(
                 }
             }
         }
-
     }
+
+    fun addLike(entity: LikeEntity) {
+        Log.e(TAG, "addLike ${entity.mediaId}")
+        viewModelScope.launch {
+            addLikeUsecase.execute(likeEntity = entity)
+                .onSuccess {
+                    Log.e(TAG, "onSuccess")
+                    _eventFlow.emit(UiEvent.ShowToast("보관함에 등록 되었습니다."))
+                }
+                .onFailure { error ->
+                    Log.e(TAG, "${error.message}")
+                }
+        }
+    }
+
 }

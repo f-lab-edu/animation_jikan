@@ -1,5 +1,7 @@
 package com.artem.animationjikan.presentation.ui.tab.home
 
+import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -17,19 +19,23 @@ import androidx.compose.material3.SuggestionChip
 import androidx.compose.material3.SuggestionChipDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.artem.animationjikan.R
+import com.artem.animationjikan.domain.entities.LikeEntity
 import com.artem.animationjikan.presentation.ui.tab.home.components.ContentSectionRow
 import com.artem.animationjikan.presentation.ui.tab.home.components.RecommendPager
 import com.artem.animationjikan.presentation.ui.theme.AnimationJikanTheme
 import com.artem.animationjikan.util.CATEGORIES_LIST
+import com.artem.animationjikan.util.event.UiEvent
 
 
 @Composable
@@ -37,6 +43,18 @@ fun HomeTab(
     modifier: Modifier = Modifier,
     viewModel: HomeTabViewModel = hiltViewModel()
 ) {
+    val context = LocalContext.current
+
+    LaunchedEffect(key1 = Unit) {
+        viewModel.eventFlow.collect { event ->
+            Log.e("HomeTab", "viewModel.eventFlow")
+            when (event) {
+                is UiEvent.ShowToast -> {
+                    Toast.makeText(context, event.message, Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+    }
 
     val scrollState = rememberScrollState()
     val recommendAnimationList = viewModel.recommendationAnimationList.collectAsStateWithLifecycle()
@@ -71,8 +89,10 @@ fun HomeTab(
                 ContentSectionRow(
                     R.string.section_recently_viewed,
                     viewModel.topAnimationList.collectAsStateWithLifecycle().value,
-                    onItemClick = { _ ->
-
+                    onItemClick = { entity ->
+                        Log.e("entity.type.name", entity.type.name)
+                        /*LikeEntity(mediaId = entity.id, imageUrl = entity.imageUrl, mediaType = entity.type.name)
+                        viewModel.addLike()*/
                     }
                 )
 
@@ -81,7 +101,14 @@ fun HomeTab(
                 ContentSectionRow(
                     R.string.section_upcoming_anime,
                     viewModel.upcomingList.collectAsStateWithLifecycle().value,
-                    onItemClick = { _ ->
+                    onItemClick = { entity ->
+                        viewModel.addLike(
+                            LikeEntity(
+                                mediaId = entity.id,
+                                imageUrl = entity.imageUrl,
+                                mediaType = entity.type.name
+                            )
+                        )
                     }
                 )
 
@@ -90,8 +117,14 @@ fun HomeTab(
                 ContentSectionRow(
                     R.string.section_top_anime,
                     viewModel.topAnimationList.collectAsStateWithLifecycle().value,
-                    onItemClick = { idx ->
-
+                    onItemClick = { entity ->
+                        viewModel.addLike(
+                            LikeEntity(
+                                mediaId = entity.id,
+                                imageUrl = entity.imageUrl,
+                                mediaType = entity.type.name
+                            )
+                        )
                     }
                 )
 
@@ -100,8 +133,14 @@ fun HomeTab(
                 ContentSectionRow(
                     R.string.section_top_manga,
                     viewModel.topMangaList.collectAsStateWithLifecycle().value,
-                    onItemClick = { idx ->
-
+                    onItemClick = { entity ->
+                        viewModel.addLike(
+                            LikeEntity(
+                                mediaId = entity.id,
+                                imageUrl = entity.imageUrl,
+                                mediaType = entity.type.name
+                            )
+                        )
                     }
                 )
 
@@ -110,8 +149,14 @@ fun HomeTab(
                 ContentSectionRow(
                     R.string.section_top_character,
                     viewModel.topCharacterList.collectAsStateWithLifecycle().value,
-                    onItemClick = { idx ->
-
+                    onItemClick = { entity ->
+                        viewModel.addLike(
+                            LikeEntity(
+                                mediaId = entity.id,
+                                imageUrl = entity.imageUrl,
+                                mediaType = entity.type.name
+                            )
+                        )
                     }
                 )
 

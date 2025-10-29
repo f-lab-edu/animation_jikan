@@ -7,13 +7,9 @@ import javax.inject.Inject
 class AddLikeUsecase @Inject constructor(
     private val likeRepository: LikeRepository
 ) {
-    suspend fun execute(mediaId: Int, imageUrl: String, mediaType: String) {
-        likeRepository.addLike(
-            likeEntity = LikeEntity(
-                mediaId = mediaId,
-                imageUrl = imageUrl,
-                mediaType = mediaType
-            ),
+    suspend fun execute(likeEntity: LikeEntity): Result<Unit> {
+        return likeRepository.addLike(
+            likeEntity = likeEntity,
         )
     }
 }

@@ -21,11 +21,22 @@ class LikeRepositoryImpl @Inject constructor(
             Result.failure<Exception>(it)
         }.flowOn(Dispatchers.IO)
 
-    override suspend fun addLike(likeEntity: LikeEntity) =
-        dao.insert(entity = likeEntity)
+    override suspend fun addLike(likeEntity: LikeEntity): Result<Unit> =
+        try {
+            dao.insert(likeEntity)
+            Result.success(Unit)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
 
-    override suspend fun removeLike(mediaId: Int) =
+
+    override suspend fun removeLike(mediaId: Int) = try {
         dao.delete(mediaId)
+        Result.success(Unit)
+    } catch (e: Exception) {
+        Result.failure(e)
+    }
+
 
     override fun getLikeStatus(mediaId: Int): Flow<Result<Boolean>> =
         dao.isLike(mediaId = mediaId).map {
