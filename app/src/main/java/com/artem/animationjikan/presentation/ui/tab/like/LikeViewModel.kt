@@ -1,5 +1,6 @@
 package com.artem.animationjikan.presentation.ui.tab.like
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.artem.animationjikan.domain.entities.LikeEntity
@@ -16,6 +17,10 @@ import javax.inject.Inject
 class LikeViewModel @Inject constructor(
     likeUsecase: LikeUsecase
 ) : ViewModel() {
+
+    init {
+        Log.e("LikeViewModel" , "init8")
+    }
 
     val likeAnimeList: StateFlow<List<LikeEntity>> =
         likeUsecase.execute(mediaType = FilterCategory.ANIMATION.name)

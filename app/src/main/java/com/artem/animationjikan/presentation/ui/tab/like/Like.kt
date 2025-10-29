@@ -45,6 +45,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil3.compose.AsyncImage
 import com.artem.animationjikan.R
 import com.artem.animationjikan.domain.entities.LikeEntity
@@ -59,6 +60,9 @@ fun LikeTab(
     modifier: Modifier = Modifier,
     viewModel: LikeViewModel = hiltViewModel()
 ) {
+
+    val likeList by viewModel.likeAnimeList.collectAsStateWithLifecycle()
+
     val sheetState = rememberModalBottomSheetState()
     val scope = rememberCoroutineScope()
     val openSheet: () -> Unit = {
@@ -105,7 +109,7 @@ fun LikeTab(
                         contentPadding = PaddingValues(bottom = 25.dp),
                         modifier = Modifier.fillMaxSize()
                     ) {
-                        items(viewModel.likeAnimeList.value) { item ->
+                        items(likeList) { item ->
                             GridItem(item)
                         }
                     }
