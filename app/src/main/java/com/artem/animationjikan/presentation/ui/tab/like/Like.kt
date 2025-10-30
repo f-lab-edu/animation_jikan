@@ -1,5 +1,6 @@
 package com.artem.animationjikan.presentation.ui.tab.like
 
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -28,10 +29,7 @@ import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -61,15 +59,21 @@ fun LikeTab(
     viewModel: LikeViewModel = hiltViewModel()
 ) {
 
-    val likeList by viewModel.likeAnimeList.collectAsStateWithLifecycle()
+    val likeList by viewModel.preservedList.collectAsStateWithLifecycle()
+
+    val currentCategory by viewModel.currentMediaType.collectAsStateWithLifecycle()
 
     val sheetState = rememberModalBottomSheetState()
     val scope = rememberCoroutineScope()
+
     val openSheet: () -> Unit = {
         scope.launch { sheetState.show() }
     }
 
-    var selectedCategory by remember { mutableStateOf(FilterCategory.ALL) }
+    val onCategorySelect: (FilterCategory) -> Unit = {
+        viewModel.setMediaTypeFilter(it)
+        scope.launch { sheetState.hide() }
+    }
 
     Scaffold(
         containerColor = Color.Black,
@@ -83,7 +87,7 @@ fun LikeTab(
                             onClick = openSheet,
                             label = {
                                 Text(
-                                    stringResource(selectedCategory.stringRes),
+                                    stringResource(currentCategory.stringRes),
                                     color = Color.White
                                 )
                             },
@@ -107,10 +111,15 @@ fun LikeTab(
                         verticalArrangement = Arrangement.spacedBy(8.dp),
                         horizontalArrangement = Arrangement.spacedBy(8.dp),
                         contentPadding = PaddingValues(bottom = 25.dp),
-                        modifier = Modifier.fillMaxSize()
+                        modifier = Modifier.fillMaxSize(),
                     ) {
                         items(likeList) { item ->
-                            GridItem(item)
+                            GridItem(
+                                model = item,
+                                onItemClick = {
+                                    viewModel.toggle(it)
+                                },
+                            )
                         }
                     }
 
@@ -127,7 +136,8 @@ fun LikeTab(
             sheetState = sheetState
         ) {
             FilterBottomSheetContent(list = FILTER_OPTION) { item ->
-                selectedCategory = item
+                //selectedCategory = item
+                onCategorySelect(item)
                 scope.launch { sheetState.hide() }
             }
         }
@@ -157,12 +167,11 @@ fun FilterBottomSheetContent(list: List<FilterCategory>, onItemClick: (FilterCat
 }
 
 @Composable
-fun GridItem(model: LikeEntity) {
+fun GridItem(model: LikeEntity, onItemClick: (LikeEntity) -> Unit) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Box {
-
             AsyncImage(
                 model = model.imageUrl,
                 modifier = Modifier
@@ -176,12 +185,16 @@ fun GridItem(model: LikeEntity) {
 
             IconButton(
                 modifier = Modifier.align(Alignment.TopEnd),
-                onClick = {}
+                onClick = {
+                    onItemClick(model)
+                }
             ) {
                 Icon(
-                    painter = painterResource(id = R.drawable.ic_favorite_off),
+                    painter = painterResource(id = if (model.isLiked) R.drawable.ic_favorite_red_on else R.drawable.ic_favorite_off),
+                    tint = Color.Unspecified,
                     contentDescription = null
                 )
+
             }
         }
 

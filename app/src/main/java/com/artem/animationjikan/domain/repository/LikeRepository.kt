@@ -1,15 +1,20 @@
 package com.artem.animationjikan.domain.repository
 
 import com.artem.animationjikan.data.dto.LikeData
+import com.artem.animationjikan.domain.entities.LikeEntity
 import kotlinx.coroutines.flow.Flow
 
 interface LikeRepository {
-    fun getAllLikeOfType(mediaType: String): Flow<Result<List<LikeData>>>
+    fun getAllLikeOfType(mediaType: String): Flow<Result<List<LikeEntity>>>
 
-    suspend fun addLike(likeData: LikeData) : Result<Unit>
+    fun getAllLike(): Flow<Result<List<LikeEntity>>>
 
-    suspend fun removeLike(mediaId: Int) : Result<Unit>
+    suspend fun addLike(likeEntity: LikeEntity): Result<Unit>
+
+    suspend fun removeLike(mediaId: Int): Result<Unit>
 
     fun getLikeStatus(mediaId: Int): Flow<Result<Boolean>>
+
+
 
 }

@@ -7,7 +7,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.artem.animationjikan.domain.entities.HomeCommonEntity
-import com.artem.animationjikan.data.dto.LikeData
+import com.artem.animationjikan.domain.entities.LikeEntity
 import com.artem.animationjikan.domain.usecase.AddLikeUsecase
 import com.artem.animationjikan.domain.usecase.GetRecommendAnimationUsecase
 import com.artem.animationjikan.domain.usecase.GetTopAnimationUsecase
@@ -72,7 +72,6 @@ class HomeTabViewModel @Inject constructor(
         viewModelScope.launch(Dispatchers.IO) {
             recommendAnimationUsecase.execute().collect { result ->
                 result.onSuccess { list ->
-                    Log.d("HomeTabViewModel", "onSuccess")
                     recommendationAnimationList.value = list
 
                     state = ViewModelState.Success
@@ -127,12 +126,10 @@ class HomeTabViewModel @Inject constructor(
         }
     }
 
-    fun addLike(entity: LikeData) {
-        Log.e(TAG, "addLike ${entity.mediaId}")
+    fun addLike(entity: LikeEntity) {
         viewModelScope.launch {
-            addLikeUsecase.execute(likeData = entity)
+            addLikeUsecase.execute(likeEntity = entity)
                 .onSuccess {
-                    Log.e(TAG, "onSuccess")
                     _eventFlow.emit(UiEvent.ShowToast("보관함에 등록 되었습니다."))
                 }
                 .onFailure { error ->

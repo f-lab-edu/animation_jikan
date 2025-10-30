@@ -30,7 +30,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.artem.animationjikan.R
-import com.artem.animationjikan.data.dto.LikeData
+import com.artem.animationjikan.domain.entities.LikeEntity
 import com.artem.animationjikan.presentation.ui.tab.home.components.ContentSectionRow
 import com.artem.animationjikan.presentation.ui.tab.home.components.RecommendPager
 import com.artem.animationjikan.presentation.ui.theme.AnimationJikanTheme
@@ -47,7 +47,6 @@ fun HomeTab(
 
     LaunchedEffect(key1 = Unit) {
         viewModel.eventFlow.collect { event ->
-            Log.e("HomeTab", "viewModel.eventFlow")
             when (event) {
                 is UiEvent.ShowToast -> {
                     Toast.makeText(context, event.message, Toast.LENGTH_SHORT).show()
@@ -92,7 +91,6 @@ fun HomeTab(
                     R.string.section_recently_viewed,
                     viewModel.topAnimationList.collectAsStateWithLifecycle().value,
                     onItemClick = { entity ->
-                        Log.e("entity.type.name", entity.type.name)
                         /*LikeEntity(mediaId = entity.id, imageUrl = entity.imageUrl, mediaType = entity.type.name)
                         viewModel.addLike()*/
                     }
@@ -105,10 +103,11 @@ fun HomeTab(
                     viewModel.upcomingList.collectAsStateWithLifecycle().value,
                     onItemClick = { entity ->
                         viewModel.addLike(
-                            LikeData(
+                            LikeEntity(
                                 mediaId = entity.id,
                                 imageUrl = entity.imageUrl,
-                                mediaType = entity.type.name
+                                mediaType = entity.type.name,
+                                isLiked = true
                             )
                         )
                     }
@@ -121,10 +120,11 @@ fun HomeTab(
                     viewModel.topAnimationList.collectAsStateWithLifecycle().value,
                     onItemClick = { entity ->
                         viewModel.addLike(
-                            LikeData(
+                            LikeEntity(
                                 mediaId = entity.id,
                                 imageUrl = entity.imageUrl,
-                                mediaType = entity.type.name
+                                mediaType = entity.type.name,
+                                isLiked = true
                             )
                         )
                     }
@@ -137,10 +137,11 @@ fun HomeTab(
                     viewModel.topMangaList.collectAsStateWithLifecycle().value,
                     onItemClick = { entity ->
                         viewModel.addLike(
-                            LikeData(
+                            LikeEntity(
                                 mediaId = entity.id,
                                 imageUrl = entity.imageUrl,
-                                mediaType = entity.type.name
+                                mediaType = entity.type.name,
+                                isLiked = true
                             )
                         )
                     }
@@ -153,10 +154,11 @@ fun HomeTab(
                     viewModel.topCharacterList.collectAsStateWithLifecycle().value,
                     onItemClick = { entity ->
                         viewModel.addLike(
-                            LikeData(
+                            LikeEntity(
                                 mediaId = entity.id,
                                 imageUrl = entity.imageUrl,
-                                mediaType = entity.type.name
+                                mediaType = entity.type.name,
+                                isLiked = true
                             )
                         )
                     }

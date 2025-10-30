@@ -1,35 +1,57 @@
 package com.artem.animationjikan.data.repository
 
-import android.util.Log
+import androidx.compose.ui.res.stringResource
+import com.artem.animationjikan.R
 import com.artem.animationjikan.data.service.local.LikeDao
-import com.artem.animationjikan.domain.entities.LikeData
+import com.artem.animationjikan.data.dto.LikeData
+import com.artem.animationjikan.domain.entities.LikeEntity
+import com.artem.animationjikan.domain.entities.toLikeData
 import com.artem.animationjikan.domain.repository.LikeRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.onStart
 import javax.inject.Inject
 
 class LikeRepositoryImpl @Inject constructor(
     private val dao: LikeDao
 ) : LikeRepository {
 
-    override fun getAllLikeOfType(mediaType: String): Flow<Result<List<LikeData>>> =
+    override fun getAllLikeOfType(mediaType: String): Flow<Result<List<LikeEntity>>> =
         dao.getAllLikeOfType(type = mediaType)
-            .onStart {
-                Log.e("LikeRepositoryImpl", "dao..onStart")
-            }.map {
-                Log.e("LikeRepositoryImpl", "dao.getAllLikeOfType ${it[0].imageUrl}")
-                Result.success(it)
+            .map {
+                Result.success(it.map { likeData ->
+                    LikeEntity(
+                        mediaId = likeData.mediaId,
+                        imageUrl = likeData.imageUrl,
+                        mediaType = likeData.mediaType,
+                        isLiked = true
+                    )
+                })
             }.catch {
                 emit(Result.failure(it))
             }.flowOn(Dispatchers.IO)
 
-    override suspend fun addLike(likeData: LikeData): Result<Unit> =
+    override fun getAllLike(): Flow<Result<List<LikeEntity>>> =
+        dao.getAllLike()
+            .map {
+                Result.success(it.map { likeData ->
+                    LikeEntity(
+                        mediaId = likeData.mediaId,
+                        imageUrl = likeData.imageUrl,
+                        mediaType = likeData.mediaType,
+                        isLiked = true
+                    )
+                })
+            }.catch {
+                emit(Result.failure(it))
+            }.flowOn(Dispatchers.IO)
+
+
+    override suspend fun addLike(likeEntity: LikeEntity): Result<Unit> =
         try {
-            dao.insert(likeData)
+            dao.insert(likeEntity.toLikeData())
             Result.success(Unit)
         } catch (e: Exception) {
             Result.failure(e)

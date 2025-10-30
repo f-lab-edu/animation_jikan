@@ -7,8 +7,6 @@ class RemoveLikeUsecase @Inject constructor(
     private val likeRepository: LikeRepository
 ) {
     suspend fun execute(mediaId: Int) {
-        likeRepository.removeLike(
-            mediaId = mediaId
-        )
+        likeRepository.removeLike(mediaId = mediaId)
     }
 }

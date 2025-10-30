@@ -15,7 +15,7 @@ class GetTopCharacterUsecase @Inject constructor(
         val response = characterRepository.fetchTopCharacters()
         return response.map { result ->
             result.map { dtoList ->
-                dtoList.map { it.toHomeCommonEntity(FilterCategory.ANIMATION) }
+                dtoList.map { it.toHomeCommonEntity(FilterCategory.CHARACTER) }
             }
         }
     }
