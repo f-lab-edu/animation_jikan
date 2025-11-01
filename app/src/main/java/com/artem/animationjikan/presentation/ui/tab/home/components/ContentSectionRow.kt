@@ -37,7 +37,7 @@ import com.artem.animationjikan.util.enums.FilterCategory
 fun ContentSectionRow(
     title: Int,
     list: List<HomeCommonEntity>,
-    onItemClick: (Int) -> Unit
+    onItemClick: (HomeCommonEntity) -> Unit
 ) {
     Column {
         Box(
@@ -70,7 +70,7 @@ fun ContentSectionRow(
                         .size(width = 110.dp, height = 159.dp)
                         .clip(RoundedCornerShape(4.dp))
                         .clickable {
-                            onItemClick(model.id)
+                            onItemClick(model)
                         }
                         .background(color = Color.LightGray),
                     contentScale = ContentScale.Crop,

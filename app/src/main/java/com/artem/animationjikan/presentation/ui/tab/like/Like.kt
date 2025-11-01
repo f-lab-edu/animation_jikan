@@ -28,10 +28,7 @@ import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -44,30 +41,43 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil3.compose.AsyncImage
 import com.artem.animationjikan.R
-import com.artem.animationjikan.data.dto.LikeModel
+import com.artem.animationjikan.domain.entities.LikeEntity
 import com.artem.animationjikan.presentation.ui.theme.AnimationJikanTheme
 import com.artem.animationjikan.util.FILTER_OPTION
 import com.artem.animationjikan.util.enums.FilterCategory
-import com.artem.animationjikan.util.likeList
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun LikeTab() {
+fun LikeTab(
+    modifier: Modifier = Modifier,
+    viewModel: LikeViewModel = hiltViewModel()
+) {
+
+    val likeList by viewModel.likeList.collectAsStateWithLifecycle()
+
+    val currentCategory by viewModel.currentMediaType.collectAsStateWithLifecycle()
+
     val sheetState = rememberModalBottomSheetState()
     val scope = rememberCoroutineScope()
+
     val openSheet: () -> Unit = {
         scope.launch { sheetState.show() }
     }
 
-    var selectedCategory by remember { mutableStateOf(FilterCategory.ALL) }
+    val onCategorySelect: (FilterCategory) -> Unit = {
+        viewModel.setMediaTypeFilter(it)
+        scope.launch { sheetState.hide() }
+    }
 
     Scaffold(
         containerColor = Color.Black,
         content = { padding ->
-            Box(modifier = Modifier.padding(horizontal = 16.dp)) {
+            Box(modifier = modifier.padding(horizontal = 16.dp)) {
                 Column {
                     Box(
                         modifier = Modifier.padding(vertical = 6.dp)
@@ -76,7 +86,7 @@ fun LikeTab() {
                             onClick = openSheet,
                             label = {
                                 Text(
-                                    stringResource(selectedCategory.stringRes),
+                                    stringResource(currentCategory.stringRes),
                                     color = Color.White
                                 )
                             },
@@ -93,7 +103,6 @@ fun LikeTab() {
                         )
                     }
 
-
                     Spacer(modifier = Modifier.height(22.dp))
 
                     LazyVerticalGrid(
@@ -101,13 +110,17 @@ fun LikeTab() {
                         verticalArrangement = Arrangement.spacedBy(8.dp),
                         horizontalArrangement = Arrangement.spacedBy(8.dp),
                         contentPadding = PaddingValues(bottom = 25.dp),
-                        modifier = Modifier.fillMaxSize()
+                        modifier = Modifier.fillMaxSize(),
                     ) {
                         items(likeList) { item ->
-                            GridItem(item)
+                            GridItem(
+                                model = item,
+                                onItemClick = {
+                                    viewModel.removeLike(it)
+                                },
+                            )
                         }
                     }
-
                 }
             }
 
@@ -121,7 +134,7 @@ fun LikeTab() {
             sheetState = sheetState
         ) {
             FilterBottomSheetContent(list = FILTER_OPTION) { item ->
-                selectedCategory = item
+                onCategorySelect(item)
                 scope.launch { sheetState.hide() }
             }
         }
@@ -151,12 +164,11 @@ fun FilterBottomSheetContent(list: List<FilterCategory>, onItemClick: (FilterCat
 }
 
 @Composable
-fun GridItem(model: LikeModel) {
+fun GridItem(model: LikeEntity, onItemClick: (LikeEntity) -> Unit) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Box {
-
             AsyncImage(
                 model = model.imageUrl,
                 modifier = Modifier
@@ -170,12 +182,16 @@ fun GridItem(model: LikeModel) {
 
             IconButton(
                 modifier = Modifier.align(Alignment.TopEnd),
-                onClick = {}
+                onClick = {
+                    onItemClick(model)
+                }
             ) {
                 Icon(
-                    painter = painterResource(id = R.drawable.ic_favorite_off),
+                    painter = painterResource(id = R.drawable.ic_favorite_red_on),
+                    tint = Color.Unspecified,
                     contentDescription = null
                 )
+
             }
         }
 

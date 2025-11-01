@@ -18,17 +18,11 @@ class AnimationRepositoryImpl @Inject constructor(
 
     override suspend fun fetchRecommendationAnimations(): Flow<Result<List<RecommendationAnimationDTO>>> =
         flow {
-            Log.d("AnimationRepositoryImpl", "fetchRecommendationAnimations")
             val response = try {
-                Log.d("AnimationRepositoryImpl", "fetchRecommendationAnimations try")
                 val result: List<RecommendationAnimationDTO> =
                     client.fetchRecommendationAnimations().data.flatMap { it.entry }
                 Result.success(result)
             } catch (e: Exception) {
-                Log.d(
-                    "AnimationRepositoryImpl",
-                    "fetchRecommendationAnimations try error ${e.message}"
-                )
                 Result.failure(e)
             }
 
