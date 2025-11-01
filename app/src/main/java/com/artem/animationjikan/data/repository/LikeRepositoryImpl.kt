@@ -1,9 +1,7 @@
 package com.artem.animationjikan.data.repository
 
-import androidx.compose.ui.res.stringResource
-import com.artem.animationjikan.R
+import android.util.Log
 import com.artem.animationjikan.data.service.local.LikeDao
-import com.artem.animationjikan.data.dto.LikeData
 import com.artem.animationjikan.domain.entities.LikeEntity
 import com.artem.animationjikan.domain.entities.toLikeData
 import com.artem.animationjikan.domain.repository.LikeRepository
@@ -18,59 +16,46 @@ class LikeRepositoryImpl @Inject constructor(
     private val dao: LikeDao
 ) : LikeRepository {
 
-    override fun getAllLikeOfType(mediaType: String): Flow<Result<List<LikeEntity>>> =
-        dao.getAllLikeOfType(type = mediaType)
+    companion object {
+        const val TAG : String = "LikeRepositoryImpl"
+    }
+
+    override fun getAllLike(type: String): Flow<List<LikeEntity>> =
+        dao.getLikesList(type)
             .map {
-                Result.success(it.map { likeData ->
+                it.map { likeData ->
                     LikeEntity(
                         mediaId = likeData.mediaId,
                         imageUrl = likeData.imageUrl,
                         mediaType = likeData.mediaType,
-                        isLiked = true
                     )
-                })
-            }.catch {
-                emit(Result.failure(it))
+                }
+            }.catch { e ->
+                Log.e(TAG, e.message.toString())
+                throw e
             }.flowOn(Dispatchers.IO)
 
-    override fun getAllLike(): Flow<Result<List<LikeEntity>>> =
-        dao.getAllLike()
-            .map {
-                Result.success(it.map { likeData ->
-                    LikeEntity(
-                        mediaId = likeData.mediaId,
-                        imageUrl = likeData.imageUrl,
-                        mediaType = likeData.mediaType,
-                        isLiked = true
-                    )
-                })
-            }.catch {
-                emit(Result.failure(it))
-            }.flowOn(Dispatchers.IO)
-
-
-    override suspend fun addLike(likeEntity: LikeEntity): Result<Unit> =
+    override suspend fun addLike(likeEntity: LikeEntity) =
         try {
             dao.insert(likeEntity.toLikeData())
-            Result.success(Unit)
         } catch (e: Exception) {
-            Result.failure(e)
+            Log.e(TAG, e.message.toString())
+            throw e
         }
-
 
     override suspend fun removeLike(mediaId: Int) = try {
         dao.delete(mediaId)
-        Result.success(Unit)
     } catch (e: Exception) {
-        Result.failure(e)
+        Log.e(TAG, e.message.toString())
+        throw e
     }
 
-
-    override fun getLikeStatus(mediaId: Int): Flow<Result<Boolean>> =
+    override fun getLikeStatus(mediaId: Int): Flow<Boolean> =
         dao.isLike(mediaId = mediaId).map {
-            Result.success(it)
-        }.catch {
-            Result.failure<Exception>(it)
+            it
+        }.catch { e ->
+            Log.e(TAG, e.message.toString())
+            throw e
         }.flowOn(Dispatchers.IO)
 
 }

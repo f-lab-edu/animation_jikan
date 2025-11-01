@@ -6,6 +6,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.artem.animationjikan.R
 import com.artem.animationjikan.domain.entities.HomeCommonEntity
 import com.artem.animationjikan.domain.entities.LikeEntity
 import com.artem.animationjikan.domain.usecase.AddLikeUsecase
@@ -130,7 +131,8 @@ class HomeTabViewModel @Inject constructor(
         viewModelScope.launch {
             addLikeUsecase.execute(likeEntity = entity)
                 .onSuccess {
-                    _eventFlow.emit(UiEvent.ShowToast("보관함에 등록 되었습니다."))
+                    val message: Int = R.string.submitted_like
+                    _eventFlow.emit(UiEvent.ShowToast(message))
                 }
                 .onFailure { error ->
                     Log.e(TAG, "${error.message}")

@@ -3,7 +3,6 @@ package com.artem.animationjikan.presentation.ui.tab.like
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.artem.animationjikan.domain.entities.LikeEntity
-import com.artem.animationjikan.domain.usecase.AddLikeUsecase
 import com.artem.animationjikan.domain.usecase.LikeUsecase
 import com.artem.animationjikan.domain.usecase.RemoveLikeUsecase
 import com.artem.animationjikan.util.enums.FilterCategory
@@ -18,27 +17,19 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+@OptIn(ExperimentalCoroutinesApi::class)
 @HiltViewModel
 class LikeViewModel @Inject constructor(
     likeUsecase: LikeUsecase,
-    private val addLikeUsecase: AddLikeUsecase,
     private val removeLikeUsecase: RemoveLikeUsecase
 ) : ViewModel() {
-    private val _preservedList = MutableStateFlow<List<LikeEntity>>(emptyList())
-    val preservedList: StateFlow<List<LikeEntity>> = _preservedList
-
     private val _mediaTypeFilter = MutableStateFlow(FilterCategory.ALL)
     val currentMediaType: StateFlow<FilterCategory> = _mediaTypeFilter.asStateFlow()
 
-    fun setMediaTypeFilter(newType: FilterCategory) {
-        if (newType != _mediaTypeFilter.value) {
-            _preservedList.value = emptyList()
-            _mediaTypeFilter.value = newType
-        }
-    }
+    private val _likeList = MutableStateFlow<List<LikeEntity>>(emptyList())
+    val likeList: StateFlow<List<LikeEntity>> = _likeList
 
-    @OptIn(ExperimentalCoroutinesApi::class)
-    private val likeDbFlow: Flow<List<LikeEntity>> =
+    private val likeFlow: Flow<List<LikeEntity>> =
         currentMediaType.flatMapLatest { mediaType ->
             likeUsecase.execute(mediaType = mediaType.name)
         }.map { result ->
@@ -47,40 +38,22 @@ class LikeViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            likeDbFlow.collect { list ->
-                val currentList = _preservedList.value
-
-                val removedList = currentList.filter { it !in list }
-
-                val addedItems = list.filter { it !in currentList }
-
-                val updateList = currentList.map { item ->
-                    if (item in removedList) {
-                        item.copy(isLiked = false)
-                    } else {
-                        item
-                    }
-                } + addedItems.map { it.copy(isLiked = true) }
-
-                val finalUniqueList = updateList.groupBy { it.mediaId }
-                    .mapValues { (_, list) ->
-                        list.find { it.isLiked } ?: list.firstOrNull()
-                    }.values
-                    .filterNotNull()
-                    .toList()
-
-                _preservedList.value = finalUniqueList
+            likeFlow.collect {
+                _likeList.value = it
             }
         }
     }
 
-    fun toggle(entity: LikeEntity) {
+    fun setMediaTypeFilter(newType: FilterCategory) {
+        if (newType != _mediaTypeFilter.value) {
+            _likeList.value = emptyList()
+            _mediaTypeFilter.value = newType
+        }
+    }
+
+    fun removeLike(entity: LikeEntity) {
         viewModelScope.launch {
-            if (entity.isLiked) {
-                removeLikeUsecase.execute(mediaId = entity.mediaId)
-            } else {
-                addLikeUsecase.execute(entity)
-            }
+            removeLikeUsecase.execute(mediaId = entity.mediaId)
         }
     }
 }

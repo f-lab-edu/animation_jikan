@@ -1,6 +1,5 @@
 package com.artem.animationjikan.presentation.ui.tab.like
 
-import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -59,7 +58,7 @@ fun LikeTab(
     viewModel: LikeViewModel = hiltViewModel()
 ) {
 
-    val likeList by viewModel.preservedList.collectAsStateWithLifecycle()
+    val likeList by viewModel.likeList.collectAsStateWithLifecycle()
 
     val currentCategory by viewModel.currentMediaType.collectAsStateWithLifecycle()
 
@@ -117,12 +116,11 @@ fun LikeTab(
                             GridItem(
                                 model = item,
                                 onItemClick = {
-                                    viewModel.toggle(it)
+                                    viewModel.removeLike(it)
                                 },
                             )
                         }
                     }
-
                 }
             }
 
@@ -136,7 +134,6 @@ fun LikeTab(
             sheetState = sheetState
         ) {
             FilterBottomSheetContent(list = FILTER_OPTION) { item ->
-                //selectedCategory = item
                 onCategorySelect(item)
                 scope.launch { sheetState.hide() }
             }
@@ -190,7 +187,7 @@ fun GridItem(model: LikeEntity, onItemClick: (LikeEntity) -> Unit) {
                 }
             ) {
                 Icon(
-                    painter = painterResource(id = if (model.isLiked) R.drawable.ic_favorite_red_on else R.drawable.ic_favorite_off),
+                    painter = painterResource(id = R.drawable.ic_favorite_red_on),
                     tint = Color.Unspecified,
                     contentDescription = null
                 )

@@ -1,6 +1,5 @@
 package com.artem.animationjikan.presentation.ui.tab.home
 
-import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -36,7 +35,6 @@ import com.artem.animationjikan.presentation.ui.tab.home.components.RecommendPag
 import com.artem.animationjikan.presentation.ui.theme.AnimationJikanTheme
 import com.artem.animationjikan.util.CATEGORIES_LIST
 import com.artem.animationjikan.util.event.UiEvent
-
 
 @Composable
 fun HomeTab(
@@ -107,7 +105,6 @@ fun HomeTab(
                                 mediaId = entity.id,
                                 imageUrl = entity.imageUrl,
                                 mediaType = entity.type.name,
-                                isLiked = true
                             )
                         )
                     }
@@ -124,7 +121,6 @@ fun HomeTab(
                                 mediaId = entity.id,
                                 imageUrl = entity.imageUrl,
                                 mediaType = entity.type.name,
-                                isLiked = true
                             )
                         )
                     }
@@ -141,7 +137,6 @@ fun HomeTab(
                                 mediaId = entity.id,
                                 imageUrl = entity.imageUrl,
                                 mediaType = entity.type.name,
-                                isLiked = true
                             )
                         )
                     }
@@ -158,7 +153,6 @@ fun HomeTab(
                                 mediaId = entity.id,
                                 imageUrl = entity.imageUrl,
                                 mediaType = entity.type.name,
-                                isLiked = true
                             )
                         )
                     }

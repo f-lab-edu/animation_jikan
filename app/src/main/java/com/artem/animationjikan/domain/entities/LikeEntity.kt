@@ -6,7 +6,6 @@ data class LikeEntity(
     val mediaId: Int,
     val imageUrl: String,
     val mediaType: String,
-    val isLiked: Boolean
 )
 
 fun LikeEntity.toLikeData(): LikeData {
