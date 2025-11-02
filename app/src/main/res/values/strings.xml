@@ -25,4 +25,6 @@
     <string name="character_en">Character</string>
     <string name="voice_actor_en">Voice Actor</string>
 
+    <string name="submitted_like">보관함에 등록 되었습니다.</string>
+
 </resources>

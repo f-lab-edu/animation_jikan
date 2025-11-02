@@ -13,13 +13,10 @@ class GetRecommendAnimationUsecase @Inject constructor(
     private val animationRepository: AnimationRepository
 ) {
     suspend fun execute(): Flow<Result<List<HomeCommonEntity>>> {
-        Log.d("GetRecommendAnimationUsecase", "execute")
         val response = animationRepository.fetchRecommendationAnimations()
         return response.map { result ->
-            Log.d("GetRecommendAnimationUsecase", "execute result")
             result.map { dtoList ->
                 val maxItemCount = 5
-
                 dtoList.map { it.toHomeCommonEntity(FilterCategory.ANIMATION) }
                     .shuffled()
                     .take(maxItemCount)
