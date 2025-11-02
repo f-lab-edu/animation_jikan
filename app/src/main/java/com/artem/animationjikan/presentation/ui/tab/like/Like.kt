@@ -1,5 +1,9 @@
 package com.artem.animationjikan.presentation.ui.tab.like
 
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.spring
+import androidx.compose.animation.core.tween
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -28,6 +32,7 @@ import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.key
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -51,7 +56,7 @@ import com.artem.animationjikan.util.FILTER_OPTION
 import com.artem.animationjikan.util.enums.FilterCategory
 import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
 fun LikeTab(
     modifier: Modifier = Modifier,
@@ -112,9 +117,17 @@ fun LikeTab(
                         contentPadding = PaddingValues(bottom = 25.dp),
                         modifier = Modifier.fillMaxSize(),
                     ) {
-                        items(likeList) { item ->
+                        items(
+                            items = likeList,
+                            key = { item -> item.mediaId }
+                        ) { item ->
                             GridItem(
                                 model = item,
+                                modifier = Modifier.animateItem(
+                                    fadeInSpec = tween(durationMillis = 250),
+                                    fadeOutSpec = tween(durationMillis = 100),
+                                    placementSpec = spring(stiffness = Spring.StiffnessLow)
+                                ),
                                 onItemClick = {
                                     viewModel.removeLike(it)
                                 },
@@ -164,8 +177,13 @@ fun FilterBottomSheetContent(list: List<FilterCategory>, onItemClick: (FilterCat
 }
 
 @Composable
-fun GridItem(model: LikeEntity, onItemClick: (LikeEntity) -> Unit) {
+fun GridItem(
+    model: LikeEntity,
+    onItemClick: (LikeEntity) -> Unit,
+    modifier: Modifier
+) {
     Column(
+        modifier = modifier,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Box {
