@@ -1,5 +1,6 @@
 package com.artem.animationjikan.presentation.ui.tab.home
 
+import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -30,11 +31,13 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.artem.animationjikan.R
 import com.artem.animationjikan.domain.entities.LikeEntity
+import com.artem.animationjikan.presentation.ui.LocalNavScreenController
 import com.artem.animationjikan.presentation.ui.tab.home.components.ContentSectionRow
 import com.artem.animationjikan.presentation.ui.tab.home.components.RecommendPager
 import com.artem.animationjikan.presentation.ui.theme.AnimationJikanTheme
 import com.artem.animationjikan.util.CATEGORIES_LIST
 import com.artem.animationjikan.util.event.UiEvent
+import com.artem.animationjikan.util.router.NavRoutes
 
 @Composable
 fun HomeTab(
@@ -42,6 +45,9 @@ fun HomeTab(
     viewModel: HomeTabViewModel = hiltViewModel()
 ) {
     val context = LocalContext.current
+    val scrollState = rememberScrollState()
+    val recommendAnimationList = viewModel.recommendationAnimationList.collectAsStateWithLifecycle()
+    val navController = LocalNavScreenController.current
 
     LaunchedEffect(key1 = Unit) {
         viewModel.eventFlow.collect { event ->
@@ -54,9 +60,6 @@ fun HomeTab(
             }
         }
     }
-
-    val scrollState = rememberScrollState()
-    val recommendAnimationList = viewModel.recommendationAnimationList.collectAsStateWithLifecycle()
 
     when (viewModel.state) {
         ViewModelState.Idle, ViewModelState.Loading, ViewModelState.Error -> Box(
@@ -89,8 +92,7 @@ fun HomeTab(
                     R.string.section_recently_viewed,
                     viewModel.topAnimationList.collectAsStateWithLifecycle().value,
                     onItemClick = { entity ->
-                        /*LikeEntity(mediaId = entity.id, imageUrl = entity.imageUrl, mediaType = entity.type.name)
-                        viewModel.addLike()*/
+                        navController.navigate(NavRoutes.AnimationDetail.router + "/${entity.id}")
                     }
                 )
 
@@ -116,6 +118,7 @@ fun HomeTab(
                     R.string.section_top_anime,
                     viewModel.topAnimationList.collectAsStateWithLifecycle().value,
                     onItemClick = { entity ->
+                        Log.e("Top Animation", "id is ${entity.id}")
                         viewModel.addLike(
                             LikeEntity(
                                 mediaId = entity.id,
