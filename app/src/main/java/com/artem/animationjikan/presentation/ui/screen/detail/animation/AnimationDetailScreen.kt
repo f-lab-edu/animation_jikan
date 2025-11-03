@@ -1,6 +1,8 @@
 package com.artem.animationjikan.presentation.ui.screen.detail.animation
 
 import android.annotation.SuppressLint
+import android.graphics.drawable.Icon
+import android.provider.CalendarContract
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -25,12 +27,17 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.PrimaryTabRow
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SegmentedButtonDefaults.Icon
+import androidx.compose.material3.Tab
+import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -43,15 +50,19 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.compose.ComposeNavigator
 import androidx.navigation.compose.rememberNavController
 import com.artem.animationjikan.R
 import com.artem.animationjikan.presentation.ui.LocalNavScreenController
 import com.artem.animationjikan.presentation.ui.theme.AnimationJikanTheme
+import com.artem.animationjikan.util.enums.DetailTabs
+import kotlinx.coroutines.selects.select
 
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -84,7 +95,7 @@ fun AnimationDetailTopBar(
     TopAppBar(
         title = {},
         colors = TopAppBarDefaults.topAppBarColors(
-            containerColor = colorResource(R.color.TransparencyBlack),
+            containerColor = Color.Transparent,
             navigationIconContentColor = colorResource(R.color.white),
             actionIconContentColor = colorResource(R.color.white)
         ),
@@ -158,6 +169,90 @@ fun AnimationDetailContent() {
         ExpandableText(
             fullText = "The contents of a hidden grave draw the interest of an industrial titan and send officer K, an LAPD blade runner, on a quest to find a missing legend. The contents of a hidden grave draw the interest of an industrial titan and send officer K, an LAPD blade runner, on a quest to find a missing legend.",
         )
+
+        Spacer(modifier = Modifier.height(11.dp))
+
+        TabBars()
+
+    }
+}
+
+@Composable
+fun TabBars() {
+    val selectedDestination = remember { mutableStateOf(DetailTabs.FIRST) }
+    val navController = rememberNavController()
+
+
+    PrimaryTabRow(
+        selectedTabIndex = 0,
+        containerColor = Color.Transparent,
+        contentColor = colorResource(R.color.white),
+        divider = {
+            Spacer(modifier = Modifier.height(0.dp))
+        },
+        indicator = {
+            Box(
+                modifier = Modifier
+                    .tabIndicatorOffset(selectedDestination.value.ordinal)
+                    .height(4.dp)
+                    .padding(horizontal = 20.dp)
+                    .background(
+                        color = colorResource(
+                            id = R.color.red
+                        )
+                    )
+            )
+        }
+    ) {
+        Tab(
+            selected = selectedDestination.value == DetailTabs.FIRST,
+            selectedContentColor = colorResource(R.color.white),
+            unselectedContentColor = colorResource(R.color.white),
+            onClick = {
+                /*navController.navigate(route = destination.route)
+                selectedDestination = index*/
+                selectedDestination.value = DetailTabs.FIRST
+            },
+            text = {
+                Text(
+                    text = "애피소드",
+                    maxLines = 2,
+                    overflow = TextOverflow.Ellipsis
+                )
+            }
+        )
+
+        Tab(
+            selected = selectedDestination.value == DetailTabs.SECOND,
+            onClick = {
+                /*navController.navigate(route = destination.route)
+                selectedDestination = index*/
+                selectedDestination.value = DetailTabs.SECOND
+            },
+            text = {
+                Text(
+                    text = "리뷰",
+                    maxLines = 2,
+                    overflow = TextOverflow.Ellipsis
+                )
+            }
+        )
+
+        Tab(
+            selected = selectedDestination.value == DetailTabs.THIRD,
+            onClick = {
+                /*navController.navigate(route = destination.route)
+                selectedDestination = index*/
+                selectedDestination.value = DetailTabs.THIRD
+            },
+            text = {
+                Text(
+                    text = "캐릭터",
+                    maxLines = 2,
+                    overflow = TextOverflow.Ellipsis
+                )
+            }
+        )
     }
 }
 
@@ -207,7 +302,8 @@ fun ExpandableText(
 @Composable
 @Preview
 fun ExpandableTextPreview() {
-    val longText = "Jetpack Compose는 선언적 UI 프레임워크로, Kotlin을 사용하여 UI를 구축합니다. 이 예시는 긴 텍스트를 일부만 보여주고 사용자의 클릭에 반응하여 전체 내용을 확장하는 기능을 구현합니다. 긴 텍스트를 다룰 때 성능과 가독성을 모두 고려하는 것이 중요합니다."
+    val longText =
+        "Jetpack Compose는 선언적 UI 프레임워크로, Kotlin을 사용하여 UI를 구축합니다. 이 예시는 긴 텍스트를 일부만 보여주고 사용자의 클릭에 반응하여 전체 내용을 확장하는 기능을 구현합니다. 긴 텍스트를 다룰 때 성능과 가독성을 모두 고려하는 것이 중요합니다."
 
     Column(modifier = Modifier.padding(16.dp)) {
         ExpandableText(
