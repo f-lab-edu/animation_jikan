@@ -1,68 +1,67 @@
 package com.artem.animationjikan.presentation.ui.screen.detail.animation
 
 import android.annotation.SuppressLint
-import android.graphics.drawable.Icon
-import android.provider.CalendarContract
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.gestures.scrollable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.text.BasicText
-import androidx.compose.foundation.text.ClickableText
-import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.PrimaryTabRow
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SegmentedButtonDefaults.Icon
 import androidx.compose.material3.Tab
-import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.AnnotatedString
-import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
-import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.compose.ComposeNavigator
-import androidx.navigation.compose.rememberNavController
+import coil3.compose.AsyncImage
 import com.artem.animationjikan.R
 import com.artem.animationjikan.presentation.ui.LocalNavScreenController
+import com.artem.animationjikan.presentation.ui.screen.detail.animation.tabs.character.CharacterTab
+import com.artem.animationjikan.presentation.ui.screen.detail.animation.tabs.news.newsTab
+import com.artem.animationjikan.presentation.ui.screen.detail.animation.tabs.review.ReviewTab
 import com.artem.animationjikan.presentation.ui.theme.AnimationJikanTheme
 import com.artem.animationjikan.util.enums.DetailTabs
-import kotlinx.coroutines.selects.select
 
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -71,17 +70,25 @@ fun AnimationDetailScreen(
     viewModel: AnimationDetailViewModel = hiltViewModel()
 ) {
     val navController = LocalNavScreenController.current
+    val scrollState = rememberLazyListState()
+
+    val showTitle by remember { derivedStateOf { scrollState.firstVisibleItemIndex > 2 } }
 
     Scaffold(
-        containerColor = colorResource(R.color.TransparencyBlack),
-        content = {
-            Column {
-                AnimationDetailTopBar(
-                    onBackPressed = { navController.popBackStack() },
-                    onFavoriteClick = { viewModel }
-                )
-                AnimationDetailContent()
-            }
+        containerColor = colorResource(R.color.black),
+        topBar = {
+            AnimationDetailTopBar(
+                title = "Sample Animation Title",
+                showTitle = showTitle,
+                onBackPressed = { navController.popBackStack() },
+                onFavoriteClick = { },
+            )
+        },
+        content = { paddingValues ->
+            AnimationDetailContent(
+                scrollState = scrollState,
+                paddingValues = paddingValues
+            )
         }
     )
 }
@@ -89,13 +96,34 @@ fun AnimationDetailScreen(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AnimationDetailTopBar(
+    title: String,
+    showTitle: Boolean,
     onBackPressed: () -> Unit,
     onFavoriteClick: () -> Unit
 ) {
+
+    val containerColor by animateColorAsState(
+        targetValue = if (showTitle) colorResource(R.color.black) else Color.Transparent,
+        label = "topAppBarContainerColor"
+    )
+
     TopAppBar(
-        title = {},
+        title = {
+            AnimatedVisibility(
+                visible = showTitle,
+                enter = fadeIn(),
+                exit = fadeOut()
+            ) {
+                Text(
+                    text = title,
+                    color = Color.White,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
+                )
+            }
+        },
         colors = TopAppBarDefaults.topAppBarColors(
-            containerColor = Color.Transparent,
+            containerColor = containerColor,
             navigationIconContentColor = colorResource(R.color.white),
             actionIconContentColor = colorResource(R.color.white)
         ),
@@ -119,140 +147,131 @@ fun AnimationDetailTopBar(
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun AnimationDetailContent() {
-    val scrollState = rememberScrollState()
-
-    Column(
-        modifier = Modifier
-            //.background(color = colorResource(R.color.black))
-            .fillMaxSize()
-            .verticalScroll(scrollState)
-    ) {
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .aspectRatio(3f / 2.5f)
-                .background(color = colorResource(R.color.purple_200))
-        ) {
-
-        }
-
-        Text(
-            modifier = Modifier.padding(horizontal = 10.dp, vertical = 8.dp),
-            text = "Sample Animation Title",
-            color = colorResource(R.color.white),
-            fontSize = 18.sp,
-            lineHeight = 20.sp,
-            fontWeight = FontWeight(600)
-        )
-
-        Row(
-            modifier = Modifier.padding(all = 5.dp),
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
-            Image(
-                painter = painterResource(R.drawable.ic_star_full),
-                contentDescription = null
-            )
-            Spacer(modifier = Modifier.width(5.dp))
-            Text(
-                "4.8",
-                fontSize = 14.sp,
-                lineHeight = 18.sp,
-                fontWeight = FontWeight(400),
-                color = colorResource(R.color.white)
-            )
-        }
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        ExpandableText(
-            fullText = "The contents of a hidden grave draw the interest of an industrial titan and send officer K, an LAPD blade runner, on a quest to find a missing legend. The contents of a hidden grave draw the interest of an industrial titan and send officer K, an LAPD blade runner, on a quest to find a missing legend.",
-        )
-
-        Spacer(modifier = Modifier.height(11.dp))
-
-        TabBars()
-
-    }
-}
-
-@Composable
-fun TabBars() {
+fun AnimationDetailContent(
+    scrollState: LazyListState,
+    paddingValues: PaddingValues
+) {
     val selectedDestination = remember { mutableStateOf(DetailTabs.FIRST) }
-    val navController = rememberNavController()
+    val tabTitles = listOf(R.string.news, R.string.review, R.string.character)
 
-
-    PrimaryTabRow(
-        selectedTabIndex = 0,
-        containerColor = Color.Transparent,
-        contentColor = colorResource(R.color.white),
-        divider = {
-            Spacer(modifier = Modifier.height(0.dp))
-        },
-        indicator = {
+    LazyColumn(
+        state = scrollState,
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(paddingValues)
+    ) {
+        item {
             Box(
                 modifier = Modifier
-                    .tabIndicatorOffset(selectedDestination.value.ordinal)
-                    .height(4.dp)
-                    .padding(horizontal = 20.dp)
-                    .background(
-                        color = colorResource(
-                            id = R.color.red
-                        )
-                    )
+                    .fillMaxWidth()
+                    .aspectRatio(2.5f / 3f)
+            ) {
+                AsyncImage(
+                    model = "https://cdn.myanimelist.net//images//anime//10//89830.jpg",
+                    contentDescription = stringResource(R.string.poster),
+                    modifier = Modifier
+                        .fillMaxHeight()
+                        .align(Alignment.Center)
+                        .clip(RoundedCornerShape(12.dp)),
+                    contentScale = ContentScale.FillHeight
+                )
+            }
+        }
+
+        item {
+            Spacer(modifier = Modifier.height(10.dp))
+        }
+
+        item {
+            Text(
+                modifier = Modifier.padding(horizontal = 10.dp, vertical = 8.dp),
+                text = "Sample Animation Title",
+                color = colorResource(R.color.white),
+                fontSize = 18.sp,
+                lineHeight = 20.sp,
+                fontWeight = FontWeight(600)
             )
         }
-    ) {
-        Tab(
-            selected = selectedDestination.value == DetailTabs.FIRST,
-            selectedContentColor = colorResource(R.color.white),
-            unselectedContentColor = colorResource(R.color.white),
-            onClick = {
-                /*navController.navigate(route = destination.route)
-                selectedDestination = index*/
-                selectedDestination.value = DetailTabs.FIRST
-            },
-            text = {
-                Text(
-                    text = "애피소드",
-                    maxLines = 2,
-                    overflow = TextOverflow.Ellipsis
-                )
-            }
-        )
 
-        Tab(
-            selected = selectedDestination.value == DetailTabs.SECOND,
-            onClick = {
-                /*navController.navigate(route = destination.route)
-                selectedDestination = index*/
-                selectedDestination.value = DetailTabs.SECOND
-            },
-            text = {
+        item {
+            Row(
+                modifier = Modifier.padding(all = 5.dp),
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Image(
+                    painter = painterResource(R.drawable.ic_star_full),
+                    contentDescription = null
+                )
+                Spacer(modifier = Modifier.width(5.dp))
                 Text(
-                    text = "리뷰",
-                    maxLines = 2,
-                    overflow = TextOverflow.Ellipsis
+                    "4.8",
+                    fontSize = 14.sp,
+                    lineHeight = 18.sp,
+                    fontWeight = FontWeight(400),
+                    color = colorResource(R.color.white)
                 )
             }
-        )
+        }
 
-        Tab(
-            selected = selectedDestination.value == DetailTabs.THIRD,
-            onClick = {
-                /*navController.navigate(route = destination.route)
-                selectedDestination = index*/
-                selectedDestination.value = DetailTabs.THIRD
-            },
-            text = {
-                Text(
-                    text = "캐릭터",
-                    maxLines = 2,
-                    overflow = TextOverflow.Ellipsis
+        item {
+            Column {
+                Spacer(modifier = Modifier.height(16.dp))
+                ExpandableText(
+                    fullText = "The contents of a hidden grave draw the interest of an industrial titan and send officer K, an LAPD blade runner, on a quest to find a missing legend. The contents of a hidden grave draw the interest of an industrial titan and send officer K, an LAPD blade runner, on a quest to find a missing legend.",
                 )
+                Spacer(modifier = Modifier.height(11.dp))
             }
-        )
+        }
+
+        stickyHeader {
+            PrimaryTabRow(
+                selectedTabIndex = 0,
+                containerColor = colorResource(R.color.black),
+                contentColor = colorResource(R.color.red),
+                divider = {
+                    Spacer(modifier = Modifier.height(0.dp))
+                },
+                indicator = {
+                    Box(
+                        modifier = Modifier
+                            .tabIndicatorOffset(selectedDestination.value.ordinal)
+                            .height(4.dp)
+                            .padding(horizontal = 20.dp)
+                            .background(
+                                color = colorResource(
+                                    id = R.color.red
+                                )
+                            )
+                    )
+                }
+            ) {
+                val tabs = DetailTabs.entries.toTypedArray()
+                tabs.forEachIndexed { index, tab ->
+                    Tab(
+                        selected = index == tabs.indexOf(selectedDestination.value),
+                        selectedContentColor = colorResource(R.color.white),
+                        unselectedContentColor = colorResource(R.color.white),
+                        onClick = {
+                            selectedDestination.value = tab
+                        },
+                        text = {
+                            Text(
+                                text = stringResource(tabTitles[index]),
+                                maxLines = 2,
+                                overflow = TextOverflow.Ellipsis
+                            )
+                        }
+                    )
+                }
+
+            }
+        }
+
+        when (selectedDestination.value) {
+            DetailTabs.FIRST -> newsTab()
+            DetailTabs.SECOND -> item { ReviewTab() }
+            DetailTabs.THIRD -> item { CharacterTab() }
+        }
     }
 }
 
@@ -273,16 +292,12 @@ fun ExpandableText(
         Text(
             text = fullText,
             maxLines = maxLines,
-            // 텍스트가 잘렸는지 확인하는 로직은 onTextLayout으로 유지
             onTextLayout = { textLayoutResult ->
-                // ... isTextClipped 상태 업데이트 로직 ...
                 if (!expanded) {
-                    // 텍스트가 잘렸는지 여부를 저장합니다.
                     isTextClipped = textLayoutResult.hasVisualOverflow
                 }
             },
             modifier = Modifier.clickable(onClick = {
-                // 클릭 시 확장/축소 로직 실행
                 toggleExpanded()
             }),
             color = Color.White
@@ -328,6 +343,10 @@ fun AnimationDetailPreview() {
 @Preview
 fun AnimationDetailTopBarPreview() {
     AnimationJikanTheme {
-        AnimationDetailTopBar(onBackPressed = {}, onFavoriteClick = {})
+        AnimationDetailTopBar(
+            title = "Preview Title",
+            showTitle = true,
+            onBackPressed = {},
+            onFavoriteClick = {})
     }
 }

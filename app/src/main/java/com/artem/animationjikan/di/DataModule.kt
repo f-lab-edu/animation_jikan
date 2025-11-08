@@ -1,13 +1,13 @@
 package com.artem.animationjikan.di
 
-import com.artem.animationjikan.domain.repository.AnimationRepository
 import com.artem.animationjikan.data.repository.AnimationRepositoryImpl
-import com.artem.animationjikan.domain.repository.CharacterRepository
 import com.artem.animationjikan.data.repository.CharacterRepositoryImpl
 import com.artem.animationjikan.data.repository.LikeRepositoryImpl
-import com.artem.animationjikan.domain.repository.MangaRepository
 import com.artem.animationjikan.data.repository.MangaRepositoryImpl
+import com.artem.animationjikan.domain.repository.AnimationRepository
+import com.artem.animationjikan.domain.repository.CharacterRepository
 import com.artem.animationjikan.domain.repository.LikeRepository
+import com.artem.animationjikan.domain.repository.MangaRepository
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn

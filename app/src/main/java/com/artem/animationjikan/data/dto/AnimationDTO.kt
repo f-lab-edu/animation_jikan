@@ -1,7 +1,7 @@
 package com.artem.animationjikan.data.dto
 
-import kotlinx.serialization.Serializable
 import com.google.gson.annotations.SerializedName
+import kotlinx.serialization.Serializable
 
 @Serializable
 data class AnimationResponse(

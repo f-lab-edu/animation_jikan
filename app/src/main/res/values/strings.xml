@@ -27,4 +27,7 @@
 
     <string name="submitted_like">보관함에 등록 되었습니다.</string>
 
+    <string name="news">뉴스</string>
+    <string name="review">리뷰</string>
+
 </resources>
