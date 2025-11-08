@@ -59,7 +59,7 @@ import com.artem.animationjikan.R
 import com.artem.animationjikan.presentation.ui.LocalNavScreenController
 import com.artem.animationjikan.presentation.ui.screen.detail.animation.tabs.character.CharacterTab
 import com.artem.animationjikan.presentation.ui.screen.detail.animation.tabs.news.newsTab
-import com.artem.animationjikan.presentation.ui.screen.detail.animation.tabs.review.ReviewTab
+import com.artem.animationjikan.presentation.ui.screen.detail.animation.tabs.review.reviewTab
 import com.artem.animationjikan.presentation.ui.theme.AnimationJikanTheme
 import com.artem.animationjikan.util.enums.DetailTabs
 
@@ -269,7 +269,7 @@ fun AnimationDetailContent(
 
         when (selectedDestination.value) {
             DetailTabs.FIRST -> newsTab()
-            DetailTabs.SECOND -> item { ReviewTab() }
+            DetailTabs.SECOND -> reviewTab()
             DetailTabs.THIRD -> item { CharacterTab() }
         }
     }
