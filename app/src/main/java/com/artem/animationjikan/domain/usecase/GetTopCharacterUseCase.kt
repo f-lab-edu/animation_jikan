@@ -10,7 +10,7 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
-class GetTopCharacterUsecase @Inject constructor(
+class GetTopCharacterUseCase @Inject constructor(
     private val characterRepository: CharacterRepository
 ) {
     suspend fun execute(): Flow<Result<List<HomeCommonEntity>>> {
@@ -20,7 +20,7 @@ class GetTopCharacterUsecase @Inject constructor(
                 it.toHomeCommonEntity(FilterCategory.CHARACTER)
             })
         }.catch { error ->
-            Log.e("GetTopCharacterUsecase", "execute: ${error.message}")
+            Log.e("GetTopCharacterUseCase", "execute: ${error.message}")
             emit(Result.failure(error))
 
         }

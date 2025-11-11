@@ -9,7 +9,7 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
-class GetTopMangaUsecase @Inject constructor(
+class GetTopMangaUseCase @Inject constructor(
     private val mangaRepository: MangaRepository
 ) {
     suspend fun execute(): Flow<Result<List<HomeCommonEntity>>> {

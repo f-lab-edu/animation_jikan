@@ -9,14 +9,14 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
-class GetRecommendAnimationUsecase @Inject constructor(
+class GetTopAnimationUseCase @Inject constructor(
     private val animationRepository: AnimationRepository
 ) {
     suspend fun execute(): Flow<Result<List<HomeCommonEntity>>> {
-        return animationRepository.fetchRecommendationAnimations().map { list ->
-            val result = list.map { item ->
-                item.toHomeCommonEntity(FilterCategory.ANIMATION)
-            }.shuffled().take(5)
+        return animationRepository.fetchTopAnimation().map { list ->
+            val result = list.map {
+                it.toHomeCommonEntity(FilterCategory.ANIMATION)
+            }
 
             Result.success(result)
         }.catch {

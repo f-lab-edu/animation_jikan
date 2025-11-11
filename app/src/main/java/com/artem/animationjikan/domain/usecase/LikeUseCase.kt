@@ -8,10 +8,10 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
-class LikeUsecase @Inject constructor(
+class LikeUseCase @Inject constructor(
     private val likeRepository: LikeRepository
 ) {
-    private val tag = "LikeUsecase"
+    private val tag = "LikeUseCase"
 
     fun execute(mediaType: String? = null): Flow<Result<List<LikeEntity>>> {
         return likeRepository.getAllLike(mediaType)

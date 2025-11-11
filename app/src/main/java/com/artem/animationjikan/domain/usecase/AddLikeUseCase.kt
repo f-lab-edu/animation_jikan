@@ -5,10 +5,10 @@ import com.artem.animationjikan.domain.entities.LikeEntity
 import com.artem.animationjikan.domain.repository.LikeRepository
 import javax.inject.Inject
 
-class AddLikeUsecase @Inject constructor(
+class AddLikeUseCase @Inject constructor(
     private val likeRepository: LikeRepository
 ) {
-    private val tag = "AddLikeUsecase"
+    private val tag = "AddLikeUseCase"
 
     suspend fun execute(likeEntity: LikeEntity): Result<Unit> {
         return try {

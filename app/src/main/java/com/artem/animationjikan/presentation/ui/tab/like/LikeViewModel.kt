@@ -3,8 +3,8 @@ package com.artem.animationjikan.presentation.ui.tab.like
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.artem.animationjikan.domain.entities.LikeEntity
-import com.artem.animationjikan.domain.usecase.LikeUsecase
-import com.artem.animationjikan.domain.usecase.RemoveLikeUsecase
+import com.artem.animationjikan.domain.usecase.LikeUseCase
+import com.artem.animationjikan.domain.usecase.RemoveLikeUseCase
 import com.artem.animationjikan.util.enums.FilterCategory
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -20,8 +20,8 @@ import javax.inject.Inject
 @OptIn(ExperimentalCoroutinesApi::class)
 @HiltViewModel
 class LikeViewModel @Inject constructor(
-    likeUsecase: LikeUsecase,
-    private val removeLikeUsecase: RemoveLikeUsecase
+    likeUseCase: LikeUseCase,
+    private val removeLikeUseCase: RemoveLikeUseCase
 ) : ViewModel() {
     private val _mediaTypeFilter = MutableStateFlow(FilterCategory.ALL)
     val currentMediaType: StateFlow<FilterCategory> = _mediaTypeFilter.asStateFlow()
@@ -31,7 +31,7 @@ class LikeViewModel @Inject constructor(
 
     private val likeFlow: Flow<List<LikeEntity>> =
         currentMediaType.flatMapLatest { mediaType ->
-            likeUsecase.execute(mediaType = mediaType.name)
+            likeUseCase.execute(mediaType = mediaType.name)
         }.map { result ->
             result.getOrElse { error -> emptyList() }
         }
@@ -53,7 +53,7 @@ class LikeViewModel @Inject constructor(
 
     fun removeLike(entity: LikeEntity) {
         viewModelScope.launch {
-            removeLikeUsecase.execute(mediaId = entity.mediaId)
+            removeLikeUseCase.execute(mediaId = entity.mediaId)
         }
     }
 }

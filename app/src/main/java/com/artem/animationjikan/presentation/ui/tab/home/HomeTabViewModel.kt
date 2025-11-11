@@ -9,12 +9,12 @@ import androidx.lifecycle.viewModelScope
 import com.artem.animationjikan.R
 import com.artem.animationjikan.domain.entities.HomeCommonEntity
 import com.artem.animationjikan.domain.entities.LikeEntity
-import com.artem.animationjikan.domain.usecase.GetRecommendAnimationUsecase
-import com.artem.animationjikan.domain.usecase.GetTopAnimationUsecase
-import com.artem.animationjikan.domain.usecase.GetTopCharacterUsecase
-import com.artem.animationjikan.domain.usecase.GetTopMangaUsecase
-import com.artem.animationjikan.domain.usecase.GetUpcomingUsecase
-import com.artem.animationjikan.domain.usecase.LikeUsecase
+import com.artem.animationjikan.domain.usecase.GetRecommendAnimationUseCase
+import com.artem.animationjikan.domain.usecase.GetTopAnimationUseCase
+import com.artem.animationjikan.domain.usecase.GetTopCharacterUseCase
+import com.artem.animationjikan.domain.usecase.GetTopMangaUseCase
+import com.artem.animationjikan.domain.usecase.GetUpcomingUseCase
+import com.artem.animationjikan.domain.usecase.LikeUseCase
 import com.artem.animationjikan.util.event.UiEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -35,12 +35,12 @@ enum class ViewModelState {
 
 @HiltViewModel
 class HomeTabViewModel @Inject constructor(
-    private val recommendAnimationUsecase: GetRecommendAnimationUsecase,
-    private val topAnimationUseCase: GetTopAnimationUsecase,
-    private val topTopMangaUseCase: GetTopMangaUsecase,
-    private val topCharacterUseCase: GetTopCharacterUsecase,
-    private val upcomingUsecase: GetUpcomingUsecase,
-    private val likeUseCase: LikeUsecase
+    private val recommendAnimationUseCase: GetRecommendAnimationUseCase,
+    private val topAnimationUseCase: GetTopAnimationUseCase,
+    private val topTopMangaUseCase: GetTopMangaUseCase,
+    private val topCharacterUseCase: GetTopCharacterUseCase,
+    private val upcomingUseCase: GetUpcomingUseCase,
+    private val likeUseCase: LikeUseCase
 ) : ViewModel() {
     companion object {
         val TAG: String? = HomeTabViewModel::class.simpleName
@@ -128,7 +128,7 @@ class HomeTabViewModel @Inject constructor(
         val initialDelayMs = 300L
 
         viewModelScope.launch(Dispatchers.IO) {
-            recommendAnimationUsecase.execute().collect { result ->
+            recommendAnimationUseCase.execute().collect { result ->
                 result.onSuccess { list ->
                     recommendationAnimationList.value = list
                     state = ViewModelState.Success
@@ -140,7 +140,7 @@ class HomeTabViewModel @Inject constructor(
 
         viewModelScope.launch(Dispatchers.IO) {
             delay(initialDelayMs)
-            upcomingUsecase.execute().collect { result ->
+            upcomingUseCase.execute().collect { result ->
                 result.onSuccess { list ->
                     upcomingList.value = list
                 }.onFailure { error ->
