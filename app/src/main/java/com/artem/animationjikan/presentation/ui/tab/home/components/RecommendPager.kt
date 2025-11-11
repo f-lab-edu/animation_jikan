@@ -25,63 +25,67 @@ import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import com.artem.animationjikan.R
 import com.artem.animationjikan.domain.entities.HomeCommonEntity
+import com.artem.animationjikan.presentation.ui.components.ShimmerRecommendItem
 import com.artem.animationjikan.presentation.ui.theme.AnimationJikanTheme
 import com.artem.animationjikan.util.enums.FilterCategory
 
 @Composable
-fun RecommendPager(recommendationAnimations: List<HomeCommonEntity>) {
+fun RecommendPager(recommendationAnimations: List<HomeCommonEntity>, isLoading: Boolean) {
     val pagerState = rememberPagerState(pageCount = { recommendationAnimations.size })
-
-    Box {
-        HorizontalPager(
-            state = pagerState
-        ) { page ->
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .aspectRatio(3f / 4f)
-                    .align(Alignment.Center),
-                contentAlignment = Alignment.Center
-            ) {
-                AsyncImage(
-                    model = recommendationAnimations[page].imageUrl,
-                    contentDescription = stringResource(R.string.poster),
-                    modifier = Modifier
-                        .fillMaxHeight()
-                        .clip(RoundedCornerShape(12.dp)),
-                    contentScale = ContentScale.FillHeight
-                )
-            }
-        }
-
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .align(Alignment.BottomCenter)
-        ) {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(
-                        vertical = 16.dp
-                    ),
-                horizontalArrangement = Arrangement.Center
-            ) {
-                repeat(recommendationAnimations.size) { iteration ->
-                    val color = if (pagerState.currentPage == iteration)
-                        Color(0xFFE50913) else Color.LightGray
-
+    ShimmerRecommendItem(
+        isLoading = isLoading,
+        contentAfterLoading = {
+            Box {
+                HorizontalPager(
+                    state = pagerState
+                ) { page ->
                     Box(
                         modifier = Modifier
-                            .padding(horizontal = 4.dp)
-                            .size(8.dp)
-                            .background(color, CircleShape)
-                    )
+                            .fillMaxWidth()
+                            .aspectRatio(3f / 4f)
+                            .align(Alignment.Center),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        AsyncImage(
+                            model = recommendationAnimations[page].imageUrl,
+                            contentDescription = stringResource(R.string.poster),
+                            modifier = Modifier
+                                .fillMaxHeight()
+                                .clip(RoundedCornerShape(12.dp)),
+                            contentScale = ContentScale.FillHeight
+                        )
+                    }
+                }
+
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .align(Alignment.BottomCenter)
+                ) {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(
+                                vertical = 16.dp
+                            ),
+                        horizontalArrangement = Arrangement.Center
+                    ) {
+                        repeat(recommendationAnimations.size) { iteration ->
+                            val color = if (pagerState.currentPage == iteration)
+                                Color(0xFFE50913) else Color.LightGray
+
+                            Box(
+                                modifier = Modifier
+                                    .padding(horizontal = 4.dp)
+                                    .size(8.dp)
+                                    .background(color, CircleShape)
+                            )
+                        }
+                    }
                 }
             }
         }
-    }
-
+    )
 }
 
 @Composable
@@ -89,13 +93,15 @@ fun RecommendPager(recommendationAnimations: List<HomeCommonEntity>) {
 fun RecommendPagerPreview() {
     AnimationJikanTheme {
         RecommendPager(
-            listOf(
-                HomeCommonEntity(
-                    id = 0,
-                    type = FilterCategory.ANIMATION,
-                    imageUrl = ""
-                )
-            )
+            recommendationAnimations =
+                listOf(
+                    HomeCommonEntity(
+                        id = 0,
+                        type = FilterCategory.ANIMATION,
+                        imageUrl = ""
+                    )
+                ),
+            isLoading = false,
         )
     }
 }

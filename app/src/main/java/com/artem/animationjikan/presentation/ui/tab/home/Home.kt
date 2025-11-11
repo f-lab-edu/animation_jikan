@@ -8,18 +8,16 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.SuggestionChip
 import androidx.compose.material3.SuggestionChipDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.ui.Alignment
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
@@ -59,85 +57,84 @@ fun HomeTab(
         }
     }
 
-    when (viewModel.state) {
-        ViewModelState.Idle, ViewModelState.Loading, ViewModelState.Error -> Box(
-            Modifier.fillMaxSize(),
-            contentAlignment = Alignment.Center
-        ) {
-            CircularProgressIndicator(
-                modifier = Modifier.size(35.dp)
+    Box(
+        modifier
+            .fillMaxSize()
+            .verticalScroll(scrollState)
+            .padding(horizontal = 10.dp)
+    ) {
+        Column {
+            Spacer(modifier = Modifier.height(6.dp))
+
+            ChipSection()
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            RecommendPager(
+                recommendationAnimations = recommendAnimationList.value,
+                isLoading = viewModel.state != ViewModelState.Success && viewModel.recommendationAnimationList.collectAsState().value.isEmpty()
             )
-        }
 
-        ViewModelState.Success -> Box(
-            modifier
-                .fillMaxSize()
-                .verticalScroll(scrollState)
-                .padding(horizontal = 10.dp)
-        ) {
-            Column {
-                Spacer(modifier = Modifier.height(6.dp))
+            Spacer(modifier = Modifier.height(25.dp))
 
-                ChipSection()
+            ContentSectionRow(
+                R.string.section_recently_viewed,
+                viewModel.topAnimationList.collectAsStateWithLifecycle().value,
+                isLoadingState = viewModel.state != ViewModelState.Success && viewModel.topAnimationList.collectAsStateWithLifecycle().value.isEmpty(),
+                onItemClick = { entity ->
+                    navController.navigate(NavRoutes.AnimationDetail.router + "/${entity.id}")
+                },
+                onItemLikeClick = { viewModel.toggleLike(entity = it) }
+            )
 
-                Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(16.dp))
 
-                RecommendPager(recommendationAnimations = recommendAnimationList.value)
+            ContentSectionRow(
+                R.string.section_upcoming_anime,
+                viewModel.upcomingList.collectAsStateWithLifecycle().value,
+                isLoadingState = viewModel.state != ViewModelState.Success && viewModel.upcomingList.collectAsStateWithLifecycle().value.isEmpty(),
+                onItemClick = { entity ->
+                    navController.navigate(NavRoutes.AnimationDetail.router + "/${entity.id}")
+                },
+                onItemLikeClick = { viewModel.toggleLike(entity = it) }
+            )
 
-                Spacer(modifier = Modifier.height(25.dp))
+            Spacer(modifier = Modifier.height(16.dp))
 
-                ContentSectionRow(
-                    R.string.section_recently_viewed,
-                    viewModel.topAnimationList.collectAsStateWithLifecycle().value,
-                    onItemClick = { entity ->
-                        navController.navigate(NavRoutes.AnimationDetail.router + "/${entity.id}")
-                    },
-                    onItemLikeClick = { viewModel.toggleLike(entity = it) }
-                )
+            ContentSectionRow(
+                R.string.section_top_anime,
+                viewModel.topAnimationList.collectAsStateWithLifecycle().value,
+                isLoadingState = viewModel.state != ViewModelState.Success && viewModel.topAnimationList.collectAsStateWithLifecycle().value.isEmpty(),
+                onItemClick = { entity ->
+                    navController.navigate(NavRoutes.AnimationDetail.router + "/${entity.id}")
+                },
+                onItemLikeClick = { viewModel.toggleLike(entity = it) }
+            )
 
-                Spacer(modifier = Modifier.height(16.dp))
 
-                ContentSectionRow(
-                    R.string.section_upcoming_anime,
-                    viewModel.upcomingList.collectAsStateWithLifecycle().value,
-                    onItemClick = { entity ->
-                        navController.navigate(NavRoutes.AnimationDetail.router + "/${entity.id}")
-                    },
-                    onItemLikeClick = { viewModel.toggleLike(entity = it) }
-                )
+            Spacer(modifier = Modifier.height(16.dp))
 
-                Spacer(modifier = Modifier.height(16.dp))
+            ContentSectionRow(
+                R.string.section_top_manga,
+                viewModel.topMangaList.collectAsStateWithLifecycle().value,
+                isLoadingState = viewModel.state != ViewModelState.Success && viewModel.topMangaList.collectAsStateWithLifecycle().value.isEmpty(),
+                onItemClick = { _ -> },
+                onItemLikeClick = { viewModel.toggleLike(entity = it) }
+            )
 
-                ContentSectionRow(
-                    R.string.section_top_anime,
-                    viewModel.topAnimationList.collectAsStateWithLifecycle().value,
-                    onItemClick = { entity ->
-                        navController.navigate(NavRoutes.AnimationDetail.router + "/${entity.id}")
-                    },
-                    onItemLikeClick = { viewModel.toggleLike(entity = it) }
-                )
+            Spacer(modifier = Modifier.height(16.dp))
 
-                Spacer(modifier = Modifier.height(16.dp))
+            ContentSectionRow(
+                R.string.section_top_character,
+                viewModel.topCharacterList.collectAsStateWithLifecycle().value,
+                isLoadingState = viewModel.state != ViewModelState.Success && viewModel.topCharacterList.collectAsStateWithLifecycle().value.isEmpty(),
+                onItemClick = { _ -> },
+                onItemLikeClick = { viewModel.toggleLike(entity = it) }
+            )
 
-                ContentSectionRow(
-                    R.string.section_top_manga,
-                    viewModel.topMangaList.collectAsStateWithLifecycle().value,
-                    onItemClick = { entity -> },
-                    onItemLikeClick = { viewModel.toggleLike(entity = it) }
-                )
 
-                Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(30.dp))
 
-                ContentSectionRow(
-                    R.string.section_top_character,
-                    viewModel.topCharacterList.collectAsStateWithLifecycle().value,
-                    onItemClick = { entity -> },
-                    onItemLikeClick = { viewModel.toggleLike(entity = it) }
-                )
-
-                Spacer(modifier = Modifier.height(30.dp))
-
-            }
         }
     }
 

@@ -49,7 +49,6 @@ class HomeTabViewModel @Inject constructor(
 
     private val likeList = MutableStateFlow<List<Int>>(emptyList())
 
-
     val recommendationAnimationList = MutableStateFlow<List<HomeCommonEntity>>(emptyList())
 
     val topAnimationList = MutableStateFlow<List<HomeCommonEntity>>(emptyList())
@@ -124,67 +123,73 @@ class HomeTabViewModel @Inject constructor(
     }
 
     fun execute() {
+        viewModelScope.launch {
+            delay(5000L)
+        }
+
         state = ViewModelState.Loading
+
         val initialDelayMs = 300L
 
         viewModelScope.launch(Dispatchers.IO) {
+
+            var isError = true
+
             recommendAnimationUseCase.execute().collect { result ->
                 result.onSuccess { list ->
                     recommendationAnimationList.value = list
-                    state = ViewModelState.Success
                 }.onFailure { error ->
                     Log.e(TAG, error.message ?: NO_ERROR_MESSAGE)
+                    isError = true
                 }
             }
-        }
 
-        viewModelScope.launch(Dispatchers.IO) {
             delay(initialDelayMs)
             upcomingUseCase.execute().collect { result ->
                 result.onSuccess { list ->
                     upcomingList.value = list
                 }.onFailure { error ->
                     Log.e(TAG, error.message ?: NO_ERROR_MESSAGE)
+                    isError = true
                 }
             }
-        }
 
-        viewModelScope.launch(Dispatchers.IO) {
             delay(initialDelayMs * 2)
             topAnimationUseCase.execute().collect { result ->
                 result.onSuccess { list ->
                     topAnimationList.value = list
                 }.onFailure { error ->
                     Log.e(TAG, error.message ?: NO_ERROR_MESSAGE)
+                    isError = true
                 }
             }
-        }
 
-        viewModelScope.launch(Dispatchers.IO) {
             delay(initialDelayMs * 3)
             topTopMangaUseCase.execute().collect { result ->
                 result.onSuccess { list ->
                     topMangaList.value = list
                 }.onFailure { error ->
                     Log.e(TAG, error.message ?: NO_ERROR_MESSAGE)
+                    isError = true
                 }
             }
-        }
 
-        viewModelScope.launch(Dispatchers.IO) {
             delay(initialDelayMs * 4)
             topCharacterUseCase.execute().collect { result ->
                 result.onSuccess { list ->
                     topCharacterList.value = list
                 }.onFailure { error ->
                     Log.e(TAG, error.message ?: NO_ERROR_MESSAGE)
+                    isError = true
                 }
             }
+
+            state = if (isError) ViewModelState.Error else ViewModelState.Success
         }
+
     }
 
     fun toggleLike(entity: HomeCommonEntity) {
-        Log.d("toggleLike", "entity.likeStatus is ${entity.likeStatus}")
         if (!entity.likeStatus) {
             addLike(
                 entity = LikeEntity(
