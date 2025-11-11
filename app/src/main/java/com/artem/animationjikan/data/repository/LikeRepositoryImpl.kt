@@ -20,7 +20,7 @@ class LikeRepositoryImpl @Inject constructor(
         const val TAG : String = "LikeRepositoryImpl"
     }
 
-    override fun getAllLike(type: String): Flow<List<LikeEntity>> =
+    override fun getAllLike(type: String?): Flow<List<LikeEntity>> =
         dao.getLikesList(type)
             .map {
                 it.map { likeData ->

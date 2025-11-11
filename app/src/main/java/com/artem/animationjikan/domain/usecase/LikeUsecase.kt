@@ -13,12 +13,32 @@ class LikeUsecase @Inject constructor(
 ) {
     private val tag = "LikeUsecase"
 
-    fun execute(mediaType: String): Flow<Result<List<LikeEntity>>> {
+    fun execute(mediaType: String? = null): Flow<Result<List<LikeEntity>>> {
         return likeRepository.getAllLike(mediaType)
             .map { list -> Result.success(list) }
             .catch { error ->
                 Log.e(tag, error.message.toString())
                 emit(Result.failure(error))
             }
+    }
+
+    suspend fun addLike(likeEntity: LikeEntity): Result<Unit> {
+        return try {
+            likeRepository.addLike(likeEntity = likeEntity)
+            Result.success(Unit)
+        } catch (e: Exception) {
+            Log.e(tag, e.message.toString())
+            Result.failure(e)
+        }
+    }
+
+    suspend fun removeLike(mediaId: Int): Result<Unit> {
+        return try {
+            likeRepository.removeLike(mediaId = mediaId)
+            Result.success(Unit)
+        } catch (e: Exception) {
+            Log.e(tag, e.message.toString())
+            Result.failure(e)
+        }
     }
 }

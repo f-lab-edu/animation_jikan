@@ -19,5 +19,5 @@ interface LikeDao {
     fun isLike(mediaId: Int): Flow<Boolean>
 
     @Query("SELECT * FROM `like` WHERE :type IS NULL OR :type = 'ALL' OR mediaType = :type")
-    fun getLikesList(type: String): Flow<List<LikeData>>
+    fun getLikesList(type: String?): Flow<List<LikeData>>
 }

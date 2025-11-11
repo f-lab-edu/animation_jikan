@@ -9,12 +9,12 @@ import androidx.lifecycle.viewModelScope
 import com.artem.animationjikan.R
 import com.artem.animationjikan.domain.entities.HomeCommonEntity
 import com.artem.animationjikan.domain.entities.LikeEntity
-import com.artem.animationjikan.domain.usecase.AddLikeUsecase
 import com.artem.animationjikan.domain.usecase.GetRecommendAnimationUsecase
 import com.artem.animationjikan.domain.usecase.GetTopAnimationUsecase
 import com.artem.animationjikan.domain.usecase.GetTopCharacterUsecase
 import com.artem.animationjikan.domain.usecase.GetTopMangaUsecase
 import com.artem.animationjikan.domain.usecase.GetUpcomingUsecase
+import com.artem.animationjikan.domain.usecase.LikeUsecase
 import com.artem.animationjikan.util.event.UiEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -22,6 +22,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -39,12 +40,15 @@ class HomeTabViewModel @Inject constructor(
     private val topTopMangaUseCase: GetTopMangaUsecase,
     private val topCharacterUseCase: GetTopCharacterUsecase,
     private val upcomingUsecase: GetUpcomingUsecase,
-    private val addLikeUsecase: AddLikeUsecase
+    private val likeUseCase: LikeUsecase
 ) : ViewModel() {
     companion object {
         val TAG: String? = HomeTabViewModel::class.simpleName
         const val NO_ERROR_MESSAGE = "empty Error message"
     }
+
+    private val likeList = MutableStateFlow<List<Int>>(emptyList())
+
 
     val recommendationAnimationList = MutableStateFlow<List<HomeCommonEntity>>(emptyList())
 
@@ -63,6 +67,59 @@ class HomeTabViewModel @Inject constructor(
     val eventFlow = _eventFlow.asSharedFlow()
 
     init {
+        viewModelScope.launch {
+            likeUseCase.execute().collect { result ->
+                result.onSuccess { list ->
+                    likeList.value = list.map { entity -> entity.mediaId }.toList()
+                }
+            }
+        }
+
+        viewModelScope.launch {
+            combine(recommendationAnimationList, likeList) { entities, likes ->
+                val likeIds = likes.toSet()
+                entities.map { it.copy(likeStatus = likeIds.contains(it.id)) }
+            }.collect { updateList ->
+                recommendationAnimationList.value = updateList
+            }
+        }
+
+        viewModelScope.launch {
+            combine(upcomingList, likeList) { entities, likes ->
+                val likeIds = likes.toSet()
+                entities.map { it.copy(likeStatus = likeIds.contains(it.id)) }
+            }.collect { updateList ->
+                upcomingList.value = updateList
+            }
+        }
+
+        viewModelScope.launch {
+            combine(topAnimationList, likeList) { entities, likes ->
+                val likeIds = likes.toSet()
+                entities.map { it.copy(likeStatus = likeIds.contains(it.id)) }
+            }.collect { updateList ->
+                topAnimationList.value = updateList
+            }
+        }
+
+        viewModelScope.launch {
+            combine(topMangaList, likeList) { entities, likes ->
+                val likeIds = likes.toSet()
+                entities.map { it.copy(likeStatus = likeIds.contains(it.id)) }
+            }.collect { updateList ->
+                topMangaList.value = updateList
+            }
+        }
+
+        viewModelScope.launch {
+            combine(topCharacterList, likeList) { entities, likes ->
+                val likeIds = likes.toSet()
+                entities.map { it.copy(likeStatus = likeIds.contains(it.id)) }
+            }.collect { updateList ->
+                topCharacterList.value = updateList
+            }
+        }
+
         execute()
     }
 
@@ -74,7 +131,6 @@ class HomeTabViewModel @Inject constructor(
             recommendAnimationUsecase.execute().collect { result ->
                 result.onSuccess { list ->
                     recommendationAnimationList.value = list
-
                     state = ViewModelState.Success
                 }.onFailure { error ->
                     Log.e(TAG, error.message ?: NO_ERROR_MESSAGE)
@@ -127,16 +183,40 @@ class HomeTabViewModel @Inject constructor(
         }
     }
 
+    fun toggleLike(entity: HomeCommonEntity) {
+        Log.d("toggleLike", "entity.likeStatus is ${entity.likeStatus}")
+        if (!entity.likeStatus) {
+            addLike(
+                entity = LikeEntity(
+                    mediaId = entity.id,
+                    mediaType = entity.type.name,
+                    imageUrl = entity.imageUrl
+                )
+            )
+        } else {
+            removeLike(mediaId = entity.id)
+        }
+    }
+
     fun addLike(entity: LikeEntity) {
         viewModelScope.launch {
-            addLikeUsecase.execute(likeEntity = entity)
+            likeUseCase.addLike(likeEntity = entity)
                 .onSuccess {
                     val message: Int = R.string.submitted_like
                     _eventFlow.emit(UiEvent.ShowToast(message))
                 }
-                .onFailure { error ->
-                    Log.e(TAG, "${error.message}")
+                .onFailure { error -> Log.e(TAG, "${error.message}") }
+        }
+    }
+
+    fun removeLike(mediaId: Int) {
+        viewModelScope.launch {
+            likeUseCase.removeLike(mediaId = mediaId)
+                .onSuccess {
+                    val message: Int = R.string.removed_like
+                    _eventFlow.emit(UiEvent.ShowToast(message))
                 }
+                .onFailure { error -> Log.e(TAG, "${error.message}") }
         }
     }
 

@@ -12,13 +12,17 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -37,7 +41,8 @@ import com.artem.animationjikan.util.enums.FilterCategory
 fun ContentSectionRow(
     title: Int,
     list: List<HomeCommonEntity>,
-    onItemClick: (HomeCommonEntity) -> Unit
+    onItemClick: (HomeCommonEntity) -> Unit,
+    onItemLikeClick: (HomeCommonEntity) -> Unit
 ) {
     Column {
         Box(
@@ -60,21 +65,35 @@ fun ContentSectionRow(
         ) {
             items(list.size) { index ->
                 val model = list[index]
-                AsyncImage(
-                    model = ImageRequest.Builder(LocalContext.current)
-                        .data(model.imageUrl)
-                        .crossfade(true)
-                        .build(),
-                    contentDescription = "Poster",
-                    modifier = Modifier
-                        .size(width = 110.dp, height = 159.dp)
-                        .clip(RoundedCornerShape(4.dp))
-                        .clickable {
-                            onItemClick(model)
-                        }
-                        .background(color = Color.LightGray),
-                    contentScale = ContentScale.Crop,
-                )
+                Box {
+                    AsyncImage(
+                        model = ImageRequest.Builder(LocalContext.current)
+                            .data(model.imageUrl)
+                            .crossfade(true)
+                            .build(),
+                        contentDescription = "Poster",
+                        modifier = Modifier
+                            .size(width = 110.dp, height = 159.dp)
+                            .clip(RoundedCornerShape(4.dp))
+                            .clickable {
+                                onItemClick(model)
+                            }
+                            .background(color = Color.LightGray),
+                        contentScale = ContentScale.Crop,
+                    )
+
+                    IconButton(
+                        modifier = Modifier.align(Alignment.TopEnd),
+                        onClick = { onItemLikeClick(model) }
+                    ) {
+                        Icon(
+                            painter = painterResource(id = if (model.likeStatus) R.drawable.ic_favorite_red_on else R.drawable.ic_favorite_white_off),
+                            tint = Color.Unspecified,
+                            contentDescription = null
+                        )
+                    }
+
+                }
             }
         }
     }
@@ -94,7 +113,8 @@ fun ContentSectionRowPreview() {
             ),
             onItemClick = {
 
-            }
+            },
+            onItemLikeClick = {}
         )
     }
 }

@@ -1,6 +1,5 @@
 package com.artem.animationjikan.presentation.ui.tab.home
 
-import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -30,7 +29,6 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.artem.animationjikan.R
-import com.artem.animationjikan.domain.entities.LikeEntity
 import com.artem.animationjikan.presentation.ui.LocalNavScreenController
 import com.artem.animationjikan.presentation.ui.tab.home.components.ContentSectionRow
 import com.artem.animationjikan.presentation.ui.tab.home.components.RecommendPager
@@ -93,7 +91,8 @@ fun HomeTab(
                     viewModel.topAnimationList.collectAsStateWithLifecycle().value,
                     onItemClick = { entity ->
                         navController.navigate(NavRoutes.AnimationDetail.router + "/${entity.id}")
-                    }
+                    },
+                    onItemLikeClick = { viewModel.toggleLike(entity = it) }
                 )
 
                 Spacer(modifier = Modifier.height(16.dp))
@@ -102,14 +101,9 @@ fun HomeTab(
                     R.string.section_upcoming_anime,
                     viewModel.upcomingList.collectAsStateWithLifecycle().value,
                     onItemClick = { entity ->
-                        viewModel.addLike(
-                            LikeEntity(
-                                mediaId = entity.id,
-                                imageUrl = entity.imageUrl,
-                                mediaType = entity.type.name,
-                            )
-                        )
-                    }
+                        navController.navigate(NavRoutes.AnimationDetail.router + "/${entity.id}")
+                    },
+                    onItemLikeClick = { viewModel.toggleLike(entity = it) }
                 )
 
                 Spacer(modifier = Modifier.height(16.dp))
@@ -118,15 +112,9 @@ fun HomeTab(
                     R.string.section_top_anime,
                     viewModel.topAnimationList.collectAsStateWithLifecycle().value,
                     onItemClick = { entity ->
-                        Log.e("Top Animation", "id is ${entity.id}")
-                        viewModel.addLike(
-                            LikeEntity(
-                                mediaId = entity.id,
-                                imageUrl = entity.imageUrl,
-                                mediaType = entity.type.name,
-                            )
-                        )
-                    }
+                        navController.navigate(NavRoutes.AnimationDetail.router + "/${entity.id}")
+                    },
+                    onItemLikeClick = { viewModel.toggleLike(entity = it) }
                 )
 
                 Spacer(modifier = Modifier.height(16.dp))
@@ -134,15 +122,8 @@ fun HomeTab(
                 ContentSectionRow(
                     R.string.section_top_manga,
                     viewModel.topMangaList.collectAsStateWithLifecycle().value,
-                    onItemClick = { entity ->
-                        viewModel.addLike(
-                            LikeEntity(
-                                mediaId = entity.id,
-                                imageUrl = entity.imageUrl,
-                                mediaType = entity.type.name,
-                            )
-                        )
-                    }
+                    onItemClick = { entity -> },
+                    onItemLikeClick = { viewModel.toggleLike(entity = it) }
                 )
 
                 Spacer(modifier = Modifier.height(16.dp))
@@ -150,15 +131,8 @@ fun HomeTab(
                 ContentSectionRow(
                     R.string.section_top_character,
                     viewModel.topCharacterList.collectAsStateWithLifecycle().value,
-                    onItemClick = { entity ->
-                        viewModel.addLike(
-                            LikeEntity(
-                                mediaId = entity.id,
-                                imageUrl = entity.imageUrl,
-                                mediaType = entity.type.name,
-                            )
-                        )
-                    }
+                    onItemClick = { entity -> },
+                    onItemLikeClick = { viewModel.toggleLike(entity = it) }
                 )
 
                 Spacer(modifier = Modifier.height(30.dp))
