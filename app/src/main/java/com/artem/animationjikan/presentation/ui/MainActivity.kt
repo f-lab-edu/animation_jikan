@@ -17,6 +17,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.artem.animationjikan.presentation.ui.screen.MainScreen
+import com.artem.animationjikan.presentation.ui.screen.detail.actor.ActorDetailContent
+import com.artem.animationjikan.presentation.ui.screen.detail.actor.ActorDetailScreen
 import com.artem.animationjikan.presentation.ui.screen.detail.animation.AnimationDetailScreen
 import com.artem.animationjikan.presentation.ui.theme.AnimationJikanTheme
 import com.artem.animationjikan.util.router.NavRoutes
@@ -76,7 +78,8 @@ fun MyNavHost() {
                 ) + fadeOut(animationSpec = tween(durationMillis = 300))
             }
         ) {
-            AnimationDetailScreen()
+            //AnimationDetailScreen()
+            ActorDetailScreen()
         }
 
         /// 만화 상세화면
