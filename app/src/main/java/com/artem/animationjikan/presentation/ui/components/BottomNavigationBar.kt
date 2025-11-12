@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.Text
@@ -79,7 +80,9 @@ fun BottomNavigationBar(navController: NavController) {
     NavigationBar(
         containerColor = colorResource(R.color.TransparencyWhite),
         contentColor = Color.White,
-        modifier = Modifier.fillMaxWidth()
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(110.dp)
     ) {
         Row(
             modifier = Modifier.fillMaxWidth(),
