@@ -32,11 +32,11 @@ import com.artem.animationjikan.domain.entities.NewsEntity
 
 
 @Composable
-fun NewsItem(entity: NewsEntity) {
+fun NewsItem(newsEntity: NewsEntity) {
     Row(modifier = Modifier.padding(vertical = 8.dp, horizontal = 10.dp)) {
         AsyncImage(
             model = ImageRequest.Builder(LocalContext.current)
-                .data(entity.imageUrl)
+                .data(newsEntity.imageUrl)
                 .crossfade(true)
                 .build(),
             contentDescription = null,
@@ -58,7 +58,7 @@ fun NewsItem(entity: NewsEntity) {
             verticalArrangement = Arrangement.Center,
         ) {
             Text(
-                entity.title,
+                newsEntity.title,
                 fontSize = 18.sp,
                 lineHeight = 20.sp,
                 fontWeight = FontWeight(600),
@@ -66,8 +66,9 @@ fun NewsItem(entity: NewsEntity) {
                 color = colorResource(R.color.white)
             )
             Spacer(modifier = Modifier.height(3.dp))
+            //TODO date format yyyy.MM.dd 적용하기
             Text(
-                entity.date,
+                newsEntity.date,
                 fontSize = 10.sp,
                 lineHeight = 17.sp,
                 maxLines = 1,
@@ -76,7 +77,7 @@ fun NewsItem(entity: NewsEntity) {
             )
             Spacer(modifier = Modifier.height(15.dp))
             Text(
-                entity.authorUsername,
+                newsEntity.authorUsername,
                 fontSize = 12.sp,
                 lineHeight = 17.sp,
                 maxLines = 1,
@@ -85,7 +86,7 @@ fun NewsItem(entity: NewsEntity) {
             )
             Spacer(modifier = Modifier.height(5.dp))
             Text(
-                entity.excerpt,
+                newsEntity.excerpt,
                 fontSize = 12.sp,
                 lineHeight = 17.sp,
                 maxLines = 5,

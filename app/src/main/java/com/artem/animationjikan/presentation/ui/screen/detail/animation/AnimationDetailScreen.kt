@@ -295,11 +295,13 @@ fun AnimationDetailContent(
             DetailTabs.FIRST -> items(
                 count = newsViewModel.newsList.count(),
                 key = { index -> "episode_$index" }) {
-                NewsItem(newsViewModel.newsList[it])
+                NewsItem(newsEntity = newsViewModel.newsList[it])
             }
 
-            DetailTabs.SECOND -> items(count = 15, key = { index -> "review_$index" }) {
-                ReviewTab()
+            DetailTabs.SECOND -> items(
+                count = reviewViewModel.reviewList.count(),
+                key = { index -> "review_$index" }) {
+                ReviewTab(reviewModel = reviewViewModel.reviewList[it])
             }
 
             DetailTabs.THIRD -> items(count = 15, key = { index -> "character_$index" }) {
