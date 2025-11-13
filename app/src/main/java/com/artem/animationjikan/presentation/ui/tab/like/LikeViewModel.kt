@@ -1,7 +1,9 @@
 package com.artem.animationjikan.presentation.ui.tab.like
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.artem.animationjikan.R
 import com.artem.animationjikan.domain.entities.LikeEntity
 import com.artem.animationjikan.domain.usecase.LikeUseCase
 import com.artem.animationjikan.domain.usecase.RemoveLikeUseCase
@@ -12,8 +14,10 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -23,6 +27,11 @@ class LikeViewModel @Inject constructor(
     likeUseCase: LikeUseCase,
     private val removeLikeUseCase: RemoveLikeUseCase
 ) : ViewModel() {
+
+    companion object {
+        private const val TAG = "LikeViewModel"
+    }
+
     private val _mediaTypeFilter = MutableStateFlow(FilterCategory.ALL)
     val currentMediaType: StateFlow<FilterCategory> = _mediaTypeFilter.asStateFlow()
 
@@ -31,17 +40,22 @@ class LikeViewModel @Inject constructor(
 
     private val likeFlow: Flow<List<LikeEntity>> =
         currentMediaType.flatMapLatest { mediaType ->
-            likeUseCase.execute(mediaType = mediaType.name)
-        }.map { result ->
-            result.getOrElse { error -> emptyList() }
+            var type: String? = mediaType.name
+
+            if (mediaType.stringRes == R.string.All) {
+                type = null
+            }
+
+            likeUseCase.execute(mediaType = type)
+        }.catch {
+            Log.e(TAG, "error: $it")
+            emit(emptyList())
         }
 
     init {
-        viewModelScope.launch {
-            likeFlow.collect {
-                _likeList.value = it
-            }
-        }
+        likeFlow.onEach {
+            _likeList.value = it
+        }.launchIn(viewModelScope)
     }
 
     fun setMediaTypeFilter(newType: FilterCategory) {

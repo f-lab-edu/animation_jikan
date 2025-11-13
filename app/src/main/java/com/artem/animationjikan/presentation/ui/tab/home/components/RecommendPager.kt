@@ -93,14 +93,9 @@ fun RecommendPager(recommendationAnimations: List<HomeCommonEntity>, isLoading: 
 fun RecommendPagerPreview() {
     AnimationJikanTheme {
         RecommendPager(
-            recommendationAnimations =
-                listOf(
-                    HomeCommonEntity(
-                        id = 0,
-                        type = FilterCategory.ANIMATION,
-                        imageUrl = ""
-                    )
-                ),
+            recommendationAnimations = listOf(
+                HomeCommonEntity(type = FilterCategory.ANIMATION)
+            ),
             isLoading = false,
         )
     }

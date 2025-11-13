@@ -23,6 +23,8 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -66,58 +68,44 @@ class HomeTabViewModel @Inject constructor(
     val eventFlow = _eventFlow.asSharedFlow()
 
     init {
-        viewModelScope.launch {
-            likeUseCase.execute().collect { result ->
-                result.onSuccess { list ->
-                    likeList.value = list.map { entity -> entity.mediaId }.toList()
-                }
-            }
-        }
+        likeUseCase.execute().onEach { result ->
+            likeList.value = result.map { entity -> entity.mediaId }.toList()
+        }.launchIn(viewModelScope)
 
-        viewModelScope.launch {
-            combine(recommendationAnimationList, likeList) { entities, likes ->
-                val likeIds = likes.toSet()
-                entities.map { it.copy(likeStatus = likeIds.contains(it.id)) }
-            }.collect { updateList ->
-                recommendationAnimationList.value = updateList
-            }
-        }
+        combine(recommendationAnimationList, likeList) { entities, likes ->
+            val likeIds = likes.toSet()
+            entities.map { it.copy(likeStatus = likeIds.contains(it.id)) }
+        }.onEach { updateList ->
+            recommendationAnimationList.value = updateList
+        }.launchIn(viewModelScope)
 
-        viewModelScope.launch {
-            combine(upcomingList, likeList) { entities, likes ->
-                val likeIds = likes.toSet()
-                entities.map { it.copy(likeStatus = likeIds.contains(it.id)) }
-            }.collect { updateList ->
-                upcomingList.value = updateList
-            }
-        }
+        combine(upcomingList, likeList) { entities, likes ->
+            val likeIds = likes.toSet()
+            entities.map { it.copy(likeStatus = likeIds.contains(it.id)) }
+        }.onEach { updateList ->
+            upcomingList.value = updateList
+        }.launchIn(viewModelScope)
 
-        viewModelScope.launch {
-            combine(topAnimationList, likeList) { entities, likes ->
-                val likeIds = likes.toSet()
-                entities.map { it.copy(likeStatus = likeIds.contains(it.id)) }
-            }.collect { updateList ->
-                topAnimationList.value = updateList
-            }
-        }
+        combine(topAnimationList, likeList) { entities, likes ->
+            val likeIds = likes.toSet()
+            entities.map { it.copy(likeStatus = likeIds.contains(it.id)) }
+        }.onEach { updateList ->
+            topAnimationList.value = updateList
+        }.launchIn(viewModelScope)
 
-        viewModelScope.launch {
-            combine(topMangaList, likeList) { entities, likes ->
-                val likeIds = likes.toSet()
-                entities.map { it.copy(likeStatus = likeIds.contains(it.id)) }
-            }.collect { updateList ->
-                topMangaList.value = updateList
-            }
-        }
+        combine(topMangaList, likeList) { entities, likes ->
+            val likeIds = likes.toSet()
+            entities.map { it.copy(likeStatus = likeIds.contains(it.id)) }
+        }.onEach { updateList ->
+            topMangaList.value = updateList
+        }.launchIn(viewModelScope)
 
-        viewModelScope.launch {
-            combine(topCharacterList, likeList) { entities, likes ->
-                val likeIds = likes.toSet()
-                entities.map { it.copy(likeStatus = likeIds.contains(it.id)) }
-            }.collect { updateList ->
-                topCharacterList.value = updateList
-            }
-        }
+        combine(topCharacterList, likeList) { entities, likes ->
+            val likeIds = likes.toSet()
+            entities.map { it.copy(likeStatus = likeIds.contains(it.id)) }
+        }.onEach { updateList ->
+            topCharacterList.value = updateList
+        }.launchIn(viewModelScope)
 
         execute()
     }
@@ -207,8 +195,7 @@ class HomeTabViewModel @Inject constructor(
         viewModelScope.launch {
             likeUseCase.addLike(likeEntity = entity)
                 .onSuccess {
-                    val message: Int = R.string.submitted_like
-                    _eventFlow.emit(UiEvent.ShowToast(message))
+                    _eventFlow.emit(UiEvent.ShowToast(R.string.submitted_like))
                 }
                 .onFailure { error -> Log.e(TAG, "${error.message}") }
         }
@@ -218,8 +205,7 @@ class HomeTabViewModel @Inject constructor(
         viewModelScope.launch {
             likeUseCase.removeLike(mediaId = mediaId)
                 .onSuccess {
-                    val message: Int = R.string.removed_like
-                    _eventFlow.emit(UiEvent.ShowToast(message))
+                    _eventFlow.emit(UiEvent.ShowToast(R.string.removed_like))
                 }
                 .onFailure { error -> Log.e(TAG, "${error.message}") }
         }

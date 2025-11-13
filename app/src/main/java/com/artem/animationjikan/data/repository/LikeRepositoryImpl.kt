@@ -17,23 +17,27 @@ class LikeRepositoryImpl @Inject constructor(
 ) : LikeRepository {
 
     companion object {
-        const val TAG : String = "LikeRepositoryImpl"
+        const val TAG: String = "LikeRepositoryImpl"
     }
 
-    override fun getAllLike(type: String?): Flow<List<LikeEntity>> =
-        dao.getLikesList(type)
-            .map {
-                it.map { likeData ->
-                    LikeEntity(
-                        mediaId = likeData.mediaId,
-                        imageUrl = likeData.imageUrl,
-                        mediaType = likeData.mediaType,
-                    )
-                }
-            }.catch { e ->
-                Log.e(TAG, e.message.toString())
-                throw e
-            }.flowOn(Dispatchers.IO)
+    override fun getAllLike(type: String?): Flow<List<LikeEntity>> {
+        return if (type.isNullOrEmpty()) {
+            dao.getAllLikes()
+        } else {
+            dao.getLikesList(type)
+        }.map {
+            it.map { likeData ->
+                LikeEntity(
+                    mediaId = likeData.mediaId,
+                    imageUrl = likeData.imageUrl,
+                    mediaType = likeData.mediaType,
+                )
+            }
+        }.catch { e ->
+            Log.e(TAG, e.message.toString())
+            throw e
+        }.flowOn(Dispatchers.IO)
+    }
 
     override suspend fun addLike(likeEntity: LikeEntity) =
         try {
