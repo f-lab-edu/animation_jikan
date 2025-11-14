@@ -51,7 +51,7 @@ fun <T> JikanNetworkCardImage(
 fun Modifier.defaultCardModifier(fraction: Float = 0.35f): Modifier {
     return this.then(
         Modifier
-            .fillMaxWidth(0.35f)
+            .fillMaxWidth(fraction)
             .aspectRatio(120f / 175f)
             .clip(RoundedCornerShape(4.dp))
             .background(color = Color.LightGray)

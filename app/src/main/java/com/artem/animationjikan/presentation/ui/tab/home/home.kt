@@ -1,6 +1,7 @@
 package com.artem.animationjikan.presentation.ui.tab.home
 
 import android.widget.Toast
+import androidx.annotation.StringRes
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -22,6 +23,7 @@ import androidx.compose.material3.SuggestionChipDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -38,6 +40,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.artem.animationjikan.R
+import com.artem.animationjikan.domain.entities.HomeCommonEntity
 import com.artem.animationjikan.presentation.ui.LocalNavScreenController
 import com.artem.animationjikan.presentation.ui.components.HeightGap
 import com.artem.animationjikan.presentation.ui.components.WidthGap
@@ -94,63 +97,45 @@ fun HomeTab(
 
             HeightGap(25)
 
-            ContentSectionRow(
-                R.string.section_recently_viewed,
-                viewModel.topAnimationList.collectAsStateWithLifecycle().value,
-                isLoadingState = viewModel.state != ViewModelState.Success && viewModel.topAnimationList.collectAsStateWithLifecycle().value.isEmpty(),
-                onItemClick = { entity ->
-                    navController.navigate(NavRoutes.AnimationDetail.router + "/${entity.id}")
-                },
-                onItemLikeClick = { viewModel.toggleLike(entity = it) }
+            HomeContentSection(
+                titleRes = R.string.section_recently_viewed,
+                listState = viewModel.topAnimationList.collectAsStateWithLifecycle(),
+                onItemLikeClick = { viewModel.toggleLike(entity = it) },
+                onItemClick = { entity -> navController.navigate(NavRoutes.AnimationDetail.router + "/${entity.id}")},
+                viewModel = viewModel
             )
 
-            HeightGap(16)
-
-            ContentSectionRow(
-                R.string.section_upcoming_anime,
-                viewModel.upcomingList.collectAsStateWithLifecycle().value,
-                isLoadingState = viewModel.state != ViewModelState.Success && viewModel.upcomingList.collectAsStateWithLifecycle().value.isEmpty(),
-                onItemClick = { entity ->
-                    navController.navigate(NavRoutes.AnimationDetail.router + "/${entity.id}")
-                },
-                onItemLikeClick = { viewModel.toggleLike(entity = it) }
+            HomeContentSection(
+                titleRes = R.string.section_upcoming_anime,
+                listState = viewModel.upcomingList.collectAsStateWithLifecycle(),
+                onItemLikeClick = { viewModel.toggleLike(entity = it) },
+                onItemClick = { entity -> navController.navigate(NavRoutes.AnimationDetail.router + "/${entity.id}")},
+                viewModel = viewModel
             )
 
-            HeightGap(16)
-
-            ContentSectionRow(
-                R.string.section_top_anime,
-                viewModel.topAnimationList.collectAsStateWithLifecycle().value,
-                isLoadingState = viewModel.state != ViewModelState.Success && viewModel.topAnimationList.collectAsStateWithLifecycle().value.isEmpty(),
-                onItemClick = { entity ->
-                    navController.navigate(NavRoutes.AnimationDetail.router + "/${entity.id}")
-                },
-                onItemLikeClick = { viewModel.toggleLike(entity = it) }
+            HomeContentSection(
+                titleRes = R.string.section_top_anime,
+                listState = viewModel.topAnimationList.collectAsStateWithLifecycle(),
+                onItemLikeClick = { viewModel.toggleLike(entity = it) },
+                onItemClick = { entity -> navController.navigate(NavRoutes.AnimationDetail.router + "/${entity.id}")},
+                viewModel = viewModel
             )
 
-
-            HeightGap(16)
-
-            ContentSectionRow(
-                R.string.section_top_manga,
-                viewModel.topMangaList.collectAsStateWithLifecycle().value,
-                isLoadingState = viewModel.state != ViewModelState.Success && viewModel.topMangaList.collectAsStateWithLifecycle().value.isEmpty(),
+            HomeContentSection(
+                titleRes = R.string.section_top_manga,
+                listState = viewModel.topMangaList.collectAsStateWithLifecycle(),
+                onItemLikeClick = { viewModel.toggleLike(entity = it) },
                 onItemClick = { _ -> },
-                onItemLikeClick = { viewModel.toggleLike(entity = it) }
+                viewModel = viewModel
             )
 
-            HeightGap(16)
-
-            ContentSectionRow(
-                R.string.section_top_character,
-                viewModel.topCharacterList.collectAsStateWithLifecycle().value,
-                isLoadingState = viewModel.state != ViewModelState.Success && viewModel.topCharacterList.collectAsStateWithLifecycle().value.isEmpty(),
+            HomeContentSection(
+                titleRes = R.string.section_top_character,
+                listState = viewModel.topCharacterList.collectAsStateWithLifecycle(),
+                onItemLikeClick = { viewModel.toggleLike(entity = it) },
                 onItemClick = { _ -> },
-                onItemLikeClick = { viewModel.toggleLike(entity = it) }
+                viewModel = viewModel
             )
-
-
-            HeightGap(30)
 
         }
     }
@@ -216,6 +201,27 @@ fun ChipSection() {
             )
         }
     }
+}
+
+@Composable
+private fun HomeContentSection(
+    @StringRes titleRes: Int, // 섹션 제목만 다름
+    listState: State<List<HomeCommonEntity>>,
+    onItemClick: (HomeCommonEntity) -> Unit,
+    onItemLikeClick: (HomeCommonEntity) -> Unit,
+    viewModel: HomeTabViewModel
+) {
+    val listValue = listState.value
+    val isLoading = viewModel.state != ViewModelState.Success && listValue.isEmpty()
+
+    ContentSectionRow(
+        title = titleRes,
+        list = listValue,
+        isLoadingState = isLoading,
+        onItemClick = onItemClick,
+        onItemLikeClick = onItemLikeClick
+    )
+    HeightGap(16)
 }
 
 
