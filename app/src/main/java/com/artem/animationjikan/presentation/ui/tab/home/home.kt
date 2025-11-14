@@ -61,6 +61,10 @@ fun HomeTab(
     val recommendAnimationList = viewModel.recommendationAnimationList.collectAsStateWithLifecycle()
     val navController = LocalNavScreenController.current
 
+    val animeNavigationClick: (HomeCommonEntity) -> Unit = { entity ->
+        navController.navigate(NavRoutes.AnimationDetail.router + "/${entity.id}")
+    }
+
     LaunchedEffect(key1 = Unit) {
         viewModel.eventFlow.collect { event ->
             when (event) {
@@ -101,7 +105,7 @@ fun HomeTab(
                 titleRes = R.string.section_recently_viewed,
                 listState = viewModel.topAnimationList.collectAsStateWithLifecycle(),
                 onItemLikeClick = { viewModel.toggleLike(entity = it) },
-                onItemClick = { entity -> navController.navigate(NavRoutes.AnimationDetail.router + "/${entity.id}")},
+                onItemClick = animeNavigationClick,
                 viewModel = viewModel
             )
 
@@ -109,7 +113,7 @@ fun HomeTab(
                 titleRes = R.string.section_upcoming_anime,
                 listState = viewModel.upcomingList.collectAsStateWithLifecycle(),
                 onItemLikeClick = { viewModel.toggleLike(entity = it) },
-                onItemClick = { entity -> navController.navigate(NavRoutes.AnimationDetail.router + "/${entity.id}")},
+                onItemClick = animeNavigationClick,
                 viewModel = viewModel
             )
 
@@ -117,7 +121,7 @@ fun HomeTab(
                 titleRes = R.string.section_top_anime,
                 listState = viewModel.topAnimationList.collectAsStateWithLifecycle(),
                 onItemLikeClick = { viewModel.toggleLike(entity = it) },
-                onItemClick = { entity -> navController.navigate(NavRoutes.AnimationDetail.router + "/${entity.id}")},
+                onItemClick = animeNavigationClick,
                 viewModel = viewModel
             )
 
