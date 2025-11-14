@@ -82,6 +82,7 @@ fun AnimationDetailScreen(
     Scaffold(
         containerColor = colorResource(R.color.black),
         topBar = {
+            //현재 Hard Coding 되어 있지만 API 연동 후 mapping 예정
             AnimationDetailTopBar(
                 title = "Sample Animation Title",
                 showTitle = showTitle,
@@ -109,7 +110,6 @@ fun AnimationDetailTopBar(
 
     val containerColor by animateColorAsState(
         targetValue = if (showTitle) colorResource(R.color.black) else Color.Transparent,
-        label = "topAppBarContainerColor"
     )
 
     TopAppBar(
@@ -185,6 +185,7 @@ fun AnimationDetailContent(
                     .fillMaxWidth()
                     .aspectRatio(2.5f / 3f)
             ) {
+                //현재 Hard Coding 되어 있지만 API 연동 후 mapping 예정
                 AsyncImage(
                     model = "https://cdn.myanimelist.net//images//anime//10//89830.jpg",
                     contentDescription = stringResource(R.string.poster),
@@ -204,6 +205,7 @@ fun AnimationDetailContent(
         item {
             Text(
                 modifier = Modifier.padding(horizontal = 10.dp, vertical = 8.dp),
+                //현재 Hard Coding 되어 있지만 API 연동 후 mapping 예정
                 text = "Sample Animation Title",
                 color = colorResource(R.color.white),
                 fontSize = 18.sp,
@@ -223,6 +225,7 @@ fun AnimationDetailContent(
                 )
                 Spacer(modifier = Modifier.width(5.dp))
                 Text(
+                    //현재 Hard Coding 되어 있지만 API 연동 후 mapping 예정
                     "4.8",
                     fontSize = 14.sp,
                     lineHeight = 18.sp,
@@ -236,6 +239,7 @@ fun AnimationDetailContent(
             Column {
                 Spacer(modifier = Modifier.height(16.dp))
                 ExpandableText(
+                    //현재 Hard Coding 되어 있지만 API 연동 후 mapping 예정
                     fullText = "The contents of a hidden grave draw the interest of an industrial titan and send officer K, an LAPD blade runner, on a quest to find a missing legend. The contents of a hidden grave draw the interest of an industrial titan and send officer K, an LAPD blade runner, on a quest to find a missing legend.",
                 )
                 Spacer(modifier = Modifier.height(11.dp))
@@ -287,23 +291,22 @@ fun AnimationDetailContent(
         }
 
         item { Spacer(modifier = Modifier.height(10.dp)) }
-
         when (selectedDestination.value) {
             DetailTabs.FIRST -> items(
                 count = newsViewModel.newsList.count(),
-                key = { index -> "episode_$index" }) {
+                key = { index -> "$index" }) {
                 NewsItem(newsEntity = newsViewModel.newsList[it])
             }
 
             DetailTabs.SECOND -> items(
                 count = reviewViewModel.reviewList.count(),
-                key = { index -> "review_$index" }) {
+                key = { index -> "$index" }) {
                 ReviewTab(reviewModel = reviewViewModel.reviewList[it])
             }
 
             DetailTabs.THIRD -> items(
                 count = characterViewModel.characterList.count(),
-                key = { index -> "character_$index" }) {
+                key = { index -> "$index" }) {
                 CharacterTab(animeCharacterEntity = characterViewModel.characterList[it])
                 Spacer(modifier = Modifier.height(10.dp))
             }
@@ -341,28 +344,12 @@ fun ExpandableText(
 
         if (isTextClipped || expanded) {
             Text(
-                text = if (expanded) " 접기" else "...more",
+                text = if (expanded) stringResource(R.string.less) else stringResource(R.string.more),
                 modifier = Modifier.clickable(onClick = toggleExpanded),
                 color = colorResource(R.color.TransparencyWhite),
                 style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Bold)
             )
         }
-    }
-}
-
-@Composable
-@Preview
-fun ExpandableTextPreview() {
-    val longText =
-        "Jetpack Compose는 선언적 UI 프레임워크로, Kotlin을 사용하여 UI를 구축합니다. 이 예시는 긴 텍스트를 일부만 보여주고 사용자의 클릭에 반응하여 전체 내용을 확장하는 기능을 구현합니다. 긴 텍스트를 다룰 때 성능과 가독성을 모두 고려하는 것이 중요합니다."
-
-    Column(modifier = Modifier.padding(16.dp)) {
-        ExpandableText(
-            fullText = longText,
-            minimizedMaxLines = 3 // 초기 3줄로 제한
-        )
-        Spacer(modifier = Modifier.height(20.dp))
-        Text("다른 콘텐츠")
     }
 }
 
@@ -380,7 +367,7 @@ fun AnimationDetailPreview() {
 fun AnimationDetailTopBarPreview() {
     AnimationJikanTheme {
         AnimationDetailTopBar(
-            title = "Preview Title",
+            title = "",
             showTitle = true,
             onBackPressed = {},
             onFavoriteClick = {})

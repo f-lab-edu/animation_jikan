@@ -62,6 +62,7 @@ import com.artem.animationjikan.R
 import com.artem.animationjikan.presentation.ui.LocalNavScreenController
 import com.artem.animationjikan.util.enums.DetailTabs
 
+/// 해당 파일은 테스트 용으로 임시로 둔 파일이며, AnimationDetail에서 합쳐질 예정
 @Composable
 fun ActorDetailScreen() {
     val navController = LocalNavScreenController.current
@@ -365,7 +366,7 @@ fun ExpandableText(
 
         if (isTextClipped || expanded) {
             Text(
-                text = if (expanded) " 접기" else "...more",
+                text = if (expanded) stringResource(R.string.less) else stringResource(R.string.more),
                 modifier = Modifier.clickable(onClick = toggleExpanded),
                 color = colorResource(R.color.TransparencyWhite),
                 style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Bold)

@@ -26,6 +26,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -127,7 +128,7 @@ fun ExpandableText(
 
         if (isTextClipped || expanded) {
             Text(
-                text = if (expanded) " 접기" else "...more",
+                text = if (expanded) stringResource(R.string.less) else stringResource(R.string.more),
                 modifier = Modifier.clickable(onClick = toggleExpanded),
                 color = colorResource(R.color.TransparencyWhite),
                 style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Bold)
