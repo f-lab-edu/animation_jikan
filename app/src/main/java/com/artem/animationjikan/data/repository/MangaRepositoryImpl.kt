@@ -1,8 +1,9 @@
 package com.artem.animationjikan.data.repository
 
-import com.artem.animationjikan.data.dto.CharacterDTO
 import com.artem.animationjikan.data.dto.ImagesDto
+import com.artem.animationjikan.data.dto.MangaCharacterDTO
 import com.artem.animationjikan.data.dto.MangaDTO
+import com.artem.animationjikan.data.dto.ReviewDTO
 import com.artem.animationjikan.data.service.remote.JikanApiClient
 import com.artem.animationjikan.domain.repository.MangaRepository
 import com.artem.animationjikan.util.network.retryOnRateLimit
@@ -18,15 +19,18 @@ class MangaRepositoryImpl @Inject constructor(
         emit(result)
     }.retryOnRateLimit()
 
-    override suspend fun fetchMangaPictures(malId: Int): List<ImagesDto> {
-        TODO("Not yet implemented")
+    override suspend fun fetchMangaPictures(id: Int): List<ImagesDto> {
+        val result = client.getMangaPictures(id = id)
+        return result.data
     }
 
-    override suspend fun fetchMangaCharacters(malId: Int): List<CharacterDTO> {
-        TODO("Not yet implemented")
+    override suspend fun fetchMangaCharacters(id: Int): List<MangaCharacterDTO> {
+        val result = client.getMangaCharacters(id = id)
+        return result.data
     }
 
-    override suspend fun fetchMangaReviews(malId: Int): List<CharacterDTO> {
-        TODO("Not yet implemented")
+    override suspend fun fetchMangaReviews(id: Int): List<ReviewDTO> {
+        val result = client.getMangaReviews(id = id)
+        return result.data
     }
 }

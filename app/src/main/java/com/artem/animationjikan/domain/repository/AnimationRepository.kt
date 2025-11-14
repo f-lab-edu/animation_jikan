@@ -1,5 +1,6 @@
 package com.artem.animationjikan.domain.repository
 
+import com.artem.animationjikan.data.dto.AnimeCharacterDTO
 import com.artem.animationjikan.data.dto.AnimeDto
 import com.artem.animationjikan.data.dto.NewsDTO
 import com.artem.animationjikan.data.dto.RecommendationAnimationDTO
@@ -18,5 +19,5 @@ interface AnimationRepository {
 
     suspend fun fetchAnimeReview(id: Int): List<ReviewDTO>
 
-    suspend fun fetchAnimeCharacters(id: Int)
+    suspend fun fetchAnimeCharacters(id: Int): List<AnimeCharacterDTO>
 }

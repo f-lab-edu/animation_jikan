@@ -60,11 +60,6 @@ import coil3.request.ImageRequest
 import coil3.request.crossfade
 import com.artem.animationjikan.R
 import com.artem.animationjikan.presentation.ui.LocalNavScreenController
-import com.artem.animationjikan.presentation.ui.screen.detail.animation.AnimationDetailContent
-import com.artem.animationjikan.presentation.ui.screen.detail.animation.AnimationDetailTopBar
-import com.artem.animationjikan.presentation.ui.screen.detail.animation.tabs.character.CharacterTab
-
-import com.artem.animationjikan.presentation.ui.screen.detail.animation.tabs.review.ReviewTab
 import com.artem.animationjikan.util.enums.DetailTabs
 
 @Composable
@@ -335,7 +330,7 @@ fun ActorDetailContent(
             }
 
             DetailTabs.SECOND -> item { /*ReviewTab()*/ }
-            DetailTabs.THIRD -> item { CharacterTab() }
+            DetailTabs.THIRD -> item { /*CharacterTab(animeCharacterEntity = )*/ }
         }
     }
 }

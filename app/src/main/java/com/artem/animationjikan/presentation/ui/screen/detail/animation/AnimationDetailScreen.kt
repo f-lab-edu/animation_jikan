@@ -1,7 +1,6 @@
 package com.artem.animationjikan.presentation.ui.screen.detail.animation
 
 import android.annotation.SuppressLint
-import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.fadeIn
@@ -56,7 +55,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
-import androidx.lifecycle.viewmodel.compose.viewModel
 import coil3.compose.AsyncImage
 import com.artem.animationjikan.R
 import com.artem.animationjikan.presentation.ui.LocalNavScreenController
@@ -68,8 +66,6 @@ import com.artem.animationjikan.presentation.ui.screen.detail.animation.tabs.rev
 import com.artem.animationjikan.presentation.ui.screen.detail.animation.tabs.review.ReviewViewModel
 import com.artem.animationjikan.presentation.ui.theme.AnimationJikanTheme
 import com.artem.animationjikan.util.enums.DetailTabs
-import androidx.compose.runtime.collectAsState
-import androidx.lifecycle.SavedStateHandle
 
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -172,7 +168,7 @@ fun AnimationDetailContent(
         when (selectedDestination.value) {
             DetailTabs.FIRST -> newsViewModel.fetchAnimeNews(malId = malId)
             DetailTabs.SECOND -> reviewViewModel.fetchReviews(malId = malId)
-            DetailTabs.THIRD -> characterViewModel.execute()
+            DetailTabs.THIRD -> characterViewModel.fetchAnimeCharacters(malId = malId)
         }
     }
 
@@ -304,8 +300,11 @@ fun AnimationDetailContent(
                 ReviewTab(reviewModel = reviewViewModel.reviewList[it])
             }
 
-            DetailTabs.THIRD -> items(count = 15, key = { index -> "character_$index" }) {
-                CharacterTab()
+            DetailTabs.THIRD -> items(
+                count = characterViewModel.characterList.count(),
+                key = { index -> "character_$index" }) {
+                CharacterTab(animeCharacterEntity = characterViewModel.characterList[it])
+                Spacer(modifier = Modifier.height(10.dp))
             }
         }
     }

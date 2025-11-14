@@ -2,6 +2,7 @@ package com.artem.animationjikan.data.repository
 
 import android.util.Log
 import com.artem.animationjikan.data.dto.AnimationResponse
+import com.artem.animationjikan.data.dto.AnimeCharacterDTO
 import com.artem.animationjikan.data.dto.AnimeDto
 import com.artem.animationjikan.data.dto.NewsDTO
 import com.artem.animationjikan.data.dto.NewsResponse
@@ -50,8 +51,10 @@ class AnimationRepositoryImpl @Inject constructor(
         return response.data
     }
 
-    override suspend fun fetchAnimeCharacters(id: Int) {
-
+    override suspend fun fetchAnimeCharacters(id: Int): List<AnimeCharacterDTO>{
+        val response = client.getAnimeCharacters(id = id)
+        Log.e("AnimationRepository", "response is $response")
+        return response.data
     }
 
 }

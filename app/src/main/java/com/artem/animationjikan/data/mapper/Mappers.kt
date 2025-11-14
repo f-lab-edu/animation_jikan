@@ -1,5 +1,7 @@
 package com.artem.animationjikan.data.mapper
 
+import com.artem.animationjikan.data.dto.ActorDTO
+import com.artem.animationjikan.data.dto.AnimeCharacterDTO
 import com.artem.animationjikan.data.dto.AnimeDto
 import com.artem.animationjikan.data.dto.CharacterDTO
 import com.artem.animationjikan.data.dto.MangaDTO
@@ -7,6 +9,8 @@ import com.artem.animationjikan.data.dto.NewsDTO
 import com.artem.animationjikan.data.dto.RecommendationAnimationDTO
 import com.artem.animationjikan.data.dto.ReviewDTO
 import com.artem.animationjikan.data.dto.UpcomingDTO
+import com.artem.animationjikan.domain.entities.ActorEntity
+import com.artem.animationjikan.domain.entities.AnimeCharacterEntity
 import com.artem.animationjikan.domain.entities.HomeCommonEntity
 import com.artem.animationjikan.domain.entities.NewsEntity
 import com.artem.animationjikan.domain.entities.ReviewEntity
@@ -69,6 +73,25 @@ fun ReviewDTO.toReviewEntity(): ReviewEntity {
         username = this.user.username,
         userProfileUrl = this.user.images.jpg.imageUrl,
         review = this.review,
-        score = this.score
+        score = this.score,
+    )
+}
+
+fun AnimeCharacterDTO.toCharacterEntity(): AnimeCharacterEntity {
+    return AnimeCharacterEntity(
+        malId = this.character.malId,
+        characterName = this.character.name,
+        imageUrl = this.character.images.jpg.imageUrl,
+        actors = this.actors.map { it.toActorEntity() },
+        role = this.role,
+    )
+}
+
+fun ActorDTO.toActorEntity(): ActorEntity {
+    return ActorEntity(
+        malId = this.person.malId,
+        imageUrl = this.person.images.jpg.imageUrl,
+        name = this.person.name,
+        language = this.language,
     )
 }
