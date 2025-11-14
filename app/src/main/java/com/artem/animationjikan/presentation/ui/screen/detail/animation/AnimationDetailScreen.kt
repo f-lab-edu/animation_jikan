@@ -71,7 +71,7 @@ import com.artem.animationjikan.util.enums.DetailTabs
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun AnimationDetailScreen(
-    animationDetailViewModel: AnimationDetailViewModel = hiltViewModel(),
+    //animationDetailViewModel: AnimationDetailViewModel = hiltViewModel(),
     //animationDetailViewModel는 여기서 api 호출할 때 사용할거임
 ) {
     val navController = LocalNavScreenController.current

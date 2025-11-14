@@ -66,7 +66,7 @@ fun NewsItem(newsEntity: NewsEntity) {
                 color = colorResource(R.color.white)
             )
             Spacer(modifier = Modifier.height(3.dp))
-            //TODO date format yyyy.MM.dd 적용하기
+            // date format yyyy.MM.dd 적용하기
             Text(
                 newsEntity.date,
                 fontSize = 10.sp,

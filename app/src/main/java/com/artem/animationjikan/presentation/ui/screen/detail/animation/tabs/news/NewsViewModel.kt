@@ -12,7 +12,6 @@ import com.artem.animationjikan.util.NO_ERROR_MESSAGE
 import com.artem.animationjikan.util.enums.ViewModelState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 

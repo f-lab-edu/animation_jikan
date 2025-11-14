@@ -213,7 +213,7 @@ fun ActorDetailContent(
             Column {
                 Spacer(modifier = Modifier.height(16.dp))
                 ExpandableText(
-                    fullText = "The contents of a hidden grave draw the interest of an industrial titan and send officer K, an LAPD blade runner, on a quest to find a missing legend. The contents of a hidden grave draw the interest of an industrial titan and send officer K, an LAPD blade runner, on a quest to find a missing legend.",
+                    fullText = stringResource(R.string.sampleStr),
                 )
                 Spacer(modifier = Modifier.height(11.dp))
             }
@@ -299,7 +299,7 @@ fun ActorDetailContent(
                         )
                         Spacer(modifier = Modifier.height(3.dp))
                         Text(
-                            "Here are the North American anime, manga, and light novel releases for September. Week 1: October 6 - 13 Anime Releases Odd Taxi Blu-ray Ookami to Koushinryou: Merch...",
+                            stringResource(R.string.sampleStr),
                             fontSize = 10.sp,
                             lineHeight = 17.sp,
                             maxLines = 1,
@@ -317,8 +317,7 @@ fun ActorDetailContent(
                         )
                         Spacer(modifier = Modifier.height(5.dp))
                         Text(
-                            "Here are the North American anime, manga, and light novel releases for September. Week 1: October 6 - 13 Anime Releases Odd Taxi Blu-ray Ookami to Koushinryou: Merch..." +
-                                    "Here are the North American anime, manga, and light novel releases for September. Week 1: October 6 - 13 Anime Releases Odd Taxi Blu-ray Ookami to Koushinryou: Merch...",
+                            stringResource(R.string.sampleStr),
                             fontSize = 12.sp,
                             lineHeight = 17.sp,
                             maxLines = 5,
