@@ -14,7 +14,6 @@ class LikeUseCase @Inject constructor(
 
     fun execute(mediaType: String? = null): Flow<List<LikeEntity>> {
         return likeRepository.getAllLike(mediaType)
-            .map { list -> list }
     }
 
     suspend fun addLike(likeEntity: LikeEntity): Result<Unit> {
