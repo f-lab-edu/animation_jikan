@@ -169,9 +169,7 @@ fun SearchView() {
                 width = 1.dp,
                 color = colorResource(R.color.grey4),
                 shape = RoundedCornerShape(8.dp)
-            ).clickable {
-                //navigate to search screen
-            }
+            )
 
     ) {
         Row(
