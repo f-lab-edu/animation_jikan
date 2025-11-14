@@ -9,12 +9,12 @@ import androidx.lifecycle.viewModelScope
 import com.artem.animationjikan.R
 import com.artem.animationjikan.domain.entities.HomeCommonEntity
 import com.artem.animationjikan.domain.entities.LikeEntity
-import com.artem.animationjikan.domain.usecase.AddLikeUsecase
-import com.artem.animationjikan.domain.usecase.GetRecommendAnimationUsecase
-import com.artem.animationjikan.domain.usecase.GetTopAnimationUsecase
-import com.artem.animationjikan.domain.usecase.GetTopCharacterUsecase
-import com.artem.animationjikan.domain.usecase.GetTopMangaUsecase
-import com.artem.animationjikan.domain.usecase.GetUpcomingUsecase
+import com.artem.animationjikan.domain.usecase.GetRecommendAnimationUseCase
+import com.artem.animationjikan.domain.usecase.GetTopAnimationUseCase
+import com.artem.animationjikan.domain.usecase.GetTopCharacterUseCase
+import com.artem.animationjikan.domain.usecase.GetTopMangaUseCase
+import com.artem.animationjikan.domain.usecase.GetUpcomingUseCase
+import com.artem.animationjikan.domain.usecase.LikeUseCase
 import com.artem.animationjikan.util.event.UiEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -22,6 +22,9 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -34,17 +37,19 @@ enum class ViewModelState {
 
 @HiltViewModel
 class HomeTabViewModel @Inject constructor(
-    private val recommendAnimationUsecase: GetRecommendAnimationUsecase,
-    private val topAnimationUseCase: GetTopAnimationUsecase,
-    private val topTopMangaUseCase: GetTopMangaUsecase,
-    private val topCharacterUseCase: GetTopCharacterUsecase,
-    private val upcomingUsecase: GetUpcomingUsecase,
-    private val addLikeUsecase: AddLikeUsecase
+    private val recommendAnimationUseCase: GetRecommendAnimationUseCase,
+    private val topAnimationUseCase: GetTopAnimationUseCase,
+    private val topTopMangaUseCase: GetTopMangaUseCase,
+    private val topCharacterUseCase: GetTopCharacterUseCase,
+    private val upcomingUseCase: GetUpcomingUseCase,
+    private val likeUseCase: LikeUseCase
 ) : ViewModel() {
     companion object {
         val TAG: String? = HomeTabViewModel::class.simpleName
         const val NO_ERROR_MESSAGE = "empty Error message"
     }
+
+    private val likeList = MutableStateFlow<List<Int>>(emptyList())
 
     val recommendationAnimationList = MutableStateFlow<List<HomeCommonEntity>>(emptyList())
 
@@ -63,80 +68,146 @@ class HomeTabViewModel @Inject constructor(
     val eventFlow = _eventFlow.asSharedFlow()
 
     init {
+        likeUseCase.execute().onEach { result ->
+            likeList.value = result.map { entity -> entity.mediaId }.toList()
+        }.launchIn(viewModelScope)
+
+        combine(recommendationAnimationList, likeList) { entities, likes ->
+            val likeIds = likes.toSet()
+            entities.map { it.copy(likeStatus = likeIds.contains(it.id)) }
+        }.onEach { updateList ->
+            recommendationAnimationList.value = updateList
+        }.launchIn(viewModelScope)
+
+        combine(upcomingList, likeList) { entities, likes ->
+            val likeIds = likes.toSet()
+            entities.map { it.copy(likeStatus = likeIds.contains(it.id)) }
+        }.onEach { updateList ->
+            upcomingList.value = updateList
+        }.launchIn(viewModelScope)
+
+        combine(topAnimationList, likeList) { entities, likes ->
+            val likeIds = likes.toSet()
+            entities.map { it.copy(likeStatus = likeIds.contains(it.id)) }
+        }.onEach { updateList ->
+            topAnimationList.value = updateList
+        }.launchIn(viewModelScope)
+
+        combine(topMangaList, likeList) { entities, likes ->
+            val likeIds = likes.toSet()
+            entities.map { it.copy(likeStatus = likeIds.contains(it.id)) }
+        }.onEach { updateList ->
+            topMangaList.value = updateList
+        }.launchIn(viewModelScope)
+
+        combine(topCharacterList, likeList) { entities, likes ->
+            val likeIds = likes.toSet()
+            entities.map { it.copy(likeStatus = likeIds.contains(it.id)) }
+        }.onEach { updateList ->
+            topCharacterList.value = updateList
+        }.launchIn(viewModelScope)
+
         execute()
     }
 
     fun execute() {
+        viewModelScope.launch {
+            delay(5000L)
+        }
+
         state = ViewModelState.Loading
+
         val initialDelayMs = 300L
 
         viewModelScope.launch(Dispatchers.IO) {
-            recommendAnimationUsecase.execute().collect { result ->
+
+            var isError = true
+
+            recommendAnimationUseCase.execute().collect { result ->
                 result.onSuccess { list ->
                     recommendationAnimationList.value = list
-
-                    state = ViewModelState.Success
                 }.onFailure { error ->
                     Log.e(TAG, error.message ?: NO_ERROR_MESSAGE)
+                    isError = true
                 }
             }
-        }
 
-        viewModelScope.launch(Dispatchers.IO) {
             delay(initialDelayMs)
-            upcomingUsecase.execute().collect { result ->
+            upcomingUseCase.execute().collect { result ->
                 result.onSuccess { list ->
                     upcomingList.value = list
                 }.onFailure { error ->
                     Log.e(TAG, error.message ?: NO_ERROR_MESSAGE)
+                    isError = true
                 }
             }
-        }
 
-        viewModelScope.launch(Dispatchers.IO) {
             delay(initialDelayMs * 2)
             topAnimationUseCase.execute().collect { result ->
                 result.onSuccess { list ->
                     topAnimationList.value = list
                 }.onFailure { error ->
                     Log.e(TAG, error.message ?: NO_ERROR_MESSAGE)
+                    isError = true
                 }
             }
-        }
 
-        viewModelScope.launch(Dispatchers.IO) {
             delay(initialDelayMs * 3)
             topTopMangaUseCase.execute().collect { result ->
                 result.onSuccess { list ->
                     topMangaList.value = list
                 }.onFailure { error ->
                     Log.e(TAG, error.message ?: NO_ERROR_MESSAGE)
+                    isError = true
                 }
             }
-        }
 
-        viewModelScope.launch(Dispatchers.IO) {
             delay(initialDelayMs * 4)
             topCharacterUseCase.execute().collect { result ->
                 result.onSuccess { list ->
                     topCharacterList.value = list
                 }.onFailure { error ->
                     Log.e(TAG, error.message ?: NO_ERROR_MESSAGE)
+                    isError = true
                 }
             }
+
+            state = if (isError) ViewModelState.Error else ViewModelState.Success
+        }
+
+    }
+
+    fun toggleLike(entity: HomeCommonEntity) {
+        if (!entity.likeStatus) {
+            addLike(
+                entity = LikeEntity(
+                    mediaId = entity.id,
+                    mediaType = entity.type.name,
+                    imageUrl = entity.imageUrl
+                )
+            )
+        } else {
+            removeLike(mediaId = entity.id)
         }
     }
 
     fun addLike(entity: LikeEntity) {
         viewModelScope.launch {
-            addLikeUsecase.execute(likeEntity = entity)
+            likeUseCase.addLike(likeEntity = entity)
                 .onSuccess {
-                    val message: Int = R.string.submitted_like
-                    _eventFlow.emit(UiEvent.ShowToast(message))
+                    _eventFlow.emit(UiEvent.ShowToast(R.string.submitted_like))
                 }
-                .onFailure { error ->
-                    Log.e(TAG, "${error.message}")
+                .onFailure { error -> Log.e(TAG, "${error.message}") }
+        }
+    }
+
+    fun removeLike(mediaId: Int) {
+        viewModelScope.launch {
+            likeUseCase.removeLike(mediaId = mediaId)
+                .onSuccess {
+                    _eventFlow.emit(UiEvent.ShowToast(R.string.removed_like))
                 }
+                .onFailure { error -> Log.e(TAG, "${error.message}") }
         }
     }
 

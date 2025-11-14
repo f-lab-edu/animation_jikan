@@ -1,6 +1,9 @@
 package com.artem.animationjikan.presentation.ui.components
 
 import androidx.annotation.StringRes
+import androidx.compose.animation.Crossfade
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -8,7 +11,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.Text
@@ -20,6 +22,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
@@ -27,6 +31,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.NavGraph.Companion.findStartDestination
+import androidx.navigation.compose.currentBackStackEntryAsState
 import com.artem.animationjikan.R
 import com.artem.animationjikan.presentation.ui.theme.AnimationJikanTheme
 import com.artem.animationjikan.util.Route
@@ -68,17 +73,17 @@ fun BottomNavigationBar(navController: NavController) {
         BottomNavItem.Search,
     )
 
+    val backStackEntry by navController.currentBackStackEntryAsState()
+    val currentRoute = backStackEntry?.destination?.route
+
     NavigationBar(
-        containerColor = Color.White,
+        containerColor = colorResource(R.color.TransparencyWhite),
         contentColor = Color.White,
         modifier = Modifier.fillMaxWidth()
     ) {
         Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .fillMaxWidth()
-                .padding(8.dp),
-            horizontalArrangement = Arrangement.SpaceAround
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceAround,
         ) {
             buttons.forEachIndexed { _, item ->
                 Box(Modifier.clickable {
@@ -96,7 +101,7 @@ fun BottomNavigationBar(navController: NavController) {
                     }
                 }) {
                     BottomNavigationBarItem(
-                        isSelected = false,
+                        isSelected = currentRoute == item.route,
                         iconOn = item.iconOn,
                         iconOff = item.iconOff,
                         label = item.label,
@@ -108,7 +113,6 @@ fun BottomNavigationBar(navController: NavController) {
 
 }
 
-
 @Composable
 fun BottomNavigationBarItem(
     isSelected: Boolean,
@@ -116,26 +120,37 @@ fun BottomNavigationBarItem(
     iconOff: Int,
     label: String
 ) {
+    val color = if (isSelected) colorResource(R.color.white)
+    else colorResource(R.color.grey4)
+
+    val animatedColor by animateColorAsState(
+        targetValue = color,
+        // (선택적) 애니메이션 속도 조절
+        animationSpec = tween(durationMillis = 200),
+        label = "item color animation"
+    )
+
     Column(
-        modifier = Modifier.size(56.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
+        Crossfade(
+            targetState = isSelected, label = "icon crossfade $label"
+        ) {
+            val icon = if (isSelected) iconOn else iconOff
 
-        val icon = if (isSelected) iconOn else iconOff
-
-        Image(
-            painter = painterResource(id = icon),
-            contentDescription = label,
-            modifier = Modifier.size(24.dp)
-        )
+            Image(
+                painter = painterResource(id = icon),
+                contentDescription = label,
+                modifier = Modifier.size(24.dp),
+                colorFilter = ColorFilter.tint(animatedColor)
+            )
+        }
 
         Text(
             label,
-            style = TextStyle(
-                fontSize = 8.sp
-            ),
-            color = if (isSelected) Color(0xFF2F44AC) else Color(0xFFACACAC)
+            style = TextStyle(fontSize = 8.sp),
+            color = animatedColor
         )
     }
 }

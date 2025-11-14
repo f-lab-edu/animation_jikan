@@ -4,10 +4,10 @@ import android.util.Log
 import com.artem.animationjikan.domain.repository.LikeRepository
 import javax.inject.Inject
 
-class RemoveLikeUsecase @Inject constructor(
+class RemoveLikeUseCase @Inject constructor(
     private val likeRepository: LikeRepository
 ) {
-    private val tag = "RemoveLikeUsecase"
+    private val tag = "RemoveLikeUseCase"
 
     suspend fun execute(mediaId: Int): Result<Unit> {
         try {
