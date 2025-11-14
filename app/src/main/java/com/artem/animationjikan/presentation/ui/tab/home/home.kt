@@ -2,18 +2,15 @@ package com.artem.animationjikan.presentation.ui.tab.home
 
 import android.widget.Toast
 import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
@@ -42,6 +39,7 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.artem.animationjikan.R
 import com.artem.animationjikan.presentation.ui.LocalNavScreenController
+import com.artem.animationjikan.presentation.ui.components.HeightGap
 import com.artem.animationjikan.presentation.ui.tab.home.components.ContentSectionRow
 import com.artem.animationjikan.presentation.ui.tab.home.components.RecommendPager
 import com.artem.animationjikan.presentation.ui.theme.AnimationJikanTheme
@@ -78,22 +76,22 @@ fun HomeTab(
             .padding(horizontal = 10.dp)
     ) {
         Column {
-            Spacer(modifier = Modifier.height(6.dp))
+            HeightGap(height = 6)
 
             SearchView()
 
-            Spacer(modifier = Modifier.height(6.dp))
+            HeightGap(height = 6)
 
             ChipSection()
 
-            Spacer(modifier = Modifier.height(16.dp))
+            HeightGap(height = 16)
 
             RecommendPager(
                 recommendationAnimations = recommendAnimationList.value,
                 isLoading = viewModel.state != ViewModelState.Success && viewModel.recommendationAnimationList.collectAsState().value.isEmpty()
             )
 
-            Spacer(modifier = Modifier.height(25.dp))
+            HeightGap(height = 25)
 
             ContentSectionRow(
                 R.string.section_recently_viewed,
@@ -105,7 +103,7 @@ fun HomeTab(
                 onItemLikeClick = { viewModel.toggleLike(entity = it) }
             )
 
-            Spacer(modifier = Modifier.height(16.dp))
+            HeightGap(height = 16)
 
             ContentSectionRow(
                 R.string.section_upcoming_anime,
@@ -117,7 +115,7 @@ fun HomeTab(
                 onItemLikeClick = { viewModel.toggleLike(entity = it) }
             )
 
-            Spacer(modifier = Modifier.height(16.dp))
+            HeightGap(height = 16)
 
             ContentSectionRow(
                 R.string.section_top_anime,
@@ -130,7 +128,7 @@ fun HomeTab(
             )
 
 
-            Spacer(modifier = Modifier.height(16.dp))
+            HeightGap(height = 16)
 
             ContentSectionRow(
                 R.string.section_top_manga,
@@ -140,7 +138,7 @@ fun HomeTab(
                 onItemLikeClick = { viewModel.toggleLike(entity = it) }
             )
 
-            Spacer(modifier = Modifier.height(16.dp))
+            HeightGap(height = 16)
 
             ContentSectionRow(
                 R.string.section_top_character,
@@ -151,7 +149,7 @@ fun HomeTab(
             )
 
 
-            Spacer(modifier = Modifier.height(30.dp))
+            HeightGap(height = 30)
 
         }
     }
@@ -186,7 +184,7 @@ fun SearchView() {
                 modifier = Modifier.size(18.dp),
                 contentDescription = stringResource(R.string.search)
             )
-            Spacer(modifier = Modifier.width(8.dp))
+            HeightGap(height = 8)
             Text(
                 "Search Contents",
                 modifier = Modifier.weight(1f),

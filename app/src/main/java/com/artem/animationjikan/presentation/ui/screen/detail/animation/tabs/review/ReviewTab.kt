@@ -5,10 +5,8 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -22,8 +20,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -31,11 +27,10 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import coil3.compose.AsyncImage
-import coil3.request.ImageRequest
-import coil3.request.crossfade
 import com.artem.animationjikan.R
 import com.artem.animationjikan.domain.entities.ReviewEntity
+import com.artem.animationjikan.presentation.ui.components.HeightGap
+import com.artem.animationjikan.presentation.ui.components.JikanNetworkCardImage
 
 @Composable
 fun ReviewTab(reviewModel: ReviewEntity) {
@@ -43,20 +38,19 @@ fun ReviewTab(reviewModel: ReviewEntity) {
         Row(
             verticalAlignment = Alignment.CenterVertically
         ) {
-            AsyncImage(
-                model = ImageRequest.Builder(LocalContext.current)
-                    .data(reviewModel.userProfileUrl)
-                    .crossfade(true)
-                    .build(),
-                contentDescription = null,
+            JikanNetworkCardImage(
+                imageUrl = reviewModel.userProfileUrl,
                 modifier = Modifier
                     .size(40.dp)
                     .clip(CircleShape)
                     .background(color = Color.LightGray),
-                contentScale = ContentScale.Crop,
+                result = reviewModel,
+                onClick = { _ ->
+
+                }
             )
 
-            Spacer(modifier = Modifier.width(12.dp))
+            HeightGap(height = 12)
 
             Text(
                 reviewModel.username,
@@ -72,7 +66,7 @@ fun ReviewTab(reviewModel: ReviewEntity) {
 
         }
 
-        Spacer(modifier = Modifier.height(20.dp))
+        HeightGap(height = 20)
 
         ExpandableText(
             fullText = reviewModel.review

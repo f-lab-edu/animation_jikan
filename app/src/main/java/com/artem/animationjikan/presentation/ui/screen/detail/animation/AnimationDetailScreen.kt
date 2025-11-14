@@ -12,14 +12,12 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -58,6 +56,7 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import coil3.compose.AsyncImage
 import com.artem.animationjikan.R
 import com.artem.animationjikan.presentation.ui.LocalNavScreenController
+import com.artem.animationjikan.presentation.ui.components.HeightGap
 import com.artem.animationjikan.presentation.ui.screen.detail.animation.tabs.character.CharacterTab
 import com.artem.animationjikan.presentation.ui.screen.detail.animation.tabs.character.CharacterViewModel
 import com.artem.animationjikan.presentation.ui.screen.detail.animation.tabs.news.NewsItem
@@ -199,7 +198,7 @@ fun AnimationDetailContent(
         }
 
         item {
-            Spacer(modifier = Modifier.height(10.dp))
+            HeightGap(height = 10)
         }
 
         item {
@@ -223,7 +222,7 @@ fun AnimationDetailContent(
                     painter = painterResource(R.drawable.ic_star_full),
                     contentDescription = null
                 )
-                Spacer(modifier = Modifier.width(5.dp))
+                HeightGap(height = 5)
                 Text(
                     //현재 Hard Coding 되어 있지만 API 연동 후 mapping 예정
                     "4.8",
@@ -237,12 +236,12 @@ fun AnimationDetailContent(
 
         item {
             Column {
-                Spacer(modifier = Modifier.height(16.dp))
+                HeightGap(height = 16)
                 ExpandableText(
                     //현재 Hard Coding 되어 있지만 API 연동 후 mapping 예정
                     fullText = "The contents of a hidden grave draw the interest of an industrial titan and send officer K, an LAPD blade runner, on a quest to find a missing legend. The contents of a hidden grave draw the interest of an industrial titan and send officer K, an LAPD blade runner, on a quest to find a missing legend.",
                 )
-                Spacer(modifier = Modifier.height(11.dp))
+                HeightGap(height = 11)
             }
         }
 
@@ -252,7 +251,7 @@ fun AnimationDetailContent(
                 containerColor = colorResource(R.color.black),
                 contentColor = colorResource(R.color.red),
                 divider = {
-                    Spacer(modifier = Modifier.height(0.dp))
+                    HeightGap(height = 0)
                 },
                 indicator = {
                     Box(
@@ -290,7 +289,7 @@ fun AnimationDetailContent(
             }
         }
 
-        item { Spacer(modifier = Modifier.height(10.dp)) }
+        item { HeightGap(height = 10) }
         when (selectedDestination.value) {
             DetailTabs.FIRST -> items(
                 count = newsViewModel.newsList.count(),
@@ -308,7 +307,7 @@ fun AnimationDetailContent(
                 count = characterViewModel.characterList.count(),
                 key = { index -> "$index" }) {
                 CharacterTab(animeCharacterEntity = characterViewModel.characterList[it])
-                Spacer(modifier = Modifier.height(10.dp))
+                HeightGap(height = 10)
             }
         }
     }

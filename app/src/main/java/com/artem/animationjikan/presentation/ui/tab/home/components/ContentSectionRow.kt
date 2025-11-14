@@ -1,13 +1,10 @@
 package com.artem.animationjikan.presentation.ui.tab.home.components
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyRow
@@ -20,8 +17,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
@@ -29,11 +24,10 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import coil3.compose.AsyncImage
-import coil3.request.ImageRequest
-import coil3.request.crossfade
 import com.artem.animationjikan.R
 import com.artem.animationjikan.domain.entities.HomeCommonEntity
+import com.artem.animationjikan.presentation.ui.components.HeightGap
+import com.artem.animationjikan.presentation.ui.components.JikanNetworkCardImage
 import com.artem.animationjikan.presentation.ui.components.ShimmerListItem
 import com.artem.animationjikan.presentation.ui.theme.AnimationJikanTheme
 import com.artem.animationjikan.util.enums.FilterCategory
@@ -42,7 +36,7 @@ import com.artem.animationjikan.util.enums.FilterCategory
 fun ContentSectionRow(
     title: Int,
     list: List<HomeCommonEntity>,
-    isLoadingState : Boolean = true,
+    isLoadingState: Boolean = true,
     onItemClick: (HomeCommonEntity) -> Unit,
     onItemLikeClick: (HomeCommonEntity) -> Unit
 ) {
@@ -61,7 +55,7 @@ fun ContentSectionRow(
                 )
             )
         }
-        Spacer(modifier = Modifier.height(4.dp))
+        HeightGap(height = 4)
         ShimmerListItem(
             isLoading = isLoadingState,
             contentAfterLoading = {
@@ -71,20 +65,15 @@ fun ContentSectionRow(
                     items(list.size) { index ->
                         val model = list[index]
                         Box {
-                            AsyncImage(
-                                model = ImageRequest.Builder(LocalContext.current)
-                                    .data(model.imageUrl)
-                                    .crossfade(true)
-                                    .build(),
-                                contentDescription = "Poster",
+                            JikanNetworkCardImage(
                                 modifier = Modifier
                                     .size(width = 110.dp, height = 159.dp)
                                     .clip(RoundedCornerShape(4.dp))
-                                    .clickable {
-                                        onItemClick(model)
-                                    }
                                     .background(color = Color.LightGray),
-                                contentScale = ContentScale.Crop,
+                                onClick = { onItemClick(it) },
+                                imageUrl = model.imageUrl,
+                                result = model,
+                                contentDescription = "Poster",
                             )
 
                             IconButton(
