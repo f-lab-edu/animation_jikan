@@ -16,9 +16,6 @@ import javax.inject.Inject
 class CharacterViewModel @Inject constructor(
     private val characterUseCase: AnimationCharacterUseCase
 ) : ViewModel() {
-    companion object {
-        val TAG: String? = CharacterViewModel::class.simpleName
-    }
 
     var characterList by mutableStateOf<List<AnimeCharacterEntity>>(value = emptyList())
         private set

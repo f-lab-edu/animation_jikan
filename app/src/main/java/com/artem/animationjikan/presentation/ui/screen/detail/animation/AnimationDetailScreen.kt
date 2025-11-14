@@ -72,6 +72,7 @@ import com.artem.animationjikan.util.enums.DetailTabs
 @Composable
 fun AnimationDetailScreen(
     animationDetailViewModel: AnimationDetailViewModel = hiltViewModel(),
+    //animationDetailViewModel는 여기서 api 호출할 때 사용할거임
 ) {
     val navController = LocalNavScreenController.current
     val scrollState = rememberLazyListState()
