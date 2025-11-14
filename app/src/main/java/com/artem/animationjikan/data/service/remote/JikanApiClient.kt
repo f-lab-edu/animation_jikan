@@ -25,4 +25,6 @@ class JikanApiClient @Inject constructor(
     suspend fun getAnimeNews(id: Int): NewsResponse = jikanApiService.getAnimeNews(id = id)
 
     suspend fun getAnimeReviews(id: Int): ReviewResponse = jikanApiService.getAnimeReviews(id = id)
+
+    suspend fun getMangaPictures(malId: Int) = jikanApiService.getRecommendationAnimations()
 }

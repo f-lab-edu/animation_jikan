@@ -31,4 +31,7 @@ interface JikanApiService {
 
     @GET("anime/{id}/reviews")
     suspend fun getAnimeReviews(@Path("id") id: Int): ReviewResponse
+
+    /*@GET("/manga/{id}/pictures")
+    suspend fun getMangaPictures(@Path malId: Int): */
 }
