@@ -16,6 +16,7 @@ import com.artem.animationjikan.R
 import com.artem.animationjikan.domain.entities.NewsEntity
 import com.artem.animationjikan.presentation.ui.components.HeightGap
 import com.artem.animationjikan.presentation.ui.components.JikanNetworkCardImage
+import com.artem.animationjikan.presentation.ui.components.WidthGap
 import com.artem.animationjikan.presentation.ui.components.defaultCardModifier
 
 
@@ -31,7 +32,7 @@ fun NewsItem(newsEntity: NewsEntity) {
             }
         )
 
-        HeightGap(height = 10)
+        WidthGap(10)
 
         Column(
             modifier = Modifier.align(Alignment.Top),
@@ -45,7 +46,7 @@ fun NewsItem(newsEntity: NewsEntity) {
                 maxLines = 2,
                 color = colorResource(R.color.white)
             )
-            HeightGap(height = 3)
+            HeightGap( 3)
             // date format yyyy.MM.dd 적용하기
             Text(
                 newsEntity.date,
@@ -55,7 +56,7 @@ fun NewsItem(newsEntity: NewsEntity) {
                 fontWeight = FontWeight(400),
                 color = colorResource(R.color.gray4)
             )
-            HeightGap(height = 15)
+            HeightGap( 15)
             Text(
                 newsEntity.authorUsername,
                 fontSize = 12.sp,
@@ -64,7 +65,7 @@ fun NewsItem(newsEntity: NewsEntity) {
                 fontWeight = FontWeight(400),
                 color = colorResource(R.color.white)
             )
-            HeightGap(height = 5)
+            HeightGap( 5)
             Text(
                 newsEntity.excerpt,
                 fontSize = 12.sp,

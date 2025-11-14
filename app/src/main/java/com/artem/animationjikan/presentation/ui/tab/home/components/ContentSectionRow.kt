@@ -55,7 +55,7 @@ fun ContentSectionRow(
                 )
             )
         }
-        HeightGap(height = 4)
+        HeightGap( 4)
         ShimmerListItem(
             isLoading = isLoadingState,
             contentAfterLoading = {
@@ -73,7 +73,7 @@ fun ContentSectionRow(
                                 onClick = { onItemClick(it) },
                                 imageUrl = model.imageUrl,
                                 result = model,
-                                contentDescription = "Poster",
+                                contentDescription = stringResource(R.string.poster),
                             )
 
                             IconButton(

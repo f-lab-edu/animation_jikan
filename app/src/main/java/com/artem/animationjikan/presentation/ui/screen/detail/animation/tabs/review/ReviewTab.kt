@@ -31,6 +31,7 @@ import com.artem.animationjikan.R
 import com.artem.animationjikan.domain.entities.ReviewEntity
 import com.artem.animationjikan.presentation.ui.components.HeightGap
 import com.artem.animationjikan.presentation.ui.components.JikanNetworkCardImage
+import com.artem.animationjikan.presentation.ui.components.WidthGap
 
 @Composable
 fun ReviewTab(reviewModel: ReviewEntity) {
@@ -50,7 +51,7 @@ fun ReviewTab(reviewModel: ReviewEntity) {
                 }
             )
 
-            HeightGap(height = 12)
+            WidthGap(12)
 
             Text(
                 reviewModel.username,
@@ -66,7 +67,7 @@ fun ReviewTab(reviewModel: ReviewEntity) {
 
         }
 
-        HeightGap(height = 20)
+        HeightGap(20)
 
         ExpandableText(
             fullText = reviewModel.review

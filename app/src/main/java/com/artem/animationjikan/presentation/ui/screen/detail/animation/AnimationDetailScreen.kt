@@ -57,6 +57,7 @@ import coil3.compose.AsyncImage
 import com.artem.animationjikan.R
 import com.artem.animationjikan.presentation.ui.LocalNavScreenController
 import com.artem.animationjikan.presentation.ui.components.HeightGap
+import com.artem.animationjikan.presentation.ui.components.WidthGap
 import com.artem.animationjikan.presentation.ui.screen.detail.animation.tabs.character.CharacterTab
 import com.artem.animationjikan.presentation.ui.screen.detail.animation.tabs.character.CharacterViewModel
 import com.artem.animationjikan.presentation.ui.screen.detail.animation.tabs.news.NewsItem
@@ -198,7 +199,7 @@ fun AnimationDetailContent(
         }
 
         item {
-            HeightGap(height = 10)
+            HeightGap(10)
         }
 
         item {
@@ -222,7 +223,7 @@ fun AnimationDetailContent(
                     painter = painterResource(R.drawable.ic_star_full),
                     contentDescription = null
                 )
-                HeightGap(height = 5)
+                WidthGap(5)
                 Text(
                     //현재 Hard Coding 되어 있지만 API 연동 후 mapping 예정
                     "4.8",
@@ -236,12 +237,12 @@ fun AnimationDetailContent(
 
         item {
             Column {
-                HeightGap(height = 16)
+                HeightGap(16)
                 ExpandableText(
                     //현재 Hard Coding 되어 있지만 API 연동 후 mapping 예정
                     fullText = "The contents of a hidden grave draw the interest of an industrial titan and send officer K, an LAPD blade runner, on a quest to find a missing legend. The contents of a hidden grave draw the interest of an industrial titan and send officer K, an LAPD blade runner, on a quest to find a missing legend.",
                 )
-                HeightGap(height = 11)
+                HeightGap(11)
             }
         }
 
@@ -251,7 +252,7 @@ fun AnimationDetailContent(
                 containerColor = colorResource(R.color.black),
                 contentColor = colorResource(R.color.red),
                 divider = {
-                    HeightGap(height = 0)
+                    HeightGap()
                 },
                 indicator = {
                     Box(
@@ -289,7 +290,8 @@ fun AnimationDetailContent(
             }
         }
 
-        item { HeightGap(height = 10) }
+        item { HeightGap(10) }
+
         when (selectedDestination.value) {
             DetailTabs.FIRST -> items(
                 count = newsViewModel.newsList.count(),
@@ -303,11 +305,12 @@ fun AnimationDetailContent(
                 ReviewTab(reviewModel = reviewViewModel.reviewList[it])
             }
 
-            DetailTabs.THIRD -> items(
-                count = characterViewModel.characterList.count(),
-                key = { index -> "$index" }) {
-                CharacterTab(animeCharacterEntity = characterViewModel.characterList[it])
-                HeightGap(height = 10)
+            DetailTabs.THIRD -> {
+                items(
+                    count = characterViewModel.characterList.count(),
+                    key = { index -> "$index" }) {
+                    CharacterTab(animeCharacterEntity = characterViewModel.characterList[it])
+                }
             }
         }
     }

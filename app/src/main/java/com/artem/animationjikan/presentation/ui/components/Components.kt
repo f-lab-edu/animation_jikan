@@ -48,7 +48,7 @@ fun <T> JikanNetworkCardImage(
     )
 }
 
-fun Modifier.defaultCardModifier(): Modifier {
+fun Modifier.defaultCardModifier(fraction: Float = 0.35f): Modifier {
     return this.then(
         Modifier
             .fillMaxWidth(0.35f)

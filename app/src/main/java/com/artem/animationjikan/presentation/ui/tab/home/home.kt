@@ -40,6 +40,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.artem.animationjikan.R
 import com.artem.animationjikan.presentation.ui.LocalNavScreenController
 import com.artem.animationjikan.presentation.ui.components.HeightGap
+import com.artem.animationjikan.presentation.ui.components.WidthGap
 import com.artem.animationjikan.presentation.ui.tab.home.components.ContentSectionRow
 import com.artem.animationjikan.presentation.ui.tab.home.components.RecommendPager
 import com.artem.animationjikan.presentation.ui.theme.AnimationJikanTheme
@@ -76,22 +77,22 @@ fun HomeTab(
             .padding(horizontal = 10.dp)
     ) {
         Column {
-            HeightGap(height = 6)
+            HeightGap(6)
 
             SearchView()
 
-            HeightGap(height = 6)
+            HeightGap(6)
 
             ChipSection()
 
-            HeightGap(height = 16)
+            HeightGap(16)
 
             RecommendPager(
                 recommendationAnimations = recommendAnimationList.value,
                 isLoading = viewModel.state != ViewModelState.Success && viewModel.recommendationAnimationList.collectAsState().value.isEmpty()
             )
 
-            HeightGap(height = 25)
+            HeightGap(25)
 
             ContentSectionRow(
                 R.string.section_recently_viewed,
@@ -103,7 +104,7 @@ fun HomeTab(
                 onItemLikeClick = { viewModel.toggleLike(entity = it) }
             )
 
-            HeightGap(height = 16)
+            HeightGap(16)
 
             ContentSectionRow(
                 R.string.section_upcoming_anime,
@@ -115,7 +116,7 @@ fun HomeTab(
                 onItemLikeClick = { viewModel.toggleLike(entity = it) }
             )
 
-            HeightGap(height = 16)
+            HeightGap(16)
 
             ContentSectionRow(
                 R.string.section_top_anime,
@@ -128,7 +129,7 @@ fun HomeTab(
             )
 
 
-            HeightGap(height = 16)
+            HeightGap(16)
 
             ContentSectionRow(
                 R.string.section_top_manga,
@@ -138,7 +139,7 @@ fun HomeTab(
                 onItemLikeClick = { viewModel.toggleLike(entity = it) }
             )
 
-            HeightGap(height = 16)
+            HeightGap(16)
 
             ContentSectionRow(
                 R.string.section_top_character,
@@ -149,7 +150,7 @@ fun HomeTab(
             )
 
 
-            HeightGap(height = 30)
+            HeightGap(30)
 
         }
     }
@@ -184,9 +185,9 @@ fun SearchView() {
                 modifier = Modifier.size(18.dp),
                 contentDescription = stringResource(R.string.search)
             )
-            HeightGap(height = 8)
+            WidthGap(8)
             Text(
-                "Search Contents",
+                stringResource(R.string.search_default_txt),
                 modifier = Modifier.weight(1f),
                 fontSize = 11.sp,
                 fontWeight = FontWeight(400),

@@ -106,7 +106,7 @@ fun LikeTab(
                         )
                     }
 
-                    HeightGap(height = 22)
+                    HeightGap( 22)
 
                     LazyVerticalGrid(
                         columns = GridCells.Fixed(3),
@@ -211,7 +211,7 @@ fun GridItem(
             }
         }
 
-        HeightGap(height = 8)
+        HeightGap( 8)
     }
 }
 
