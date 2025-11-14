@@ -20,7 +20,7 @@ data class ImagesDto(
 @Serializable
 data class JpgImageDto(
     @SerializedName("image_url")
-    val imageUrl: String,
+    val imageUrl: String?,
     @SerializedName("small_image_url")
     val smallImageUrl: String?,
     @SerializedName("large_image_url")

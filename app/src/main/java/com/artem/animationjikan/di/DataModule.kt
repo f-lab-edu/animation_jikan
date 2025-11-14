@@ -17,17 +17,18 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 interface DataModule {
-    @Binds
-    @Singleton
-    fun bindAnimationRepository(animationRepository: AnimationRepositoryImpl): AnimationRepository
 
     @Binds
     @Singleton
-    fun bindMangaRepository(mangaRepository: MangaRepositoryImpl): MangaRepository
+    abstract fun bindAnimationRepository(animationRepository: AnimationRepositoryImpl): AnimationRepository
 
     @Binds
     @Singleton
-    fun bindCharacterRepository(characterRepository: CharacterRepositoryImpl): CharacterRepository
+    abstract fun bindMangaRepository(mangaRepository: MangaRepositoryImpl): MangaRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindCharacterRepository(characterRepository: CharacterRepositoryImpl): CharacterRepository
 
     @Binds
     @Singleton

@@ -19,6 +19,7 @@
     <string name="actor">성우</string>
     <string name="character">캐릭터</string>
     <string name="poster">Poster</string>
+    <string name="not_found_mal_id">해당 컨텐츠를 조회할 수 없습니다.</string>
 
     <string name="animation_en">Animation</string>
     <string name="manga_en">Manga</string>

@@ -1,6 +1,7 @@
 package com.artem.animationjikan.presentation.ui.screen.detail.animation
 
 import android.annotation.SuppressLint
+import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.fadeIn
@@ -35,6 +36,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -54,20 +56,26 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
 import coil3.compose.AsyncImage
 import com.artem.animationjikan.R
 import com.artem.animationjikan.presentation.ui.LocalNavScreenController
 import com.artem.animationjikan.presentation.ui.screen.detail.animation.tabs.character.CharacterTab
-import com.artem.animationjikan.presentation.ui.screen.detail.animation.tabs.news.newsTab
-import com.artem.animationjikan.presentation.ui.screen.detail.animation.tabs.review.reviewTab
+import com.artem.animationjikan.presentation.ui.screen.detail.animation.tabs.character.CharacterViewModel
+import com.artem.animationjikan.presentation.ui.screen.detail.animation.tabs.news.NewsItem
+import com.artem.animationjikan.presentation.ui.screen.detail.animation.tabs.news.NewsViewModel
+import com.artem.animationjikan.presentation.ui.screen.detail.animation.tabs.review.ReviewTab
+import com.artem.animationjikan.presentation.ui.screen.detail.animation.tabs.review.ReviewViewModel
 import com.artem.animationjikan.presentation.ui.theme.AnimationJikanTheme
 import com.artem.animationjikan.util.enums.DetailTabs
+import androidx.compose.runtime.collectAsState
+import androidx.lifecycle.SavedStateHandle
 
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun AnimationDetailScreen(
-    viewModel: AnimationDetailViewModel = hiltViewModel()
+    animationDetailViewModel: AnimationDetailViewModel = hiltViewModel(),
 ) {
     val navController = LocalNavScreenController.current
     val scrollState = rememberLazyListState()
@@ -149,10 +157,24 @@ fun AnimationDetailTopBar(
 @Composable
 fun AnimationDetailContent(
     scrollState: LazyListState,
-    paddingValues: PaddingValues
+    paddingValues: PaddingValues,
+    animationDetailViewModel: AnimationDetailViewModel = hiltViewModel(),
+    newsViewModel: NewsViewModel = hiltViewModel(),
+    reviewViewModel: ReviewViewModel = hiltViewModel(),
+    characterViewModel: CharacterViewModel = hiltViewModel(),
 ) {
     val selectedDestination = remember { mutableStateOf(DetailTabs.FIRST) }
     val tabTitles = listOf(R.string.news, R.string.review, R.string.character)
+
+
+    LaunchedEffect(selectedDestination.value) {
+        val malId = animationDetailViewModel.animeId ?: return@LaunchedEffect
+        when (selectedDestination.value) {
+            DetailTabs.FIRST -> newsViewModel.fetchAnimeNews(malId = malId)
+            DetailTabs.SECOND -> reviewViewModel.fetchReviews(malId = malId)
+            DetailTabs.THIRD -> characterViewModel.execute()
+        }
+    }
 
     LazyColumn(
         state = scrollState,
@@ -267,10 +289,22 @@ fun AnimationDetailContent(
             }
         }
 
+        item { Spacer(modifier = Modifier.height(10.dp)) }
+
         when (selectedDestination.value) {
-            DetailTabs.FIRST -> newsTab()
-            DetailTabs.SECOND -> reviewTab()
-            DetailTabs.THIRD -> item { CharacterTab() }
+            DetailTabs.FIRST -> items(
+                count = newsViewModel.newsList.count(),
+                key = { index -> "episode_$index" }) {
+                NewsItem(newsViewModel.newsList[it])
+            }
+
+            DetailTabs.SECOND -> items(count = 15, key = { index -> "review_$index" }) {
+                ReviewTab()
+            }
+
+            DetailTabs.THIRD -> items(count = 15, key = { index -> "character_$index" }) {
+                CharacterTab()
+            }
         }
     }
 }
