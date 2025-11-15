@@ -1,5 +1,6 @@
 package com.artem.animationjikan.presentation.ui.screen.detail.animation.tabs.character
 
+import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -24,8 +25,19 @@ class CharacterViewModel @Inject constructor(
         private set
 
     fun fetchAnimeCharacters(malId: Int) {
+        if (state == ViewModelState.Loading) return
+
+        state = ViewModelState.Loading
+        characterList = emptyList()
+
         viewModelScope.launch {
-            characterList = characterUseCase.execute(id = malId)
+            characterUseCase.execute(id = malId)
+                .onSuccess {
+                    characterList = it
+                    state = ViewModelState.Success
+                }.onFailure {
+                    state = ViewModelState.Error
+                }
         }
     }
 }

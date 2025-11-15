@@ -305,12 +305,10 @@ fun AnimationDetailContent(
                 ReviewTab(reviewModel = reviewViewModel.reviewList[it])
             }
 
-            DetailTabs.THIRD -> {
-                items(
-                    count = characterViewModel.characterList.count(),
-                    key = { index -> "$index" }) {
-                    CharacterTab(animeCharacterEntity = characterViewModel.characterList[it])
-                }
+            DetailTabs.THIRD -> items(
+                count = characterViewModel.characterList.count(),
+                key = { index -> "$index" }) {
+                CharacterTab(animeCharacterEntity = characterViewModel.characterList[it])
             }
         }
     }

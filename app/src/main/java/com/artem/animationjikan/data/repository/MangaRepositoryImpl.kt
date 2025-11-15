@@ -20,17 +20,14 @@ class MangaRepositoryImpl @Inject constructor(
     }.retryOnRateLimit()
 
     override suspend fun fetchMangaPictures(id: Int): List<ImagesDto> {
-        val result = client.getMangaPictures(id = id)
-        return result.data
+        return client.getMangaPictures(id = id).data
     }
 
     override suspend fun fetchMangaCharacters(id: Int): List<MangaCharacterDTO> {
-        val result = client.getMangaCharacters(id = id)
-        return result.data
+        return client.getMangaCharacters(id = id).data
     }
 
     override suspend fun fetchMangaReviews(id: Int): List<ReviewDTO> {
-        val result = client.getMangaReviews(id = id)
-        return result.data
+        return client.getMangaReviews(id = id).data
     }
 }

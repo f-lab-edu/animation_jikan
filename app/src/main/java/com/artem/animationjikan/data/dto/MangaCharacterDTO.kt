@@ -6,5 +6,5 @@ data class MangaCharacterResponse(
 )
 
 data class MangaCharacterDTO(
-    val character: List<CharacterDTO>
+    val character: List<CharacterDTO>,
 )

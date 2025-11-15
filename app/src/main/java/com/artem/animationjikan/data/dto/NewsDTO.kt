@@ -6,7 +6,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class NewsResponse(
     val pagination: Pagination,
-    val data: List<NewsDTO>
+    val data: List<NewsDTO>,
 )
 
 @Serializable
@@ -18,5 +18,5 @@ data class NewsDTO(
     @SerializedName("author_username")
     val authorUsername: String,
     val images: ImagesDto,
-    val excerpt: String
+    val excerpt: String,
 )

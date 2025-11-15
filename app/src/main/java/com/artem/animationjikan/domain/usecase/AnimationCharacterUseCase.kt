@@ -8,10 +8,14 @@ import javax.inject.Inject
 class AnimationCharacterUseCase @Inject constructor(
     private val animationRepository: AnimationRepository
 ) {
-
-    suspend fun execute(id: Int): List<AnimeCharacterEntity> {
-        return animationRepository.fetchAnimeCharacters(id = id).map { characterInfo ->
-            characterInfo.toCharacterEntity()
+    suspend fun execute(id: Int): Result<List<AnimeCharacterEntity>> {
+        return try {
+            val result = animationRepository.fetchAnimeCharacters(id = id).map { characterInfo ->
+                characterInfo.toCharacterEntity()
+            }
+            Result.success(result)
+        } catch (e: Exception) {
+            Result.failure(e)
         }
     }
 }

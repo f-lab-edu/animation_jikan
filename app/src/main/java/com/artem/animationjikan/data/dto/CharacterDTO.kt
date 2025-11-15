@@ -21,7 +21,7 @@ data class CharacterDTO(
 
 @Serializable
 data class AnimeCharacterResponse(
-    val data: List<AnimeCharacterDTO>
+    val data: List<AnimeCharacterDTO>,
 )
 
 @Serializable

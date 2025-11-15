@@ -1,11 +1,9 @@
 package com.artem.animationjikan.data.repository
 
-import android.util.Log
 import com.artem.animationjikan.data.dto.AnimationResponse
 import com.artem.animationjikan.data.dto.AnimeCharacterDTO
 import com.artem.animationjikan.data.dto.AnimeDto
 import com.artem.animationjikan.data.dto.NewsDTO
-import com.artem.animationjikan.data.dto.NewsResponse
 import com.artem.animationjikan.data.dto.RecommendationAnimationDTO
 import com.artem.animationjikan.data.dto.ReviewDTO
 import com.artem.animationjikan.data.dto.UpcomingDTO
@@ -42,19 +40,15 @@ class AnimationRepositoryImpl @Inject constructor(
     }.retryOnRateLimit()
 
     override suspend fun fetchAnimeNews(id: Int): List<NewsDTO> {
-        val response: NewsResponse = client.getAnimeNews(id)
-        return response.data
+        return client.getAnimeNews(id).data
     }
 
     override suspend fun fetchAnimeReview(id: Int): List<ReviewDTO> {
-        val response = client.getAnimeReviews(id)
-        return response.data
+        return client.getAnimeReviews(id).data
     }
 
-    override suspend fun fetchAnimeCharacters(id: Int): List<AnimeCharacterDTO>{
-        val response = client.getAnimeCharacters(id = id)
-        Log.e("AnimationRepository", "response is $response")
-        return response.data
+    override suspend fun fetchAnimeCharacters(id: Int): List<AnimeCharacterDTO> {
+        return client.getAnimeCharacters(id = id).data
     }
 
 }

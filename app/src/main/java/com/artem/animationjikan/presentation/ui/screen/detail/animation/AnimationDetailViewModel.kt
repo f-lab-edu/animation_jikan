@@ -25,7 +25,6 @@ class AnimationDetailViewModel @Inject constructor(
             Log.d(TAG, "Received Anime ID: $animeId")
             // Use animeId to fetch details
         } else {
-
             // Handle the case where animeId is null (e.g., show an error state)
         }
     }

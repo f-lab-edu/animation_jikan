@@ -77,7 +77,7 @@ fun MyNavHost() {
             }
         ) {
             AnimationDetailScreen()
-//            ActorDetailScreen()
+
         }
 
         /// 만화 상세화면
