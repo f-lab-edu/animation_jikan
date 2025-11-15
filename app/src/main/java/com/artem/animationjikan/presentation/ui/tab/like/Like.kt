@@ -8,11 +8,9 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
@@ -50,6 +48,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil3.compose.AsyncImage
 import com.artem.animationjikan.R
 import com.artem.animationjikan.domain.entities.LikeEntity
+import com.artem.animationjikan.presentation.ui.components.HeightGap
 import com.artem.animationjikan.presentation.ui.theme.AnimationJikanTheme
 import com.artem.animationjikan.util.FILTER_OPTION
 import com.artem.animationjikan.util.enums.FilterCategory
@@ -107,7 +106,7 @@ fun LikeTab(
                         )
                     }
 
-                    Spacer(modifier = Modifier.height(22.dp))
+                    HeightGap( 22)
 
                     LazyVerticalGrid(
                         columns = GridCells.Fixed(3),
@@ -212,7 +211,7 @@ fun GridItem(
             }
         }
 
-        Spacer(modifier = Modifier.height(8.dp))
+        HeightGap( 8)
     }
 }
 

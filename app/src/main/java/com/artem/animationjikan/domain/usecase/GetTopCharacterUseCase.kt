@@ -22,7 +22,6 @@ class GetTopCharacterUseCase @Inject constructor(
         }.catch { error ->
             Log.e("GetTopCharacterUseCase", "execute: ${error.message}")
             emit(Result.failure(error))
-
         }
     }
 

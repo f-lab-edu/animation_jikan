@@ -12,14 +12,12 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -35,6 +33,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -57,9 +56,14 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import coil3.compose.AsyncImage
 import com.artem.animationjikan.R
 import com.artem.animationjikan.presentation.ui.LocalNavScreenController
+import com.artem.animationjikan.presentation.ui.components.HeightGap
+import com.artem.animationjikan.presentation.ui.components.WidthGap
 import com.artem.animationjikan.presentation.ui.screen.detail.animation.tabs.character.CharacterTab
-import com.artem.animationjikan.presentation.ui.screen.detail.animation.tabs.news.newsTab
+import com.artem.animationjikan.presentation.ui.screen.detail.animation.tabs.character.CharacterViewModel
+import com.artem.animationjikan.presentation.ui.screen.detail.animation.tabs.news.NewsItem
+import com.artem.animationjikan.presentation.ui.screen.detail.animation.tabs.news.NewsViewModel
 import com.artem.animationjikan.presentation.ui.screen.detail.animation.tabs.review.ReviewTab
+import com.artem.animationjikan.presentation.ui.screen.detail.animation.tabs.review.ReviewViewModel
 import com.artem.animationjikan.presentation.ui.theme.AnimationJikanTheme
 import com.artem.animationjikan.util.enums.DetailTabs
 
@@ -67,7 +71,8 @@ import com.artem.animationjikan.util.enums.DetailTabs
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun AnimationDetailScreen(
-    viewModel: AnimationDetailViewModel = hiltViewModel()
+    //animationDetailViewModel: AnimationDetailViewModel = hiltViewModel(),
+    //animationDetailViewModel는 여기서 api 호출할 때 사용할거임
 ) {
     val navController = LocalNavScreenController.current
     val scrollState = rememberLazyListState()
@@ -77,6 +82,7 @@ fun AnimationDetailScreen(
     Scaffold(
         containerColor = colorResource(R.color.black),
         topBar = {
+            //현재 Hard Coding 되어 있지만 API 연동 후 mapping 예정
             AnimationDetailTopBar(
                 title = "Sample Animation Title",
                 showTitle = showTitle,
@@ -104,7 +110,6 @@ fun AnimationDetailTopBar(
 
     val containerColor by animateColorAsState(
         targetValue = if (showTitle) colorResource(R.color.black) else Color.Transparent,
-        label = "topAppBarContainerColor"
     )
 
     TopAppBar(
@@ -149,10 +154,24 @@ fun AnimationDetailTopBar(
 @Composable
 fun AnimationDetailContent(
     scrollState: LazyListState,
-    paddingValues: PaddingValues
+    paddingValues: PaddingValues,
+    animationDetailViewModel: AnimationDetailViewModel = hiltViewModel(),
+    newsViewModel: NewsViewModel = hiltViewModel(),
+    reviewViewModel: ReviewViewModel = hiltViewModel(),
+    characterViewModel: CharacterViewModel = hiltViewModel(),
 ) {
     val selectedDestination = remember { mutableStateOf(DetailTabs.FIRST) }
     val tabTitles = listOf(R.string.news, R.string.review, R.string.character)
+
+
+    LaunchedEffect(selectedDestination.value) {
+        val malId = animationDetailViewModel.animeId ?: return@LaunchedEffect
+        when (selectedDestination.value) {
+            DetailTabs.FIRST -> newsViewModel.fetchAnimeNews(malId = malId)
+            DetailTabs.SECOND -> reviewViewModel.fetchReviews(malId = malId)
+            DetailTabs.THIRD -> characterViewModel.fetchAnimeCharacters(malId = malId)
+        }
+    }
 
     LazyColumn(
         state = scrollState,
@@ -166,6 +185,7 @@ fun AnimationDetailContent(
                     .fillMaxWidth()
                     .aspectRatio(2.5f / 3f)
             ) {
+                //현재 Hard Coding 되어 있지만 API 연동 후 mapping 예정
                 AsyncImage(
                     model = "https://cdn.myanimelist.net//images//anime//10//89830.jpg",
                     contentDescription = stringResource(R.string.poster),
@@ -179,12 +199,13 @@ fun AnimationDetailContent(
         }
 
         item {
-            Spacer(modifier = Modifier.height(10.dp))
+            HeightGap(10)
         }
 
         item {
             Text(
                 modifier = Modifier.padding(horizontal = 10.dp, vertical = 8.dp),
+                //현재 Hard Coding 되어 있지만 API 연동 후 mapping 예정
                 text = "Sample Animation Title",
                 color = colorResource(R.color.white),
                 fontSize = 18.sp,
@@ -202,8 +223,9 @@ fun AnimationDetailContent(
                     painter = painterResource(R.drawable.ic_star_full),
                     contentDescription = null
                 )
-                Spacer(modifier = Modifier.width(5.dp))
+                WidthGap(5)
                 Text(
+                    //현재 Hard Coding 되어 있지만 API 연동 후 mapping 예정
                     "4.8",
                     fontSize = 14.sp,
                     lineHeight = 18.sp,
@@ -215,11 +237,12 @@ fun AnimationDetailContent(
 
         item {
             Column {
-                Spacer(modifier = Modifier.height(16.dp))
+                HeightGap(16)
                 ExpandableText(
+                    //현재 Hard Coding 되어 있지만 API 연동 후 mapping 예정
                     fullText = "The contents of a hidden grave draw the interest of an industrial titan and send officer K, an LAPD blade runner, on a quest to find a missing legend. The contents of a hidden grave draw the interest of an industrial titan and send officer K, an LAPD blade runner, on a quest to find a missing legend.",
                 )
-                Spacer(modifier = Modifier.height(11.dp))
+                HeightGap(11)
             }
         }
 
@@ -229,7 +252,7 @@ fun AnimationDetailContent(
                 containerColor = colorResource(R.color.black),
                 contentColor = colorResource(R.color.red),
                 divider = {
-                    Spacer(modifier = Modifier.height(0.dp))
+                    HeightGap()
                 },
                 indicator = {
                     Box(
@@ -267,10 +290,26 @@ fun AnimationDetailContent(
             }
         }
 
+        item { HeightGap(10) }
+
         when (selectedDestination.value) {
-            DetailTabs.FIRST -> newsTab()
-            DetailTabs.SECOND -> item { ReviewTab() }
-            DetailTabs.THIRD -> item { CharacterTab() }
+            DetailTabs.FIRST -> items(
+                count = newsViewModel.newsList.count(),
+                key = { index -> "$index" }) {
+                NewsItem(newsEntity = newsViewModel.newsList[it])
+            }
+
+            DetailTabs.SECOND -> items(
+                count = reviewViewModel.reviewList.count(),
+                key = { index -> "$index" }) {
+                ReviewTab(reviewModel = reviewViewModel.reviewList[it])
+            }
+
+            DetailTabs.THIRD -> items(
+                count = characterViewModel.characterList.count(),
+                key = { index -> "$index" }) {
+                CharacterTab(animeCharacterEntity = characterViewModel.characterList[it])
+            }
         }
     }
 }
@@ -305,28 +344,12 @@ fun ExpandableText(
 
         if (isTextClipped || expanded) {
             Text(
-                text = if (expanded) " 접기" else "...more",
+                text = if (expanded) stringResource(R.string.less) else stringResource(R.string.more),
                 modifier = Modifier.clickable(onClick = toggleExpanded),
                 color = colorResource(R.color.TransparencyWhite),
                 style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Bold)
             )
         }
-    }
-}
-
-@Composable
-@Preview
-fun ExpandableTextPreview() {
-    val longText =
-        "Jetpack Compose는 선언적 UI 프레임워크로, Kotlin을 사용하여 UI를 구축합니다. 이 예시는 긴 텍스트를 일부만 보여주고 사용자의 클릭에 반응하여 전체 내용을 확장하는 기능을 구현합니다. 긴 텍스트를 다룰 때 성능과 가독성을 모두 고려하는 것이 중요합니다."
-
-    Column(modifier = Modifier.padding(16.dp)) {
-        ExpandableText(
-            fullText = longText,
-            minimizedMaxLines = 3 // 초기 3줄로 제한
-        )
-        Spacer(modifier = Modifier.height(20.dp))
-        Text("다른 콘텐츠")
     }
 }
 
@@ -344,7 +367,7 @@ fun AnimationDetailPreview() {
 fun AnimationDetailTopBarPreview() {
     AnimationJikanTheme {
         AnimationDetailTopBar(
-            title = "Preview Title",
+            title = "",
             showTitle = true,
             onBackPressed = {},
             onFavoriteClick = {})
