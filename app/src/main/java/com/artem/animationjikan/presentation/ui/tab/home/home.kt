@@ -48,6 +48,7 @@ import com.artem.animationjikan.presentation.ui.tab.home.components.ContentSecti
 import com.artem.animationjikan.presentation.ui.tab.home.components.RecommendPager
 import com.artem.animationjikan.presentation.ui.theme.AnimationJikanTheme
 import com.artem.animationjikan.util.CATEGORIES_LIST
+import com.artem.animationjikan.util.enums.ViewModelState
 import com.artem.animationjikan.util.event.UiEvent
 import com.artem.animationjikan.util.router.NavRoutes
 

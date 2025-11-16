@@ -1,6 +1,6 @@
 package com.artem.animationjikan.data.repository
 
-import com.artem.animationjikan.data.dto.ImagesDto
+import com.artem.animationjikan.data.dto.ImagesDTO
 import com.artem.animationjikan.data.dto.MangaCharacterDTO
 import com.artem.animationjikan.data.dto.MangaDTO
 import com.artem.animationjikan.data.dto.ReviewDTO
@@ -19,7 +19,7 @@ class MangaRepositoryImpl @Inject constructor(
         emit(result)
     }.retryOnRateLimit()
 
-    override suspend fun fetchMangaPictures(id: Int): List<ImagesDto> {
+    override suspend fun fetchMangaPictures(id: Int): List<ImagesDTO> {
         return client.getMangaPictures(id = id).data
     }
 

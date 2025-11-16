@@ -15,6 +15,7 @@ import com.artem.animationjikan.domain.usecase.GetTopCharacterUseCase
 import com.artem.animationjikan.domain.usecase.GetTopMangaUseCase
 import com.artem.animationjikan.domain.usecase.GetUpcomingUseCase
 import com.artem.animationjikan.domain.usecase.LikeUseCase
+import com.artem.animationjikan.util.enums.ViewModelState
 import com.artem.animationjikan.util.event.UiEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -27,13 +28,6 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import javax.inject.Inject
-
-enum class ViewModelState {
-    Idle,
-    Loading,
-    Success,
-    Error
-}
 
 @HiltViewModel
 class HomeTabViewModel @Inject constructor(

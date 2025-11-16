@@ -19,5 +19,5 @@ data class ReviewDTO(
 
 data class UserDTO(
     val username: String,
-    val images: ImagesDto,
+    val images: ImagesDTO,
 )

@@ -1,6 +1,7 @@
 package com.artem.animationjikan.presentation.ui.screen.detail.animation
 
 import android.annotation.SuppressLint
+import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.fadeIn
@@ -22,6 +23,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -55,6 +57,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import coil3.compose.AsyncImage
 import com.artem.animationjikan.R
+import com.artem.animationjikan.domain.entities.AnimationDetailEntity
 import com.artem.animationjikan.presentation.ui.LocalNavScreenController
 import com.artem.animationjikan.presentation.ui.components.HeightGap
 import com.artem.animationjikan.presentation.ui.components.WidthGap
@@ -66,13 +69,13 @@ import com.artem.animationjikan.presentation.ui.screen.detail.animation.tabs.rev
 import com.artem.animationjikan.presentation.ui.screen.detail.animation.tabs.review.ReviewViewModel
 import com.artem.animationjikan.presentation.ui.theme.AnimationJikanTheme
 import com.artem.animationjikan.util.enums.DetailTabs
+import com.artem.animationjikan.util.enums.ViewModelState
 
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun AnimationDetailScreen(
-    //animationDetailViewModel: AnimationDetailViewModel = hiltViewModel(),
-    //animationDetailViewModel는 여기서 api 호출할 때 사용할거임
+    animationDetailViewModel: AnimationDetailViewModel = hiltViewModel(),
 ) {
     val navController = LocalNavScreenController.current
     val scrollState = rememberLazyListState()
@@ -84,17 +87,42 @@ fun AnimationDetailScreen(
         topBar = {
             //현재 Hard Coding 되어 있지만 API 연동 후 mapping 예정
             AnimationDetailTopBar(
-                title = "Sample Animation Title",
+                title = animationDetailViewModel.animationDetailEntity.title,
                 showTitle = showTitle,
                 onBackPressed = { navController.popBackStack() },
                 onFavoriteClick = { },
             )
         },
         content = { paddingValues ->
-            AnimationDetailContent(
-                scrollState = scrollState,
-                paddingValues = paddingValues
-            )
+            when (animationDetailViewModel.state) {
+                ViewModelState.Idle, ViewModelState.Loading -> {
+                    Log.e("AnimationDetailScreen", "ViewModelState.Idle, ViewModelState.Loading")
+                    Box(
+                        modifier = Modifier.fillMaxSize(),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        CircularProgressIndicator(
+                            color = colorResource(R.color.red)
+                        )
+                    }
+                }
+
+                ViewModelState.Success -> {
+                    Log.e("AnimationDetailScreen", "ViewModelState.Success")
+                    AnimationDetailContent(
+                        scrollState = scrollState,
+                        paddingValues = paddingValues,
+                        animationId = animationDetailViewModel.animeId ?: 0,
+                        animationDetailEntity = animationDetailViewModel.animationDetailEntity
+                    )
+                }
+
+                ViewModelState.Error -> {
+                    Box(modifier = Modifier.fillMaxHeight()) {
+                        Text("")
+                    }
+                }
+            }
         }
     )
 }
@@ -105,7 +133,7 @@ fun AnimationDetailTopBar(
     title: String,
     showTitle: Boolean,
     onBackPressed: () -> Unit,
-    onFavoriteClick: () -> Unit
+    onFavoriteClick: () -> Unit,
 ) {
 
     val containerColor by animateColorAsState(
@@ -155,21 +183,23 @@ fun AnimationDetailTopBar(
 fun AnimationDetailContent(
     scrollState: LazyListState,
     paddingValues: PaddingValues,
-    animationDetailViewModel: AnimationDetailViewModel = hiltViewModel(),
+    animationId: Int,
+    animationDetailEntity: AnimationDetailEntity,
+    //animationDetailViewModel: AnimationDetailViewModel = hiltViewModel(),
     newsViewModel: NewsViewModel = hiltViewModel(),
     reviewViewModel: ReviewViewModel = hiltViewModel(),
     characterViewModel: CharacterViewModel = hiltViewModel(),
 ) {
+    Log.e("AnimationDetailContent", "AnimationDetailContent")
     val selectedDestination = remember { mutableStateOf(DetailTabs.FIRST) }
     val tabTitles = listOf(R.string.news, R.string.review, R.string.character)
 
 
     LaunchedEffect(selectedDestination.value) {
-        val malId = animationDetailViewModel.animeId ?: return@LaunchedEffect
         when (selectedDestination.value) {
-            DetailTabs.FIRST -> newsViewModel.fetchAnimeNews(malId = malId)
-            DetailTabs.SECOND -> reviewViewModel.fetchReviews(malId = malId)
-            DetailTabs.THIRD -> characterViewModel.fetchAnimeCharacters(malId = malId)
+            DetailTabs.FIRST -> newsViewModel.fetchAnimeNews(malId = animationId)
+            DetailTabs.SECOND -> reviewViewModel.fetchReviews(malId = animationId)
+            DetailTabs.THIRD -> characterViewModel.fetchAnimeCharacters(malId = animationId)
         }
     }
 
@@ -185,9 +215,8 @@ fun AnimationDetailContent(
                     .fillMaxWidth()
                     .aspectRatio(2.5f / 3f)
             ) {
-                //현재 Hard Coding 되어 있지만 API 연동 후 mapping 예정
                 AsyncImage(
-                    model = "https://cdn.myanimelist.net//images//anime//10//89830.jpg",
+                    model = animationDetailEntity.imageUrl,
                     contentDescription = stringResource(R.string.poster),
                     modifier = Modifier
                         .fillMaxHeight()
@@ -205,8 +234,7 @@ fun AnimationDetailContent(
         item {
             Text(
                 modifier = Modifier.padding(horizontal = 10.dp, vertical = 8.dp),
-                //현재 Hard Coding 되어 있지만 API 연동 후 mapping 예정
-                text = "Sample Animation Title",
+                text = animationDetailEntity.title,
                 color = colorResource(R.color.white),
                 fontSize = 18.sp,
                 lineHeight = 20.sp,
@@ -225,8 +253,7 @@ fun AnimationDetailContent(
                 )
                 WidthGap(5)
                 Text(
-                    //현재 Hard Coding 되어 있지만 API 연동 후 mapping 예정
-                    "4.8",
+                    animationDetailEntity.score.toString(),
                     fontSize = 14.sp,
                     lineHeight = 18.sp,
                     fontWeight = FontWeight(400),
@@ -239,8 +266,7 @@ fun AnimationDetailContent(
             Column {
                 HeightGap(16)
                 ExpandableText(
-                    //현재 Hard Coding 되어 있지만 API 연동 후 mapping 예정
-                    fullText = "The contents of a hidden grave draw the interest of an industrial titan and send officer K, an LAPD blade runner, on a quest to find a missing legend. The contents of a hidden grave draw the interest of an industrial titan and send officer K, an LAPD blade runner, on a quest to find a missing legend.",
+                    fullText = animationDetailEntity.synopsis,
                 )
                 HeightGap(11)
             }

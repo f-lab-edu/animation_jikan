@@ -19,5 +19,5 @@ data class RecommendationAnimationDTO(
     @SerializedName("mal_id")
     val malId: Int = -1,
     @SerializedName("images")
-    val images: ImagesDto,
+    val images: ImagesDTO,
 )

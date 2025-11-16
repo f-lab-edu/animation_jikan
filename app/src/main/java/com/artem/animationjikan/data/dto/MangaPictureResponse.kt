@@ -4,5 +4,5 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class MangaPictureResponse(
-    val data: List<ImagesDto>,
+    val data: List<ImagesDTO>,
 )

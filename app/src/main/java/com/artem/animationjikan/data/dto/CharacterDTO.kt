@@ -14,7 +14,7 @@ data class CharacterDTO(
     @SerializedName("mal_id")
     val malId: Int = -1,
     val url: String,
-    val images: ImagesDto,
+    val images: ImagesDTO,
     val name: String,
 )
 
@@ -37,7 +37,7 @@ data class AnimeCharacterDetailDTO(
     @SerializedName("mal_id")
     val malId: Int = -1,
     val url: String,
-    val images: ImagesDto,
+    val images: ImagesDTO,
     val name: String,
 )
 
@@ -51,6 +51,6 @@ data class ActorDTO(
 data class PersonDTO(
     @SerializedName("mal_id")
     val malId: Int,
-    val images: ImagesDto,
+    val images: ImagesDTO,
     val name: String,
 )
