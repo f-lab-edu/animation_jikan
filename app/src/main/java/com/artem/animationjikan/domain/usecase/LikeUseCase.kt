@@ -1,9 +1,13 @@
 package com.artem.animationjikan.domain.usecase
 
 import android.util.Log
+import androidx.lifecycle.viewModelScope
 import com.artem.animationjikan.domain.entities.LikeEntity
 import com.artem.animationjikan.domain.repository.LikeRepository
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import javax.inject.Inject
 
 class LikeUseCase @Inject constructor(
@@ -33,5 +37,13 @@ class LikeUseCase @Inject constructor(
             Log.e(tag, e.message.toString())
             Result.failure(e)
         }
+    }
+
+    suspend fun getLikeStatus(mediaId: Int): Flow<Boolean> {
+        return likeRepository.getLikeStatus(mediaId)
+            .catch {
+                //TODO
+                //emit()
+            }
     }
 }

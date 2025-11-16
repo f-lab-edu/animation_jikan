@@ -32,6 +32,7 @@ class NewsViewModel @Inject constructor(
 
     fun fetchAnimeNews(malId: Int) {
         state = ViewModelState.Loading
+        newsList = emptyList()
         viewModelScope.launch(Dispatchers.IO) {
             val result = newsUseCase.execute(malId)
             result.onSuccess { list ->

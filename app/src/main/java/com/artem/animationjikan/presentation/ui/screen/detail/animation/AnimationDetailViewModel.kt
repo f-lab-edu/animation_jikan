@@ -9,6 +9,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.artem.animationjikan.domain.entities.AnimationDetailEntity
 import com.artem.animationjikan.domain.usecase.AnimationDetailUseCase
+import com.artem.animationjikan.domain.usecase.LikeUseCase
 import com.artem.animationjikan.util.enums.ViewModelState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -19,6 +20,7 @@ import javax.inject.Inject
 class AnimationDetailViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val animationDetailUseCase: AnimationDetailUseCase
+    private val likeUseCase: LikeUseCase,
 ) : ViewModel() {
 
     companion object {
@@ -57,5 +59,9 @@ class AnimationDetailViewModel @Inject constructor(
             Log.e("AnimationDetailViewModel","animeId == null")
             state = ViewModelState.Error
         }
+    }
+
+    fun toggleFavorite() {
+        likeUseCase.execute()
     }
 }

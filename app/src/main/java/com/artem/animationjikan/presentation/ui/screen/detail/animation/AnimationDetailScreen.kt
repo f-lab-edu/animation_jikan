@@ -19,6 +19,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -60,6 +61,7 @@ import com.artem.animationjikan.R
 import com.artem.animationjikan.domain.entities.AnimationDetailEntity
 import com.artem.animationjikan.presentation.ui.LocalNavScreenController
 import com.artem.animationjikan.presentation.ui.components.HeightGap
+import com.artem.animationjikan.presentation.ui.components.LoadingSpinner
 import com.artem.animationjikan.presentation.ui.components.WidthGap
 import com.artem.animationjikan.presentation.ui.screen.detail.animation.tabs.character.CharacterTab
 import com.artem.animationjikan.presentation.ui.screen.detail.animation.tabs.character.CharacterViewModel
@@ -85,43 +87,35 @@ fun AnimationDetailScreen(
     Scaffold(
         containerColor = colorResource(R.color.black),
         topBar = {
-            //현재 Hard Coding 되어 있지만 API 연동 후 mapping 예정
             AnimationDetailTopBar(
                 title = animationDetailViewModel.animationDetailEntity.title,
                 showTitle = showTitle,
                 onBackPressed = { navController.popBackStack() },
-                onFavoriteClick = { },
+                onFavoriteClick = {
+
+                },
             )
         },
         content = { paddingValues ->
             when (animationDetailViewModel.state) {
-                ViewModelState.Idle, ViewModelState.Loading -> {
-                    Log.e("AnimationDetailScreen", "ViewModelState.Idle, ViewModelState.Loading")
-                    Box(
-                        modifier = Modifier.fillMaxSize(),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        CircularProgressIndicator(
-                            color = colorResource(R.color.red)
-                        )
-                    }
-                }
+                ViewModelState.Idle, ViewModelState.Loading ->
+                    LoadingSpinner(modifier = Modifier.fillMaxSize())
 
-                ViewModelState.Success -> {
-                    Log.e("AnimationDetailScreen", "ViewModelState.Success")
+
+                ViewModelState.Success ->
                     AnimationDetailContent(
                         scrollState = scrollState,
                         paddingValues = paddingValues,
                         animationId = animationDetailViewModel.animeId ?: 0,
                         animationDetailEntity = animationDetailViewModel.animationDetailEntity
                     )
-                }
 
-                ViewModelState.Error -> {
+
+                ViewModelState.Error ->
                     Box(modifier = Modifier.fillMaxHeight()) {
                         Text("")
                     }
-                }
+
             }
         }
     )
@@ -185,12 +179,10 @@ fun AnimationDetailContent(
     paddingValues: PaddingValues,
     animationId: Int,
     animationDetailEntity: AnimationDetailEntity,
-    //animationDetailViewModel: AnimationDetailViewModel = hiltViewModel(),
     newsViewModel: NewsViewModel = hiltViewModel(),
     reviewViewModel: ReviewViewModel = hiltViewModel(),
     characterViewModel: CharacterViewModel = hiltViewModel(),
 ) {
-    Log.e("AnimationDetailContent", "AnimationDetailContent")
     val selectedDestination = remember { mutableStateOf(DetailTabs.FIRST) }
     val tabTitles = listOf(R.string.news, R.string.review, R.string.character)
 
@@ -319,23 +311,62 @@ fun AnimationDetailContent(
         item { HeightGap(10) }
 
         when (selectedDestination.value) {
-            DetailTabs.FIRST -> items(
-                count = newsViewModel.newsList.count(),
-                key = { index -> "$index" }) {
-                NewsItem(newsEntity = newsViewModel.newsList[it])
+            DetailTabs.FIRST -> when (newsViewModel.state) {
+                ViewModelState.Idle, ViewModelState.Loading ->
+                    item { LoadingSpinner(modifier = Modifier.fillMaxWidth().height(200.dp)) }
+
+
+                ViewModelState.Success ->
+                    items(
+                        count = newsViewModel.newsList.count(),
+                        key = { index -> "$index" }) {
+                        NewsItem(newsEntity = newsViewModel.newsList[it])
+                    }
+
+
+                ViewModelState.Error -> {
+
+                }
             }
 
-            DetailTabs.SECOND -> items(
-                count = reviewViewModel.reviewList.count(),
-                key = { index -> "$index" }) {
-                ReviewTab(reviewModel = reviewViewModel.reviewList[it])
+            DetailTabs.SECOND -> when (reviewViewModel.state) {
+                ViewModelState.Idle, ViewModelState.Loading ->
+                    item { LoadingSpinner(modifier = Modifier.fillMaxWidth().height(200.dp)) }
+
+
+                ViewModelState.Success ->
+                    items(
+                        count = reviewViewModel.reviewList.count(),
+                        key = { index -> "$index" }) {
+
+                        ReviewTab(reviewModel = reviewViewModel.reviewList[it])
+                    }
+
+
+                ViewModelState.Error -> {
+
+                }
             }
 
-            DetailTabs.THIRD -> items(
-                count = characterViewModel.characterList.count(),
-                key = { index -> "$index" }) {
-                CharacterTab(animeCharacterEntity = characterViewModel.characterList[it])
+            DetailTabs.THIRD -> when (characterViewModel.state) {
+                ViewModelState.Idle, ViewModelState.Loading -> {
+                    item { LoadingSpinner(modifier = Modifier.fillMaxWidth().height(200.dp)) }
+                }
+
+                ViewModelState.Success -> {
+                    items(
+                        count = characterViewModel.characterList.count(),
+                        key = { index -> "$index" }) {
+                        CharacterTab(animeCharacterEntity = characterViewModel.characterList[it])
+                    }
+                }
+
+                ViewModelState.Error -> {
+
+                }
             }
+
+
         }
     }
 }

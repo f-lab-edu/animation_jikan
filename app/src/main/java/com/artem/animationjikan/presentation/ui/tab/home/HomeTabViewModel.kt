@@ -62,6 +62,8 @@ class HomeTabViewModel @Inject constructor(
     val eventFlow = _eventFlow.asSharedFlow()
 
     init {
+        /// 전체 Refactoring 하는게 필요하다고 하심
+        /// 중복되는 코드가 많음
         likeUseCase.execute().onEach { result ->
             likeList.value = result.map { entity -> entity.mediaId }.toList()
         }.launchIn(viewModelScope)
