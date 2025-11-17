@@ -55,11 +55,10 @@ class LikeRepositoryImpl @Inject constructor(
     }
 
     override fun getLikeStatus(mediaId: Int): Flow<Boolean> =
-        dao.isLike(mediaId = mediaId).map {
-            it
-        }.catch { e ->
-            Log.e(TAG, e.message.toString())
-            throw e
-        }.flowOn(Dispatchers.IO)
+        dao.isLike(mediaId = mediaId)
+            .catch { e ->
+                Log.e(TAG, e.message.toString())
+                throw e
+            }.flowOn(Dispatchers.IO)
 
 }

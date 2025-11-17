@@ -1,6 +1,5 @@
 package com.artem.animationjikan.data.repository
 
-import android.util.Log
 import com.artem.animationjikan.data.dto.AnimationDetailDTO
 import com.artem.animationjikan.data.dto.AnimationResponse
 import com.artem.animationjikan.data.dto.AnimeCharacterDTO
@@ -54,9 +53,6 @@ class AnimationRepositoryImpl @Inject constructor(
     }
 
     override suspend fun fetchAnimeFullById(id: Int): AnimationDetailDTO {
-        val result = client.getAnimeFullById(id = id).data
-        Log.e("AnimationDetailUseCase","fetchAnimeFullById $id")
-        Log.e("AnimationDetailUseCase","result is $result")
         return client.getAnimeFullById(id = id).data
     }
 

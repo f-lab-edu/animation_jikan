@@ -19,7 +19,6 @@ import com.artem.animationjikan.presentation.ui.components.JikanNetworkCardImage
 import com.artem.animationjikan.presentation.ui.components.WidthGap
 import com.artem.animationjikan.presentation.ui.components.defaultCardModifier
 
-
 @Composable
 fun NewsItem(newsEntity: NewsEntity) {
     Row(modifier = Modifier.padding(vertical = 8.dp, horizontal = 10.dp)) {

@@ -51,6 +51,8 @@ import com.artem.animationjikan.util.CATEGORIES_LIST
 import com.artem.animationjikan.util.enums.ViewModelState
 import com.artem.animationjikan.util.event.UiEvent
 import com.artem.animationjikan.util.router.NavRoutes
+import com.google.gson.Gson
+import java.util.Base64
 
 @Composable
 fun HomeTab(
@@ -63,7 +65,16 @@ fun HomeTab(
     val navController = LocalNavScreenController.current
 
     val animeNavigationClick: (HomeCommonEntity) -> Unit = { entity ->
-        navController.navigate(NavRoutes.AnimationDetail.router + "/${entity.id}")
+        val jsonString = Gson().toJson(entity)
+        val encodedString = Base64.getUrlEncoder()
+
+        navController.navigate(
+            NavRoutes.AnimationDetail.router + "/" + encodedString.encodeToString(
+                jsonString.toByteArray(
+                    Charsets.UTF_8
+                )
+            )
+        )
     }
 
     LaunchedEffect(key1 = Unit) {

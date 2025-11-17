@@ -1,7 +1,6 @@
 package com.artem.animationjikan.presentation.ui.screen.detail.animation
 
 import android.annotation.SuppressLint
-import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.fadeIn
@@ -19,12 +18,10 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -37,6 +34,7 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -47,10 +45,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -63,6 +63,7 @@ import com.artem.animationjikan.presentation.ui.LocalNavScreenController
 import com.artem.animationjikan.presentation.ui.components.HeightGap
 import com.artem.animationjikan.presentation.ui.components.LoadingSpinner
 import com.artem.animationjikan.presentation.ui.components.WidthGap
+import com.artem.animationjikan.presentation.ui.components.showToast
 import com.artem.animationjikan.presentation.ui.screen.detail.animation.tabs.character.CharacterTab
 import com.artem.animationjikan.presentation.ui.screen.detail.animation.tabs.character.CharacterViewModel
 import com.artem.animationjikan.presentation.ui.screen.detail.animation.tabs.news.NewsItem
@@ -72,17 +73,44 @@ import com.artem.animationjikan.presentation.ui.screen.detail.animation.tabs.rev
 import com.artem.animationjikan.presentation.ui.theme.AnimationJikanTheme
 import com.artem.animationjikan.util.enums.DetailTabs
 import com.artem.animationjikan.util.enums.ViewModelState
+import com.artem.animationjikan.util.event.UiEvent
 
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun AnimationDetailScreen(
     animationDetailViewModel: AnimationDetailViewModel = hiltViewModel(),
+    newsViewModel: NewsViewModel = hiltViewModel(),
+    reviewViewModel: ReviewViewModel = hiltViewModel(),
+    characterViewModel: CharacterViewModel = hiltViewModel(),
 ) {
+    val context = LocalContext.current
     val navController = LocalNavScreenController.current
     val scrollState = rememberLazyListState()
+    val favoriteState by animationDetailViewModel.likeStatus.collectAsState()
 
     val showTitle by remember { derivedStateOf { scrollState.firstVisibleItemIndex > 2 } }
+
+    val selectedDestination = remember { mutableStateOf(DetailTabs.FIRST) }
+
+    LaunchedEffect(key1 = Unit) {
+        animationDetailViewModel.eventFlow.collect { event ->
+            when (event) {
+                is UiEvent.ShowToast -> showToast(context = context, event.message)
+                else -> {}
+            }
+        }
+    }
+
+    LaunchedEffect(selectedDestination.value) {
+        val animationId = animationDetailViewModel.paramEntity?.id ?: 0
+
+        when (selectedDestination.value) {
+            DetailTabs.FIRST -> newsViewModel.fetchAnimeNews(malId = animationId)
+            DetailTabs.SECOND -> reviewViewModel.fetchReviews(malId = animationId)
+            DetailTabs.THIRD -> characterViewModel.fetchAnimeCharacters(malId = animationId)
+        }
+    }
 
     Scaffold(
         containerColor = colorResource(R.color.black),
@@ -90,10 +118,9 @@ fun AnimationDetailScreen(
             AnimationDetailTopBar(
                 title = animationDetailViewModel.animationDetailEntity.title,
                 showTitle = showTitle,
+                favoriteState = favoriteState,
                 onBackPressed = { navController.popBackStack() },
-                onFavoriteClick = {
-
-                },
+                onFavoriteClick = { animationDetailViewModel.toggleFavorite() },
             )
         },
         content = { paddingValues ->
@@ -101,20 +128,27 @@ fun AnimationDetailScreen(
                 ViewModelState.Idle, ViewModelState.Loading ->
                     LoadingSpinner(modifier = Modifier.fillMaxSize())
 
-
-                ViewModelState.Success ->
+                ViewModelState.Success -> {
                     AnimationDetailContent(
                         scrollState = scrollState,
                         paddingValues = paddingValues,
-                        animationId = animationDetailViewModel.animeId ?: 0,
-                        animationDetailEntity = animationDetailViewModel.animationDetailEntity
+                        animationDetailEntity = animationDetailViewModel.animationDetailEntity,
+                        selectedDestination = selectedDestination.value,
+                        onTabClick = { selectedDestination.value = it }
                     )
+                }
 
-
-                ViewModelState.Error ->
-                    Box(modifier = Modifier.fillMaxHeight()) {
-                        Text("")
-                    }
+                ViewModelState.Error -> Box(modifier = Modifier.fillMaxSize()) {
+                    Text(
+                        stringResource(R.string.fail_message),
+                        modifier = Modifier
+                            .align(alignment = Alignment.Center),
+                        fontSize = 11.sp,
+                        fontWeight = FontWeight(400),
+                        textAlign = TextAlign.Center,
+                        color = colorResource(R.color.grey4)
+                    )
+                }
 
             }
         }
@@ -126,10 +160,10 @@ fun AnimationDetailScreen(
 fun AnimationDetailTopBar(
     title: String,
     showTitle: Boolean,
+    favoriteState: Boolean,
     onBackPressed: () -> Unit,
     onFavoriteClick: () -> Unit,
 ) {
-
     val containerColor by animateColorAsState(
         targetValue = if (showTitle) colorResource(R.color.black) else Color.Transparent,
     )
@@ -158,14 +192,19 @@ fun AnimationDetailTopBar(
             IconButton(
                 onClick = { onBackPressed() }
             ) {
-                Icon(painter = painterResource(R.drawable.ic_arrow_back), contentDescription = null)
+                Icon(
+                    painter = painterResource(R.drawable.ic_arrow_back),
+                    contentDescription = null,
+                    tint = Color.Unspecified
+                )
             }
         },
         actions = {
             IconButton(onClick = { onFavoriteClick() }) {
                 Icon(
-                    painter = painterResource(R.drawable.ic_favorite_off),
-                    contentDescription = null
+                    painter = painterResource(if (favoriteState) R.drawable.ic_favorite_red_on else R.drawable.ic_favorite_off),
+                    contentDescription = null,
+                    tint = Color.Unspecified
                 )
             }
         }
@@ -177,23 +216,14 @@ fun AnimationDetailTopBar(
 fun AnimationDetailContent(
     scrollState: LazyListState,
     paddingValues: PaddingValues,
-    animationId: Int,
     animationDetailEntity: AnimationDetailEntity,
     newsViewModel: NewsViewModel = hiltViewModel(),
     reviewViewModel: ReviewViewModel = hiltViewModel(),
     characterViewModel: CharacterViewModel = hiltViewModel(),
+    selectedDestination: DetailTabs,
+    onTabClick: (DetailTabs) -> Unit,
 ) {
-    val selectedDestination = remember { mutableStateOf(DetailTabs.FIRST) }
     val tabTitles = listOf(R.string.news, R.string.review, R.string.character)
-
-
-    LaunchedEffect(selectedDestination.value) {
-        when (selectedDestination.value) {
-            DetailTabs.FIRST -> newsViewModel.fetchAnimeNews(malId = animationId)
-            DetailTabs.SECOND -> reviewViewModel.fetchReviews(malId = animationId)
-            DetailTabs.THIRD -> characterViewModel.fetchAnimeCharacters(malId = animationId)
-        }
-    }
 
     LazyColumn(
         state = scrollState,
@@ -275,7 +305,7 @@ fun AnimationDetailContent(
                 indicator = {
                     Box(
                         modifier = Modifier
-                            .tabIndicatorOffset(selectedDestination.value.ordinal)
+                            .tabIndicatorOffset(selectedTabIndex = selectedDestination.ordinal)
                             .height(4.dp)
                             .padding(horizontal = 20.dp)
                             .background(
@@ -289,11 +319,11 @@ fun AnimationDetailContent(
                 val tabs = DetailTabs.entries.toTypedArray()
                 tabs.forEachIndexed { index, tab ->
                     Tab(
-                        selected = index == tabs.indexOf(selectedDestination.value),
+                        selected = index == tabs.indexOf(tab),
                         selectedContentColor = colorResource(R.color.white),
                         unselectedContentColor = colorResource(R.color.white),
                         onClick = {
-                            selectedDestination.value = tab
+                            onTabClick(tab)
                         },
                         text = {
                             Text(
@@ -310,10 +340,17 @@ fun AnimationDetailContent(
 
         item { HeightGap(10) }
 
-        when (selectedDestination.value) {
+        when (selectedDestination) {
+
             DetailTabs.FIRST -> when (newsViewModel.state) {
                 ViewModelState.Idle, ViewModelState.Loading ->
-                    item { LoadingSpinner(modifier = Modifier.fillMaxWidth().height(200.dp)) }
+                    item {
+                        LoadingSpinner(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(200.dp)
+                        )
+                    }
 
 
                 ViewModelState.Success ->
@@ -331,7 +368,13 @@ fun AnimationDetailContent(
 
             DetailTabs.SECOND -> when (reviewViewModel.state) {
                 ViewModelState.Idle, ViewModelState.Loading ->
-                    item { LoadingSpinner(modifier = Modifier.fillMaxWidth().height(200.dp)) }
+                    item {
+                        LoadingSpinner(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(200.dp)
+                        )
+                    }
 
 
                 ViewModelState.Success ->
@@ -350,7 +393,13 @@ fun AnimationDetailContent(
 
             DetailTabs.THIRD -> when (characterViewModel.state) {
                 ViewModelState.Idle, ViewModelState.Loading -> {
-                    item { LoadingSpinner(modifier = Modifier.fillMaxWidth().height(200.dp)) }
+                    item {
+                        LoadingSpinner(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(200.dp)
+                        )
+                    }
                 }
 
                 ViewModelState.Success -> {
@@ -416,17 +465,5 @@ fun ExpandableText(
 fun AnimationDetailPreview() {
     AnimationJikanTheme {
         AnimationDetailScreen()
-    }
-}
-
-@Composable
-@Preview
-fun AnimationDetailTopBarPreview() {
-    AnimationJikanTheme {
-        AnimationDetailTopBar(
-            title = "",
-            showTitle = true,
-            onBackPressed = {},
-            onFavoriteClick = {})
     }
 }
