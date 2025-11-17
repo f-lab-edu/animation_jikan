@@ -15,12 +15,16 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -35,18 +39,33 @@ fun CharacterTab(animeCharacterEntity: AnimeCharacterEntity) {
     Row(
         modifier = Modifier.height(175.dp).padding(all = 10.dp)
     ) {
-        JikanNetworkCardImage(
-            imageUrl = animeCharacterEntity.imageUrl,
-            modifier = Modifier
-                .height(175.dp)
-                .aspectRatio(120f / 175f)
-                .clip(RoundedCornerShape(4.dp))
-                .background(color = Color.LightGray),
-            result = animeCharacterEntity,
-            onClick = {
+        Box {
+            JikanNetworkCardImage(
+                imageUrl = animeCharacterEntity.imageUrl,
+                modifier = Modifier
+                    .height(175.dp)
+                    .aspectRatio(120f / 175f)
+                    .clip(RoundedCornerShape(4.dp))
+                    .background(color = Color.LightGray),
+                result = animeCharacterEntity,
+                onClick = {
 
-            },
-        )
+                },
+            )
+
+            IconButton(
+                modifier = Modifier.align(Alignment.TopEnd),
+                onClick = {
+
+                }
+            ) {
+                Icon(
+                    painter = painterResource(id = R.drawable.ic_favorite_red_on),
+                    tint = Color.Unspecified,
+                    contentDescription = null
+                )
+            }
+        }
 
         WidthGap(10)
 

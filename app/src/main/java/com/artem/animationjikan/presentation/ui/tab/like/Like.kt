@@ -35,7 +35,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -45,10 +44,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import coil3.compose.AsyncImage
 import com.artem.animationjikan.R
 import com.artem.animationjikan.domain.entities.LikeEntity
 import com.artem.animationjikan.presentation.ui.components.HeightGap
+import com.artem.animationjikan.presentation.ui.components.JikanNetworkCardImage
 import com.artem.animationjikan.presentation.ui.theme.AnimationJikanTheme
 import com.artem.animationjikan.util.FILTER_OPTION
 import com.artem.animationjikan.util.enums.FilterCategory
@@ -79,7 +78,7 @@ fun LikeTab(
 
     Scaffold(
         containerColor = Color.Black,
-        content = { padding ->
+        content = {
             Box(modifier = modifier.padding(horizontal = 16.dp)) {
                 Column {
                     Box(
@@ -185,15 +184,18 @@ fun GridItem(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Box {
-            AsyncImage(
-                model = model.imageUrl,
+            JikanNetworkCardImage(
                 modifier = Modifier
                     .aspectRatio(9f / 13f)
                     .clip(
                         RoundedCornerShape(4.dp)
                     ),
-                contentScale = ContentScale.Crop,
-                contentDescription = null,
+                imageUrl = model.imageUrl,
+                result = model,
+                onClick = {
+
+                },
+
             )
 
             IconButton(
