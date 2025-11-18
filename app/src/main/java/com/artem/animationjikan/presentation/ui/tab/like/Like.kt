@@ -1,5 +1,6 @@
 package com.artem.animationjikan.presentation.ui.tab.like
 
+import android.annotation.SuppressLint
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.tween
@@ -54,6 +55,7 @@ import com.artem.animationjikan.util.enums.FilterCategory
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
+@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun LikeTab(
     modifier: Modifier = Modifier,
@@ -105,7 +107,7 @@ fun LikeTab(
                         )
                     }
 
-                    HeightGap( 22)
+                    HeightGap(22)
 
                     LazyVerticalGrid(
                         columns = GridCells.Fixed(3),
@@ -196,7 +198,7 @@ fun GridItem(
 
                 },
 
-            )
+                )
 
             IconButton(
                 modifier = Modifier.align(Alignment.TopEnd),
@@ -213,7 +215,7 @@ fun GridItem(
             }
         }
 
-        HeightGap( 8)
+        HeightGap(8)
     }
 }
 
