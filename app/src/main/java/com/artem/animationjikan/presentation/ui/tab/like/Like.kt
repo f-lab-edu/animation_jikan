@@ -1,10 +1,12 @@
 package com.artem.animationjikan.presentation.ui.tab.like
 
 import android.annotation.SuppressLint
+import android.util.Log
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -55,7 +57,6 @@ import com.artem.animationjikan.util.enums.FilterCategory
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
-@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun LikeTab(
     modifier: Modifier = Modifier,
@@ -78,65 +79,62 @@ fun LikeTab(
         scope.launch { sheetState.hide() }
     }
 
-    Scaffold(
-        containerColor = Color.Black,
-        content = {
-            Box(modifier = modifier.padding(horizontal = 16.dp)) {
-                Column {
-                    Box(
-                        modifier = Modifier.padding(vertical = 6.dp)
-                    ) {
-                        AssistChip(
-                            onClick = openSheet,
-                            label = {
-                                Text(
-                                    stringResource(currentCategory.stringRes),
-                                    color = Color.White
-                                )
-                            },
-                            colors = AssistChipDefaults.assistChipColors(
-                                leadingIconContentColor = Color.White
-                            ),
-                            leadingIcon = {
-                                Icon(
-                                    painter = painterResource(R.drawable.ic_arrow_down),
-                                    tint = Color.White,
-                                    contentDescription = null
-                                )
-                            }
+    Box(modifier = modifier
+        .padding(horizontal = 16.dp)
+        .background(color = Color.Black)) {
+        Column {
+            Box(
+                modifier = Modifier.padding(vertical = 6.dp)
+            ) {
+                AssistChip(
+                    onClick = openSheet,
+                    label = {
+                        Text(
+                            stringResource(currentCategory.stringRes),
+                            color = Color.White
+                        )
+                    },
+                    colors = AssistChipDefaults.assistChipColors(
+                        leadingIconContentColor = Color.White
+                    ),
+                    leadingIcon = {
+                        Icon(
+                            painter = painterResource(R.drawable.ic_arrow_down),
+                            tint = Color.White,
+                            contentDescription = null
                         )
                     }
-
-                    HeightGap(22)
-
-                    LazyVerticalGrid(
-                        columns = GridCells.Fixed(3),
-                        verticalArrangement = Arrangement.spacedBy(8.dp),
-                        horizontalArrangement = Arrangement.spacedBy(8.dp),
-                        contentPadding = PaddingValues(bottom = 25.dp),
-                        modifier = Modifier.fillMaxSize(),
-                    ) {
-                        items(
-                            items = likeList,
-                            key = { item -> item.mediaId }
-                        ) { item ->
-                            GridItem(
-                                model = item,
-                                modifier = Modifier.animateItem(
-                                    fadeInSpec = tween(durationMillis = 250),
-                                    fadeOutSpec = tween(durationMillis = 100),
-                                    placementSpec = spring(stiffness = Spring.StiffnessLow)
-                                ),
-                                onItemClick = {
-                                    viewModel.removeLike(it)
-                                },
-                            )
-                        }
-                    }
-                }
+                )
             }
 
-        })
+            HeightGap(22)
+
+            LazyVerticalGrid(
+                columns = GridCells.Fixed(3),
+                verticalArrangement = Arrangement.spacedBy(8.dp),
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                contentPadding = PaddingValues(bottom = 25.dp),
+                modifier = Modifier.fillMaxSize(),
+            ) {
+                items(
+                    items = likeList,
+                    key = { item -> item.mediaId }
+                ) { item ->
+                    GridItem(
+                        model = item,
+                        modifier = Modifier.animateItem(
+                            fadeInSpec = tween(durationMillis = 250),
+                            fadeOutSpec = tween(durationMillis = 100),
+                            placementSpec = spring(stiffness = Spring.StiffnessLow)
+                        ),
+                        onItemClick = {
+                            viewModel.removeLike(it)
+                        },
+                    )
+                }
+            }
+        }
+    }
 
     if (sheetState.isVisible) {
         ModalBottomSheet(
