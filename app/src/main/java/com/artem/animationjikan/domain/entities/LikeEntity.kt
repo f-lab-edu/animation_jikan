@@ -4,7 +4,7 @@ import com.artem.animationjikan.data.dto.LikeData
 
 data class LikeEntity(
     val mediaId: Int,
-    val imageUrl: String,
+    val imageUrl: String?,
     val mediaType: String,
 )
 

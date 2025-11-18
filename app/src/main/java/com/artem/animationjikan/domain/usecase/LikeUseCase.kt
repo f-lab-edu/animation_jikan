@@ -4,7 +4,6 @@ import android.util.Log
 import com.artem.animationjikan.domain.entities.LikeEntity
 import com.artem.animationjikan.domain.repository.LikeRepository
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 class LikeUseCase @Inject constructor(

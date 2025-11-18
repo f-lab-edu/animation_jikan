@@ -7,6 +7,6 @@ import androidx.room.PrimaryKey
 data class LikeData(
     @PrimaryKey
     val mediaId: Int,
-    val imageUrl: String,
+    val imageUrl: String?,
     val mediaType: String,
 )

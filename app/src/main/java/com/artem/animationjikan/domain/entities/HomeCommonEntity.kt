@@ -6,5 +6,5 @@ data class HomeCommonEntity(
     val id: Int = -1,
     val type: FilterCategory,
     val likeStatus: Boolean = false,
-    val imageUrl: String = "",
+    val imageUrl: String? = null,
 )

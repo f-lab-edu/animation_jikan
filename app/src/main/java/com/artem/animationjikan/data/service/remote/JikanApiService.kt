@@ -1,11 +1,17 @@
 package com.artem.animationjikan.data.service.remote
 
 import com.artem.animationjikan.data.dto.AnimationResponse
+import com.artem.animationjikan.data.dto.AnimeCharacterResponse
 import com.artem.animationjikan.data.dto.CharacterResponse
+import com.artem.animationjikan.data.dto.MangaCharacterResponse
+import com.artem.animationjikan.data.dto.MangaPictureResponse
 import com.artem.animationjikan.data.dto.MangaResponse
+import com.artem.animationjikan.data.dto.NewsResponse
 import com.artem.animationjikan.data.dto.RecommendationAnimationResponse
+import com.artem.animationjikan.data.dto.ReviewResponse
 import com.artem.animationjikan.data.dto.UpcomingResponse
 import retrofit2.http.GET
+import retrofit2.http.Path
 
 interface JikanApiService {
     @GET("recommendations/anime")
@@ -22,4 +28,22 @@ interface JikanApiService {
 
     @GET("seasons/upcoming")
     suspend fun getUpcoming(): UpcomingResponse
+
+    @GET("anime/{id}/news")
+    suspend fun getAnimeNews(@Path("id") id: Int): NewsResponse
+
+    @GET("anime/{id}/reviews")
+    suspend fun getAnimeReviews(@Path("id") id: Int): ReviewResponse
+
+    @GET("anime/{id}/characters")
+    suspend fun getAnimeCharacters(@Path("id") id: Int): AnimeCharacterResponse
+
+    @GET("manga/{id}/pictures")
+    suspend fun getMangaPictures(@Path("id") id: Int): MangaPictureResponse
+
+    @GET("manga/{id}/characters")
+    suspend fun getMangaCharacters(@Path("id") id: Int): MangaCharacterResponse
+
+    @GET("manga/{id}/reviews")
+    suspend fun getMangaReviews(@Path("id") id: Int): ReviewResponse
 }
