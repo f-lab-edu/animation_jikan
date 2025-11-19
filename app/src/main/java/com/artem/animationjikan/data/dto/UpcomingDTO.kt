@@ -5,7 +5,7 @@ import kotlinx.serialization.Serializable
 
 
 @Serializable
-data class UpcomingResponse(
+data class UpcomingResponseDTO(
     val pagination: Pagination,
     val data: List<UpcomingDTO>,
 )

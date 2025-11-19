@@ -4,7 +4,7 @@ import com.google.gson.annotations.SerializedName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class CharacterResponse(
+data class CharacterResponseDTO(
     val pagination: Pagination,
     val data: List<CharacterDTO>,
 )

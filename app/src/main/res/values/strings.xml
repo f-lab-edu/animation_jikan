@@ -16,6 +16,9 @@
     <string name="news_en">news</string>
     <string name="review_en">review</string>
 
+    <string name="image">이미지</string>
+    <string name="appearance_info">등장정보</string>
+
     <string name="All">ALL</string>
     <string name="animation">애니메이션</string>
     <string name="manga">만화</string>

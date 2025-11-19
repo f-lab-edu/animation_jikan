@@ -58,7 +58,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import coil3.compose.AsyncImage
 import com.artem.animationjikan.R
-import com.artem.animationjikan.domain.entities.AnimationDetailEntity
+import com.artem.animationjikan.domain.entities.DetailEntity
 import com.artem.animationjikan.presentation.ui.LocalNavScreenController
 import com.artem.animationjikan.presentation.ui.components.HeightGap
 import com.artem.animationjikan.presentation.ui.components.LoadingSpinner
@@ -72,6 +72,8 @@ import com.artem.animationjikan.presentation.ui.screen.detail.animation.tabs.rev
 import com.artem.animationjikan.presentation.ui.screen.detail.animation.tabs.review.ReviewViewModel
 import com.artem.animationjikan.presentation.ui.theme.AnimationJikanTheme
 import com.artem.animationjikan.util.enums.DetailTabs
+import com.artem.animationjikan.util.enums.FilterCategory
+import com.artem.animationjikan.util.enums.FilterType
 import com.artem.animationjikan.util.enums.ViewModelState
 import com.artem.animationjikan.util.event.UiEvent
 
@@ -116,7 +118,7 @@ fun AnimationDetailScreen(
         containerColor = colorResource(R.color.black),
         topBar = {
             AnimationDetailTopBar(
-                title = animationDetailViewModel.animationDetailEntity.title,
+                title = animationDetailViewModel.detailEntity.title,
                 showTitle = showTitle,
                 favoriteState = favoriteState,
                 onBackPressed = { navController.popBackStack() },
@@ -132,9 +134,10 @@ fun AnimationDetailScreen(
                     AnimationDetailContent(
                         scrollState = scrollState,
                         paddingValues = paddingValues,
-                        animationDetailEntity = animationDetailViewModel.animationDetailEntity,
+                        detailEntity = animationDetailViewModel.detailEntity,
                         selectedDestination = selectedDestination.value,
-                        onTabClick = { selectedDestination.value = it }
+                        onTabClick = { selectedDestination.value = it },
+                        type = animationDetailViewModel.paramEntity?.type
                     )
                 }
 
@@ -214,16 +217,26 @@ fun AnimationDetailTopBar(
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun AnimationDetailContent(
+    type: FilterType?,
     scrollState: LazyListState,
     paddingValues: PaddingValues,
-    animationDetailEntity: AnimationDetailEntity,
+    detailEntity: DetailEntity,
     newsViewModel: NewsViewModel = hiltViewModel(),
     reviewViewModel: ReviewViewModel = hiltViewModel(),
     characterViewModel: CharacterViewModel = hiltViewModel(),
     selectedDestination: DetailTabs,
     onTabClick: (DetailTabs) -> Unit,
 ) {
-    val tabTitles = listOf(R.string.news, R.string.review, R.string.character)
+
+    val tabTitles = listOf(
+        when (type) {
+            FilterType.ANIMATION -> R.string.news
+            FilterType.MANGA -> R.string.image
+            FilterType.CHARACTER -> R.string.appearance_info
+            FilterType.VOICE_ACTOR -> R.string.animation
+            else -> R.string.news
+        }, R.string.review, R.string.character
+    )
 
     LazyColumn(
         state = scrollState,
@@ -238,7 +251,7 @@ fun AnimationDetailContent(
                     .aspectRatio(2.5f / 3f)
             ) {
                 AsyncImage(
-                    model = animationDetailEntity.imageUrl,
+                    model = detailEntity.imageUrl,
                     contentDescription = stringResource(R.string.poster),
                     modifier = Modifier
                         .fillMaxHeight()
@@ -256,7 +269,7 @@ fun AnimationDetailContent(
         item {
             Text(
                 modifier = Modifier.padding(horizontal = 10.dp, vertical = 8.dp),
-                text = animationDetailEntity.title,
+                text = detailEntity.title,
                 color = colorResource(R.color.white),
                 fontSize = 18.sp,
                 lineHeight = 20.sp,
@@ -275,7 +288,7 @@ fun AnimationDetailContent(
                 )
                 WidthGap(5)
                 Text(
-                    animationDetailEntity.score.toString(),
+                    detailEntity.score.toString(),
                     fontSize = 14.sp,
                     lineHeight = 18.sp,
                     fontWeight = FontWeight(400),
@@ -288,7 +301,7 @@ fun AnimationDetailContent(
             Column {
                 HeightGap(16)
                 ExpandableText(
-                    fullText = animationDetailEntity.synopsis,
+                    fullText = detailEntity.synopsis,
                 )
                 HeightGap(11)
             }

@@ -1,6 +1,6 @@
 package com.artem.animationjikan.domain.entities
 
-data class AnimationDetailEntity(
+data class DetailEntity(
     val malId: Int = -1,
     val title: String = "",
     val imageUrl: String? = null,

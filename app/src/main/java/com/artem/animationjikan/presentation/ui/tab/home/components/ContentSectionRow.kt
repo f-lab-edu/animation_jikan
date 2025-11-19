@@ -31,6 +31,7 @@ import com.artem.animationjikan.presentation.ui.components.JikanNetworkCardImage
 import com.artem.animationjikan.presentation.ui.components.ShimmerListItem
 import com.artem.animationjikan.presentation.ui.theme.AnimationJikanTheme
 import com.artem.animationjikan.util.enums.FilterCategory
+import com.artem.animationjikan.util.enums.FilterType
 
 @Composable
 fun ContentSectionRow(
@@ -105,7 +106,7 @@ fun ContentSectionRowPreview() {
             list = listOf(
                 HomeCommonEntity(
                     id = 0,
-                    type = FilterCategory.ANIMATION,
+                    type = FilterType.ANIMATION,
                 )
             ),
             onItemClick = {

@@ -10,3 +10,11 @@ enum class FilterCategory(@StringRes val stringRes: Int) {
     VOICE_ACTOR(R.string.actor),
     CHARACTER(R.string.character)
 }
+
+
+enum class FilterType(@StringRes val stringRes: Int) {
+    ANIMATION(R.string.animation),
+    MANGA(R.string.manga),
+    VOICE_ACTOR(R.string.actor),
+    CHARACTER(R.string.character)
+}

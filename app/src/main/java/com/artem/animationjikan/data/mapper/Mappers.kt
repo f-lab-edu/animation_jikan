@@ -6,12 +6,13 @@ import com.artem.animationjikan.data.dto.AnimeCharacterDTO
 import com.artem.animationjikan.data.dto.AnimeDTO
 import com.artem.animationjikan.data.dto.CharacterDTO
 import com.artem.animationjikan.data.dto.MangaDTO
+import com.artem.animationjikan.data.dto.MangaDetailDTO
 import com.artem.animationjikan.data.dto.NewsDTO
 import com.artem.animationjikan.data.dto.RecommendationAnimationDTO
 import com.artem.animationjikan.data.dto.ReviewDTO
 import com.artem.animationjikan.data.dto.UpcomingDTO
 import com.artem.animationjikan.domain.entities.ActorEntity
-import com.artem.animationjikan.domain.entities.AnimationDetailEntity
+import com.artem.animationjikan.domain.entities.DetailEntity
 import com.artem.animationjikan.domain.entities.AnimeCharacterEntity
 import com.artem.animationjikan.domain.entities.HomeCommonEntity
 import com.artem.animationjikan.domain.entities.NewsEntity
@@ -98,8 +99,18 @@ fun ActorDTO.toActorEntity(): ActorEntity {
     )
 }
 
-fun AnimationDetailDTO.toAnimationDetailEntity(): AnimationDetailEntity {
-    return AnimationDetailEntity(
+fun AnimationDetailDTO.toAnimationDetailEntity(): DetailEntity {
+    return DetailEntity(
+        malId = this.malId,
+        title = this.title,
+        imageUrl = this.images.jpg.largeImageUrl,
+        synopsis = this.synopsis,
+        score = this.score,
+    )
+}
+
+fun MangaDetailDTO.toMangaDetailEntity(): DetailEntity {
+    return DetailEntity(
         malId = this.malId,
         title = this.title,
         imageUrl = this.images.jpg.largeImageUrl,

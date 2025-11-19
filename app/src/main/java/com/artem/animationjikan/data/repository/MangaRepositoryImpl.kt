@@ -30,4 +30,8 @@ class MangaRepositoryImpl @Inject constructor(
     override suspend fun fetchMangaReviews(id: Int): List<ReviewDTO> {
         return client.getMangaReviews(id = id).data
     }
+
+    override suspend fun fetchMangaFullById(id: Int): List<MangaDTO> {
+        return client.getMangaReviews().data
+    }
 }
