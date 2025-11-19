@@ -60,6 +60,7 @@ import coil3.compose.AsyncImage
 import com.artem.animationjikan.R
 import com.artem.animationjikan.domain.entities.DetailEntity
 import com.artem.animationjikan.presentation.ui.LocalNavScreenController
+import com.artem.animationjikan.presentation.ui.components.ErrorWidget
 import com.artem.animationjikan.presentation.ui.components.HeightGap
 import com.artem.animationjikan.presentation.ui.components.LoadingSpinner
 import com.artem.animationjikan.presentation.ui.components.WidthGap
@@ -72,7 +73,6 @@ import com.artem.animationjikan.presentation.ui.screen.detail.animation.tabs.rev
 import com.artem.animationjikan.presentation.ui.screen.detail.animation.tabs.review.ReviewViewModel
 import com.artem.animationjikan.presentation.ui.theme.AnimationJikanTheme
 import com.artem.animationjikan.util.enums.DetailTabs
-import com.artem.animationjikan.util.enums.FilterCategory
 import com.artem.animationjikan.util.enums.FilterType
 import com.artem.animationjikan.util.enums.ViewModelState
 import com.artem.animationjikan.util.event.UiEvent
@@ -367,15 +367,24 @@ fun AnimationDetailContent(
 
 
                 ViewModelState.Success ->
-                    items(
-                        count = newsViewModel.newsList.count(),
-                        key = { index -> "$index" }) {
-                        NewsItem(newsEntity = newsViewModel.newsList[it])
+                    if (newsViewModel.newsList.isNotEmpty()) {
+                        items(
+                            count = newsViewModel.newsList.count(),
+                            key = { index -> "$index" }) {
+                            NewsItem(newsEntity = newsViewModel.newsList[it])
+                        }
+                    } else {
+                        item {
+                            ErrorWidget(
+                                messageStringResId = R.string.no_get_news_data,
+                                contentDescription = R.string.no_data,
+                            )
+                        }
                     }
 
 
                 ViewModelState.Error -> {
-
+                    item { BuildErrorWidget() }
                 }
             }
 
@@ -390,17 +399,26 @@ fun AnimationDetailContent(
                     }
 
 
-                ViewModelState.Success ->
-                    items(
-                        count = reviewViewModel.reviewList.count(),
-                        key = { index -> "$index" }) {
-
-                        ReviewTab(reviewModel = reviewViewModel.reviewList[it])
+                ViewModelState.Success -> {
+                    if (reviewViewModel.reviewList.isNotEmpty()) {
+                        items(
+                            count = reviewViewModel.reviewList.count(),
+                            key = { index -> "$index" }) {
+                            ReviewTab(reviewModel = reviewViewModel.reviewList[it])
+                        }
+                    } else {
+                        items(
+                            count = newsViewModel.newsList.count(),
+                            key = { index -> "$index" }) {
+                            NewsItem(newsEntity = newsViewModel.newsList[it])
+                        }
                     }
+
+                }
 
 
                 ViewModelState.Error -> {
-
+                    item { BuildErrorWidget() }
                 }
             }
 
@@ -424,7 +442,7 @@ fun AnimationDetailContent(
                 }
 
                 ViewModelState.Error -> {
-
+                    item { BuildErrorWidget() }
                 }
             }
 
@@ -432,6 +450,14 @@ fun AnimationDetailContent(
         }
     }
 }
+
+@Composable
+fun BuildErrorWidget() {
+    ErrorWidget(
+        messageStringResId = R.string.fail_load_data,
+    )
+}
+
 
 @Composable
 fun ExpandableText(
