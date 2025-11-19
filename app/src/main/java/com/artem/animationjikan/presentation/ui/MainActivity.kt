@@ -13,9 +13,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.compositionLocalOf
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.artem.animationjikan.presentation.ui.screen.MainScreen
 import com.artem.animationjikan.presentation.ui.screen.detail.animation.AnimationDetailScreen
 import com.artem.animationjikan.presentation.ui.theme.AnimationJikanTheme
@@ -63,7 +65,13 @@ fun MyNavHost() {
 
         /// 애니메이션 상세화면
         composable(
-            NavRoutes.AnimationDetail.router + "/{malId}",
+            NavRoutes.AnimationDetail.router + "/{entityData}",
+            arguments = listOf(
+                navArgument("entityData") {
+                    type = NavType.StringType
+                    nullable = false
+                }
+            ),
             enterTransition = {
                 slideInHorizontally(
                     initialOffsetX = { fullWidth -> fullWidth },

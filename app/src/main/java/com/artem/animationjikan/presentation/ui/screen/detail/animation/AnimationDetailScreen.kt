@@ -34,6 +34,7 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -44,10 +45,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -55,9 +58,12 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import coil3.compose.AsyncImage
 import com.artem.animationjikan.R
+import com.artem.animationjikan.domain.entities.AnimationDetailEntity
 import com.artem.animationjikan.presentation.ui.LocalNavScreenController
 import com.artem.animationjikan.presentation.ui.components.HeightGap
+import com.artem.animationjikan.presentation.ui.components.LoadingSpinner
 import com.artem.animationjikan.presentation.ui.components.WidthGap
+import com.artem.animationjikan.presentation.ui.components.showToast
 import com.artem.animationjikan.presentation.ui.screen.detail.animation.tabs.character.CharacterTab
 import com.artem.animationjikan.presentation.ui.screen.detail.animation.tabs.character.CharacterViewModel
 import com.artem.animationjikan.presentation.ui.screen.detail.animation.tabs.news.NewsItem
@@ -66,35 +72,85 @@ import com.artem.animationjikan.presentation.ui.screen.detail.animation.tabs.rev
 import com.artem.animationjikan.presentation.ui.screen.detail.animation.tabs.review.ReviewViewModel
 import com.artem.animationjikan.presentation.ui.theme.AnimationJikanTheme
 import com.artem.animationjikan.util.enums.DetailTabs
+import com.artem.animationjikan.util.enums.ViewModelState
+import com.artem.animationjikan.util.event.UiEvent
 
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun AnimationDetailScreen(
-    //animationDetailViewModel: AnimationDetailViewModel = hiltViewModel(),
-    //animationDetailViewModel는 여기서 api 호출할 때 사용할거임
+    animationDetailViewModel: AnimationDetailViewModel = hiltViewModel(),
+    newsViewModel: NewsViewModel = hiltViewModel(),
+    reviewViewModel: ReviewViewModel = hiltViewModel(),
+    characterViewModel: CharacterViewModel = hiltViewModel(),
 ) {
+    val context = LocalContext.current
     val navController = LocalNavScreenController.current
     val scrollState = rememberLazyListState()
+    val favoriteState by animationDetailViewModel.likeStatus.collectAsState()
 
     val showTitle by remember { derivedStateOf { scrollState.firstVisibleItemIndex > 2 } }
+
+    val selectedDestination = remember { mutableStateOf(DetailTabs.FIRST) }
+
+    LaunchedEffect(key1 = Unit) {
+        animationDetailViewModel.eventFlow.collect { event ->
+            when (event) {
+                is UiEvent.ShowToast -> showToast(context = context, event.message)
+                else -> {}
+            }
+        }
+    }
+
+    LaunchedEffect(selectedDestination.value) {
+        val animationId = animationDetailViewModel.paramEntity?.id ?: 0
+
+        when (selectedDestination.value) {
+            DetailTabs.FIRST -> newsViewModel.fetchAnimeNews(malId = animationId)
+            DetailTabs.SECOND -> reviewViewModel.fetchReviews(malId = animationId)
+            DetailTabs.THIRD -> characterViewModel.fetchAnimeCharacters(malId = animationId)
+        }
+    }
 
     Scaffold(
         containerColor = colorResource(R.color.black),
         topBar = {
-            //현재 Hard Coding 되어 있지만 API 연동 후 mapping 예정
             AnimationDetailTopBar(
-                title = "Sample Animation Title",
+                title = animationDetailViewModel.animationDetailEntity.title,
                 showTitle = showTitle,
+                favoriteState = favoriteState,
                 onBackPressed = { navController.popBackStack() },
-                onFavoriteClick = { },
+                onFavoriteClick = { animationDetailViewModel.toggleFavorite() },
             )
         },
         content = { paddingValues ->
-            AnimationDetailContent(
-                scrollState = scrollState,
-                paddingValues = paddingValues
-            )
+            when (animationDetailViewModel.state) {
+                ViewModelState.Idle, ViewModelState.Loading ->
+                    LoadingSpinner(modifier = Modifier.fillMaxSize())
+
+                ViewModelState.Success -> {
+                    AnimationDetailContent(
+                        scrollState = scrollState,
+                        paddingValues = paddingValues,
+                        animationDetailEntity = animationDetailViewModel.animationDetailEntity,
+                        selectedDestination = selectedDestination.value,
+                        onTabClick = { selectedDestination.value = it }
+                    )
+                }
+
+                ViewModelState.Error -> Box(modifier = Modifier.fillMaxSize()) {
+                    Text(
+                        stringResource(R.string.fail_message),
+                        modifier = Modifier
+                            .align(alignment = Alignment.Center),
+                        fontSize = 11.sp,
+                        fontWeight = FontWeight(400),
+                        textAlign = TextAlign.Center,
+                        color = colorResource(R.color.grey4)
+                    )
+                }
+
+            }
         }
     )
 }
@@ -104,10 +160,10 @@ fun AnimationDetailScreen(
 fun AnimationDetailTopBar(
     title: String,
     showTitle: Boolean,
+    favoriteState: Boolean,
     onBackPressed: () -> Unit,
-    onFavoriteClick: () -> Unit
+    onFavoriteClick: () -> Unit,
 ) {
-
     val containerColor by animateColorAsState(
         targetValue = if (showTitle) colorResource(R.color.black) else Color.Transparent,
     )
@@ -136,14 +192,19 @@ fun AnimationDetailTopBar(
             IconButton(
                 onClick = { onBackPressed() }
             ) {
-                Icon(painter = painterResource(R.drawable.ic_arrow_back), contentDescription = null)
+                Icon(
+                    painter = painterResource(R.drawable.ic_arrow_back),
+                    contentDescription = null,
+                    tint = Color.Unspecified
+                )
             }
         },
         actions = {
             IconButton(onClick = { onFavoriteClick() }) {
                 Icon(
-                    painter = painterResource(R.drawable.ic_favorite_off),
-                    contentDescription = null
+                    painter = painterResource(if (favoriteState) R.drawable.ic_favorite_red_on else R.drawable.ic_favorite_off),
+                    contentDescription = null,
+                    tint = Color.Unspecified
                 )
             }
         }
@@ -155,23 +216,14 @@ fun AnimationDetailTopBar(
 fun AnimationDetailContent(
     scrollState: LazyListState,
     paddingValues: PaddingValues,
-    animationDetailViewModel: AnimationDetailViewModel = hiltViewModel(),
+    animationDetailEntity: AnimationDetailEntity,
     newsViewModel: NewsViewModel = hiltViewModel(),
     reviewViewModel: ReviewViewModel = hiltViewModel(),
     characterViewModel: CharacterViewModel = hiltViewModel(),
+    selectedDestination: DetailTabs,
+    onTabClick: (DetailTabs) -> Unit,
 ) {
-    val selectedDestination = remember { mutableStateOf(DetailTabs.FIRST) }
     val tabTitles = listOf(R.string.news, R.string.review, R.string.character)
-
-
-    LaunchedEffect(selectedDestination.value) {
-        val malId = animationDetailViewModel.animeId ?: return@LaunchedEffect
-        when (selectedDestination.value) {
-            DetailTabs.FIRST -> newsViewModel.fetchAnimeNews(malId = malId)
-            DetailTabs.SECOND -> reviewViewModel.fetchReviews(malId = malId)
-            DetailTabs.THIRD -> characterViewModel.fetchAnimeCharacters(malId = malId)
-        }
-    }
 
     LazyColumn(
         state = scrollState,
@@ -185,9 +237,8 @@ fun AnimationDetailContent(
                     .fillMaxWidth()
                     .aspectRatio(2.5f / 3f)
             ) {
-                //현재 Hard Coding 되어 있지만 API 연동 후 mapping 예정
                 AsyncImage(
-                    model = "https://cdn.myanimelist.net//images//anime//10//89830.jpg",
+                    model = animationDetailEntity.imageUrl,
                     contentDescription = stringResource(R.string.poster),
                     modifier = Modifier
                         .fillMaxHeight()
@@ -205,8 +256,7 @@ fun AnimationDetailContent(
         item {
             Text(
                 modifier = Modifier.padding(horizontal = 10.dp, vertical = 8.dp),
-                //현재 Hard Coding 되어 있지만 API 연동 후 mapping 예정
-                text = "Sample Animation Title",
+                text = animationDetailEntity.title,
                 color = colorResource(R.color.white),
                 fontSize = 18.sp,
                 lineHeight = 20.sp,
@@ -225,8 +275,7 @@ fun AnimationDetailContent(
                 )
                 WidthGap(5)
                 Text(
-                    //현재 Hard Coding 되어 있지만 API 연동 후 mapping 예정
-                    "4.8",
+                    animationDetailEntity.score.toString(),
                     fontSize = 14.sp,
                     lineHeight = 18.sp,
                     fontWeight = FontWeight(400),
@@ -239,8 +288,7 @@ fun AnimationDetailContent(
             Column {
                 HeightGap(16)
                 ExpandableText(
-                    //현재 Hard Coding 되어 있지만 API 연동 후 mapping 예정
-                    fullText = "The contents of a hidden grave draw the interest of an industrial titan and send officer K, an LAPD blade runner, on a quest to find a missing legend. The contents of a hidden grave draw the interest of an industrial titan and send officer K, an LAPD blade runner, on a quest to find a missing legend.",
+                    fullText = animationDetailEntity.synopsis,
                 )
                 HeightGap(11)
             }
@@ -257,7 +305,7 @@ fun AnimationDetailContent(
                 indicator = {
                     Box(
                         modifier = Modifier
-                            .tabIndicatorOffset(selectedDestination.value.ordinal)
+                            .tabIndicatorOffset(selectedTabIndex = selectedDestination.ordinal)
                             .height(4.dp)
                             .padding(horizontal = 20.dp)
                             .background(
@@ -271,11 +319,11 @@ fun AnimationDetailContent(
                 val tabs = DetailTabs.entries.toTypedArray()
                 tabs.forEachIndexed { index, tab ->
                     Tab(
-                        selected = index == tabs.indexOf(selectedDestination.value),
+                        selected = index == tabs.indexOf(tab),
                         selectedContentColor = colorResource(R.color.white),
                         unselectedContentColor = colorResource(R.color.white),
                         onClick = {
-                            selectedDestination.value = tab
+                            onTabClick(tab)
                         },
                         text = {
                             Text(
@@ -292,24 +340,82 @@ fun AnimationDetailContent(
 
         item { HeightGap(10) }
 
-        when (selectedDestination.value) {
-            DetailTabs.FIRST -> items(
-                count = newsViewModel.newsList.count(),
-                key = { index -> "$index" }) {
-                NewsItem(newsEntity = newsViewModel.newsList[it])
+        when (selectedDestination) {
+
+            DetailTabs.FIRST -> when (newsViewModel.state) {
+                ViewModelState.Idle, ViewModelState.Loading ->
+                    item {
+                        LoadingSpinner(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(200.dp)
+                        )
+                    }
+
+
+                ViewModelState.Success ->
+                    items(
+                        count = newsViewModel.newsList.count(),
+                        key = { index -> "$index" }) {
+                        NewsItem(newsEntity = newsViewModel.newsList[it])
+                    }
+
+
+                ViewModelState.Error -> {
+
+                }
             }
 
-            DetailTabs.SECOND -> items(
-                count = reviewViewModel.reviewList.count(),
-                key = { index -> "$index" }) {
-                ReviewTab(reviewModel = reviewViewModel.reviewList[it])
+            DetailTabs.SECOND -> when (reviewViewModel.state) {
+                ViewModelState.Idle, ViewModelState.Loading ->
+                    item {
+                        LoadingSpinner(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(200.dp)
+                        )
+                    }
+
+
+                ViewModelState.Success ->
+                    items(
+                        count = reviewViewModel.reviewList.count(),
+                        key = { index -> "$index" }) {
+
+                        ReviewTab(reviewModel = reviewViewModel.reviewList[it])
+                    }
+
+
+                ViewModelState.Error -> {
+
+                }
             }
 
-            DetailTabs.THIRD -> items(
-                count = characterViewModel.characterList.count(),
-                key = { index -> "$index" }) {
-                CharacterTab(animeCharacterEntity = characterViewModel.characterList[it])
+            DetailTabs.THIRD -> when (characterViewModel.state) {
+                ViewModelState.Idle, ViewModelState.Loading -> {
+                    item {
+                        LoadingSpinner(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(200.dp)
+                        )
+                    }
+                }
+
+                ViewModelState.Success -> {
+                    items(
+                        count = characterViewModel.characterList.count(),
+                        key = { index -> "$index" }) {
+                        CharacterTab(animeCharacterEntity = characterViewModel.characterList[it])
+                    }
+                }
+
+                ViewModelState.Error -> {
+
+                }
             }
+
+
         }
     }
 }
@@ -359,17 +465,5 @@ fun ExpandableText(
 fun AnimationDetailPreview() {
     AnimationJikanTheme {
         AnimationDetailScreen()
-    }
-}
-
-@Composable
-@Preview
-fun AnimationDetailTopBarPreview() {
-    AnimationJikanTheme {
-        AnimationDetailTopBar(
-            title = "",
-            showTitle = true,
-            onBackPressed = {},
-            onFavoriteClick = {})
     }
 }

@@ -4,6 +4,7 @@ import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -24,7 +25,6 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.ModalBottomSheet
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberModalBottomSheetState
@@ -35,7 +35,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -45,10 +44,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import coil3.compose.AsyncImage
 import com.artem.animationjikan.R
 import com.artem.animationjikan.domain.entities.LikeEntity
 import com.artem.animationjikan.presentation.ui.components.HeightGap
+import com.artem.animationjikan.presentation.ui.components.JikanNetworkCardImage
 import com.artem.animationjikan.presentation.ui.theme.AnimationJikanTheme
 import com.artem.animationjikan.util.FILTER_OPTION
 import com.artem.animationjikan.util.enums.FilterCategory
@@ -77,65 +76,62 @@ fun LikeTab(
         scope.launch { sheetState.hide() }
     }
 
-    Scaffold(
-        containerColor = Color.Black,
-        content = { padding ->
-            Box(modifier = modifier.padding(horizontal = 16.dp)) {
-                Column {
-                    Box(
-                        modifier = Modifier.padding(vertical = 6.dp)
-                    ) {
-                        AssistChip(
-                            onClick = openSheet,
-                            label = {
-                                Text(
-                                    stringResource(currentCategory.stringRes),
-                                    color = Color.White
-                                )
-                            },
-                            colors = AssistChipDefaults.assistChipColors(
-                                leadingIconContentColor = Color.White
-                            ),
-                            leadingIcon = {
-                                Icon(
-                                    painter = painterResource(R.drawable.ic_arrow_down),
-                                    tint = Color.White,
-                                    contentDescription = null
-                                )
-                            }
+    Box(modifier = modifier
+        .padding(horizontal = 16.dp)
+        .background(color = Color.Black)) {
+        Column {
+            Box(
+                modifier = Modifier.padding(vertical = 6.dp)
+            ) {
+                AssistChip(
+                    onClick = openSheet,
+                    label = {
+                        Text(
+                            stringResource(currentCategory.stringRes),
+                            color = Color.White
+                        )
+                    },
+                    colors = AssistChipDefaults.assistChipColors(
+                        leadingIconContentColor = Color.White
+                    ),
+                    leadingIcon = {
+                        Icon(
+                            painter = painterResource(R.drawable.ic_arrow_down),
+                            tint = Color.White,
+                            contentDescription = null
                         )
                     }
-
-                    HeightGap( 22)
-
-                    LazyVerticalGrid(
-                        columns = GridCells.Fixed(3),
-                        verticalArrangement = Arrangement.spacedBy(8.dp),
-                        horizontalArrangement = Arrangement.spacedBy(8.dp),
-                        contentPadding = PaddingValues(bottom = 25.dp),
-                        modifier = Modifier.fillMaxSize(),
-                    ) {
-                        items(
-                            items = likeList,
-                            key = { item -> item.mediaId }
-                        ) { item ->
-                            GridItem(
-                                model = item,
-                                modifier = Modifier.animateItem(
-                                    fadeInSpec = tween(durationMillis = 250),
-                                    fadeOutSpec = tween(durationMillis = 100),
-                                    placementSpec = spring(stiffness = Spring.StiffnessLow)
-                                ),
-                                onItemClick = {
-                                    viewModel.removeLike(it)
-                                },
-                            )
-                        }
-                    }
-                }
+                )
             }
 
-        })
+            HeightGap(22)
+
+            LazyVerticalGrid(
+                columns = GridCells.Fixed(3),
+                verticalArrangement = Arrangement.spacedBy(8.dp),
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                contentPadding = PaddingValues(bottom = 25.dp),
+                modifier = Modifier.fillMaxSize(),
+            ) {
+                items(
+                    items = likeList,
+                    key = { item -> item.mediaId }
+                ) { item ->
+                    GridItem(
+                        model = item,
+                        modifier = Modifier.animateItem(
+                            fadeInSpec = tween(durationMillis = 250),
+                            fadeOutSpec = tween(durationMillis = 100),
+                            placementSpec = spring(stiffness = Spring.StiffnessLow)
+                        ),
+                        onItemClick = {
+                            viewModel.removeLike(it)
+                        },
+                    )
+                }
+            }
+        }
+    }
 
     if (sheetState.isVisible) {
         ModalBottomSheet(
@@ -185,16 +181,19 @@ fun GridItem(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Box {
-            AsyncImage(
-                model = model.imageUrl,
+            JikanNetworkCardImage(
                 modifier = Modifier
                     .aspectRatio(9f / 13f)
                     .clip(
                         RoundedCornerShape(4.dp)
                     ),
-                contentScale = ContentScale.Crop,
-                contentDescription = null,
-            )
+                imageUrl = model.imageUrl,
+                result = model,
+                onClick = {
+
+                },
+
+                )
 
             IconButton(
                 modifier = Modifier.align(Alignment.TopEnd),
@@ -211,7 +210,7 @@ fun GridItem(
             }
         }
 
-        HeightGap( 8)
+        HeightGap(8)
     }
 }
 

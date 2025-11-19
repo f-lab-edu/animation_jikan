@@ -17,6 +17,6 @@ data class NewsDTO(
     val date: String,
     @SerializedName("author_username")
     val authorUsername: String,
-    val images: ImagesDto,
+    val images: ImagesDTO,
     val excerpt: String,
 )

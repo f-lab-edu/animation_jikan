@@ -15,5 +15,5 @@ data class UpcomingDTO(
     @SerializedName("mal_id")
     val malId: Int = -1,
     val url: String,
-    val images: ImagesDto,
+    val images: ImagesDTO,
 )

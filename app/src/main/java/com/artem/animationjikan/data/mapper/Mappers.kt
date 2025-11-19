@@ -1,8 +1,9 @@
 package com.artem.animationjikan.data.mapper
 
 import com.artem.animationjikan.data.dto.ActorDTO
+import com.artem.animationjikan.data.dto.AnimationDetailDTO
 import com.artem.animationjikan.data.dto.AnimeCharacterDTO
-import com.artem.animationjikan.data.dto.AnimeDto
+import com.artem.animationjikan.data.dto.AnimeDTO
 import com.artem.animationjikan.data.dto.CharacterDTO
 import com.artem.animationjikan.data.dto.MangaDTO
 import com.artem.animationjikan.data.dto.NewsDTO
@@ -10,6 +11,7 @@ import com.artem.animationjikan.data.dto.RecommendationAnimationDTO
 import com.artem.animationjikan.data.dto.ReviewDTO
 import com.artem.animationjikan.data.dto.UpcomingDTO
 import com.artem.animationjikan.domain.entities.ActorEntity
+import com.artem.animationjikan.domain.entities.AnimationDetailEntity
 import com.artem.animationjikan.domain.entities.AnimeCharacterEntity
 import com.artem.animationjikan.domain.entities.HomeCommonEntity
 import com.artem.animationjikan.domain.entities.NewsEntity
@@ -24,7 +26,7 @@ fun RecommendationAnimationDTO.toHomeCommonEntity(type: FilterCategory): HomeCom
     )
 }
 
-fun AnimeDto.toHomeCommonEntity(type: FilterCategory): HomeCommonEntity {
+fun AnimeDTO.toHomeCommonEntity(type: FilterCategory): HomeCommonEntity {
     return HomeCommonEntity(
         id = this.malId,
         type = type,
@@ -93,5 +95,15 @@ fun ActorDTO.toActorEntity(): ActorEntity {
         imageUrl = this.person.images.jpg.imageUrl,
         name = this.person.name,
         language = this.language,
+    )
+}
+
+fun AnimationDetailDTO.toAnimationDetailEntity(): AnimationDetailEntity {
+    return AnimationDetailEntity(
+        malId = this.malId,
+        title = this.title,
+        imageUrl = this.images.jpg.largeImageUrl,
+        synopsis = this.synopsis,
+        score = this.score,
     )
 }

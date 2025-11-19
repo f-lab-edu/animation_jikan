@@ -34,4 +34,8 @@ class LikeUseCase @Inject constructor(
             Result.failure(e)
         }
     }
+
+    fun getLikeStatus(mediaId: Int): Flow<Boolean> {
+        return likeRepository.getLikeStatus(mediaId)
+    }
 }

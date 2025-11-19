@@ -1,5 +1,6 @@
 package com.artem.animationjikan.presentation.ui.components
 
+import android.annotation.SuppressLint
 import androidx.annotation.StringRes
 import androidx.compose.animation.Crossfade
 import androidx.compose.animation.animateColorAsState
@@ -116,6 +117,7 @@ fun BottomNavigationBar(navController: NavController) {
 
 }
 
+@SuppressLint("UnusedCrossfadeTargetStateParameter")
 @Composable
 fun BottomNavigationBarItem(
     isSelected: Boolean,

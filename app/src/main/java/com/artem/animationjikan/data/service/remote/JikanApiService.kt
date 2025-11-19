@@ -1,5 +1,6 @@
 package com.artem.animationjikan.data.service.remote
 
+import com.artem.animationjikan.data.dto.AnimationDetailResponse
 import com.artem.animationjikan.data.dto.AnimationResponse
 import com.artem.animationjikan.data.dto.AnimeCharacterResponse
 import com.artem.animationjikan.data.dto.CharacterResponse
@@ -46,4 +47,8 @@ interface JikanApiService {
 
     @GET("manga/{id}/reviews")
     suspend fun getMangaReviews(@Path("id") id: Int): ReviewResponse
+
+    @GET("anime/{id}/full")
+    suspend fun getAnimeFullById(@Path("id") id: Int): AnimationDetailResponse
+
 }

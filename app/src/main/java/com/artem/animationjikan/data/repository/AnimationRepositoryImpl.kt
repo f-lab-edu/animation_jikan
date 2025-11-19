@@ -1,8 +1,9 @@
 package com.artem.animationjikan.data.repository
 
+import com.artem.animationjikan.data.dto.AnimationDetailDTO
 import com.artem.animationjikan.data.dto.AnimationResponse
 import com.artem.animationjikan.data.dto.AnimeCharacterDTO
-import com.artem.animationjikan.data.dto.AnimeDto
+import com.artem.animationjikan.data.dto.AnimeDTO
 import com.artem.animationjikan.data.dto.NewsDTO
 import com.artem.animationjikan.data.dto.RecommendationAnimationDTO
 import com.artem.animationjikan.data.dto.ReviewDTO
@@ -26,7 +27,7 @@ class AnimationRepositoryImpl @Inject constructor(
             emit(result)
         }.retryOnRateLimit()
 
-    override suspend fun fetchTopAnimation(): Flow<List<AnimeDto>> = flow {
+    override suspend fun fetchTopAnimation(): Flow<List<AnimeDTO>> = flow {
         val response: AnimationResponse = client.getTopAnimation()
         val result = response.data
         emit(result)
@@ -49,6 +50,10 @@ class AnimationRepositoryImpl @Inject constructor(
 
     override suspend fun fetchAnimeCharacters(id: Int): List<AnimeCharacterDTO> {
         return client.getAnimeCharacters(id = id).data
+    }
+
+    override suspend fun fetchAnimeFullById(id: Int): AnimationDetailDTO {
+        return client.getAnimeFullById(id = id).data
     }
 
 }
