@@ -9,11 +9,8 @@ class NewsUsecase @Inject constructor(
     private val animationRepository: AnimationRepository
 ) {
     suspend fun execute(id: Int): Result<List<NewsEntity>> {
-        return try {
-            val response = animationRepository.fetchAnimeNews(id)
-            return Result.success(response.map { it.toNewsEntity() })
-        } catch (e: Exception) {
-            Result.failure(e)
+        return runCatching {
+            animationRepository.fetchAnimeNews(id).map { it.toNewsEntity() }
         }
     }
 }

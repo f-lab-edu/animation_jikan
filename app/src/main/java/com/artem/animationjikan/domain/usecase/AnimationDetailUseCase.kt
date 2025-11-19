@@ -9,11 +9,8 @@ class AnimationDetailUseCase @Inject constructor(
     private val animationRepository: AnimationRepository
 ) {
     suspend fun execute(id: Int): Result<AnimationDetailEntity> {
-        return try {
-            val result = animationRepository.fetchAnimeFullById(id = id).toAnimationDetailEntity()
-            Result.success(result)
-        } catch (e: Exception) {
-            Result.failure(e)
+        return runCatching {
+            animationRepository.fetchAnimeFullById(id = id).toAnimationDetailEntity()
         }
     }
 }

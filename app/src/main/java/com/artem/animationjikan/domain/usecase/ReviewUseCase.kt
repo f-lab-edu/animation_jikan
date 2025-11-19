@@ -9,11 +9,8 @@ class ReviewUseCase @Inject constructor(
     private val animationRepository: AnimationRepository
 ) {
     suspend fun execute(malId: Int): Result<List<ReviewEntity>> {
-        return try {
-            val result = animationRepository.fetchAnimeReview(id = malId)
-            Result.success(result.map { it.toReviewEntity() })
-        } catch (e: Exception) {
-            Result.failure(e)
+        return runCatching {
+            animationRepository.fetchAnimeReview(id = malId).map { it.toReviewEntity() }
         }
     }
 }
