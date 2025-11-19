@@ -3,6 +3,7 @@ package com.artem.animationjikan.data.repository
 import com.artem.animationjikan.data.dto.ImagesDTO
 import com.artem.animationjikan.data.dto.MangaCharacterDTO
 import com.artem.animationjikan.data.dto.MangaDTO
+import com.artem.animationjikan.data.dto.MangaDetailDTO
 import com.artem.animationjikan.data.dto.ReviewDTO
 import com.artem.animationjikan.data.service.remote.JikanApiClient
 import com.artem.animationjikan.domain.repository.MangaRepository
@@ -31,7 +32,7 @@ class MangaRepositoryImpl @Inject constructor(
         return client.getMangaReviews(id = id).data
     }
 
-    override suspend fun fetchMangaFullById(id: Int): List<MangaDTO> {
-        return client.getMangaReviews().data
+    override suspend fun fetchMangaFullById(id: Int): MangaDetailDTO {
+        return client.getMangaFullById(id = id).data
     }
 }

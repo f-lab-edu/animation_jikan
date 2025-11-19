@@ -18,3 +18,14 @@ enum class FilterType(@StringRes val stringRes: Int) {
     VOICE_ACTOR(R.string.actor),
     CHARACTER(R.string.character)
 }
+
+fun FilterCategory.toFilterType(): FilterType? {
+    return when (this) {
+        FilterCategory.ANIMATION -> FilterType.ANIMATION
+        FilterCategory.MANGA -> FilterType.MANGA
+        FilterCategory.CHARACTER -> FilterType.CHARACTER
+        FilterCategory.VOICE_ACTOR -> FilterType.VOICE_ACTOR
+        FilterCategory.ALL -> null
+
+    }
+}

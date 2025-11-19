@@ -5,6 +5,7 @@ import com.artem.animationjikan.data.mapper.toHomeCommonEntity
 import com.artem.animationjikan.domain.entities.HomeCommonEntity
 import com.artem.animationjikan.domain.repository.CharacterRepository
 import com.artem.animationjikan.util.enums.FilterCategory
+import com.artem.animationjikan.util.enums.FilterType
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
@@ -17,7 +18,7 @@ class GetTopCharacterUseCase @Inject constructor(
         val response = characterRepository.fetchTopCharacters()
         return response.map { result ->
             Result.success(result.map {
-                it.toHomeCommonEntity(FilterCategory.CHARACTER)
+                it.toHomeCommonEntity(FilterType.CHARACTER)
             })
         }.catch { error ->
             Log.e("GetTopCharacterUseCase", "execute: ${error.message}")

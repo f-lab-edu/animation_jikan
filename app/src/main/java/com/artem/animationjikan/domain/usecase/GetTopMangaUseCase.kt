@@ -4,6 +4,7 @@ import com.artem.animationjikan.data.mapper.toHomeCommonEntity
 import com.artem.animationjikan.domain.entities.HomeCommonEntity
 import com.artem.animationjikan.domain.repository.MangaRepository
 import com.artem.animationjikan.util.enums.FilterCategory
+import com.artem.animationjikan.util.enums.FilterType
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
@@ -15,7 +16,7 @@ class GetTopMangaUseCase @Inject constructor(
     suspend fun execute(): Flow<Result<List<HomeCommonEntity>>> {
         return mangaRepository.fetchTopManga().map { list ->
             Result.success(list.map {
-                it.toHomeCommonEntity(type = FilterCategory.MANGA)
+                it.toHomeCommonEntity(type = FilterType.MANGA)
             })
         }.catch { emit(Result.failure(it)) }
     }

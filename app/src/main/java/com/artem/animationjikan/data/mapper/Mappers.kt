@@ -18,8 +18,9 @@ import com.artem.animationjikan.domain.entities.HomeCommonEntity
 import com.artem.animationjikan.domain.entities.NewsEntity
 import com.artem.animationjikan.domain.entities.ReviewEntity
 import com.artem.animationjikan.util.enums.FilterCategory
+import com.artem.animationjikan.util.enums.FilterType
 
-fun RecommendationAnimationDTO.toHomeCommonEntity(type: FilterCategory): HomeCommonEntity {
+fun RecommendationAnimationDTO.toHomeCommonEntity(type: FilterType): HomeCommonEntity {
     return HomeCommonEntity(
         id = this.malId,
         type = type,
@@ -27,7 +28,7 @@ fun RecommendationAnimationDTO.toHomeCommonEntity(type: FilterCategory): HomeCom
     )
 }
 
-fun AnimeDTO.toHomeCommonEntity(type: FilterCategory): HomeCommonEntity {
+fun AnimeDTO.toHomeCommonEntity(type: FilterType): HomeCommonEntity {
     return HomeCommonEntity(
         id = this.malId,
         type = type,
@@ -35,7 +36,7 @@ fun AnimeDTO.toHomeCommonEntity(type: FilterCategory): HomeCommonEntity {
     )
 }
 
-fun MangaDTO.toHomeCommonEntity(type: FilterCategory): HomeCommonEntity {
+fun MangaDTO.toHomeCommonEntity(type: FilterType): HomeCommonEntity {
     return HomeCommonEntity(
         id = this.malId,
         type = type,
@@ -43,7 +44,7 @@ fun MangaDTO.toHomeCommonEntity(type: FilterCategory): HomeCommonEntity {
     )
 }
 
-fun UpcomingDTO.toHomeCommonEntity(type: FilterCategory): HomeCommonEntity {
+fun UpcomingDTO.toHomeCommonEntity(type: FilterType): HomeCommonEntity {
     return HomeCommonEntity(
         id = this.malId,
         type = type,
@@ -51,7 +52,7 @@ fun UpcomingDTO.toHomeCommonEntity(type: FilterCategory): HomeCommonEntity {
     )
 }
 
-fun CharacterDTO.toHomeCommonEntity(type: FilterCategory): HomeCommonEntity {
+fun CharacterDTO.toHomeCommonEntity(type: FilterType): HomeCommonEntity {
     return HomeCommonEntity(
         id = this.malId,
         type = type,
