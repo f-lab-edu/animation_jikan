@@ -8,6 +8,4 @@ interface RecentRepository {
 
     suspend fun addRecent(recentEntity: RecentEntity)
 
-    suspend fun removeRecent(mediaId: Int)
-
 }

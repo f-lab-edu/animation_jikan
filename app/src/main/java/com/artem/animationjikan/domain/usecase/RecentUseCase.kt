@@ -16,10 +16,4 @@ class RecentUseCase @Inject constructor(
             recentRepository.addRecent(recentEntity = recentEntity)
         }
     }
-
-    suspend fun removeRecent(malId: Int): Result<Unit> {
-        return runCatching {
-            recentRepository.removeRecent(mediaId = malId)
-        }
-    }
 }

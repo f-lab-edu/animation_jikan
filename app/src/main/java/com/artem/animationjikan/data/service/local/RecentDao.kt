@@ -12,9 +12,6 @@ interface RecentDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(entity: RecentItemData)
 
-    @Query("DELETE FROM `recent` WHERE mediaId = :mediaId")
-    suspend fun delete(mediaId: Int)
-
     @Query("SELECT * FROM `recent` ORDER BY accessTime DESC LIMIT 20")
     fun getRecentItems(): Flow<List<RecentItemData>>
 

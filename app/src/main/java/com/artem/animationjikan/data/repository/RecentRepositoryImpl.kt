@@ -41,8 +41,4 @@ class RecentRepositoryImpl @Inject constructor(
 
         dao.insert(recentEntity.toRecent())
     }
-
-    override suspend fun removeRecent(mediaId: Int) {
-        dao.delete(mediaId)
-    }
 }
