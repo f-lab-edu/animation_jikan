@@ -407,10 +407,11 @@ fun AnimationDetailContent(
                             ReviewTab(reviewModel = reviewViewModel.reviewList[it])
                         }
                     } else {
-                        items(
-                            count = newsViewModel.newsList.count(),
-                            key = { index -> "$index" }) {
-                            NewsItem(newsEntity = newsViewModel.newsList[it])
+                        item {
+                            ErrorWidget(
+                                messageStringResId = R.string.no_get_review_data,
+                                contentDescription = R.string.no_data,
+                            )
                         }
                     }
 
@@ -434,10 +435,19 @@ fun AnimationDetailContent(
                 }
 
                 ViewModelState.Success -> {
-                    items(
-                        count = characterViewModel.characterList.count(),
-                        key = { index -> "$index" }) {
-                        CharacterTab(animeCharacterEntity = characterViewModel.characterList[it])
+                    if (characterViewModel.characterList.isNotEmpty()) {
+                        items(
+                            count = characterViewModel.characterList.count(),
+                            key = { index -> "$index" }) {
+                            CharacterTab(animeCharacterEntity = characterViewModel.characterList[it])
+                        }
+                    } else {
+                        item {
+                            ErrorWidget(
+                                messageStringResId = R.string.no_get_character_data,
+                                contentDescription = R.string.no_data,
+                            )
+                        }
                     }
                 }
 
@@ -445,8 +455,6 @@ fun AnimationDetailContent(
                     item { BuildErrorWidget() }
                 }
             }
-
-
         }
     }
 }

@@ -12,8 +12,10 @@ import com.artem.animationjikan.R
 import com.artem.animationjikan.domain.entities.DetailEntity
 import com.artem.animationjikan.domain.entities.HomeCommonEntity
 import com.artem.animationjikan.domain.entities.LikeEntity
+import com.artem.animationjikan.domain.entities.RecentEntity
 import com.artem.animationjikan.domain.usecase.DetailUseCase
 import com.artem.animationjikan.domain.usecase.LikeUseCase
+import com.artem.animationjikan.domain.usecase.RecentUseCase
 import com.artem.animationjikan.util.enums.FilterCategory
 import com.artem.animationjikan.util.enums.FilterType
 import com.artem.animationjikan.util.enums.ViewModelState
@@ -35,6 +37,7 @@ class AnimationDetailViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val detailUseCase: DetailUseCase,
     private val likeUseCase: LikeUseCase,
+    private val recentUseCase: RecentUseCase,
 ) : ViewModel() {
 
     companion object {
@@ -75,6 +78,17 @@ class AnimationDetailViewModel @Inject constructor(
         paramEntity?.let {
             val animeId = it.id
             state = ViewModelState.Loading
+
+            viewModelScope.launch {
+                addRecentItem(
+                    RecentEntity(
+                        mediaId = animeId,
+                        imageUrl = it.imageUrl,
+                        mediaType = it.type.name
+                    )
+                )
+            }
+
             detailEntity = DetailEntity()
 
             likeUseCase.getLikeStatus(mediaId = animeId)
@@ -96,6 +110,10 @@ class AnimationDetailViewModel @Inject constructor(
             Log.e("AnimationDetailViewModel", "animeId == null")
             state = ViewModelState.Error
         }
+    }
+
+    suspend fun addRecentItem(recentEntity: RecentEntity) {
+        recentUseCase.addRecent(recentEntity = recentEntity)
     }
 
     fun fetchAnimationDetailInfo(animeId: Int) {

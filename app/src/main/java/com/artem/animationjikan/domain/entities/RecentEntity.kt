@@ -6,6 +6,7 @@ data class RecentEntity(
     val mediaId: Int,
     val imageUrl: String?,
     val mediaType: String,
+    val likeStatus: Boolean = false,
 )
 
 fun RecentEntity.toRecent(): RecentItemData {

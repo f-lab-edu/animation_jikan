@@ -1,5 +1,6 @@
 package com.artem.animationjikan.presentation.ui.tab.home
 
+import android.util.Log
 import android.widget.Toast
 import androidx.annotation.StringRes
 import androidx.compose.foundation.border
@@ -25,6 +26,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -63,9 +65,11 @@ fun HomeTab(
     val scrollState = rememberScrollState()
     val recommendAnimationList = viewModel.recommendationAnimationList.collectAsStateWithLifecycle()
     val navController = LocalNavScreenController.current
+    val recentItems by viewModel.recentItemList.collectAsStateWithLifecycle()
 
     val animeNavigationClick: (HomeCommonEntity) -> Unit = { entity ->
         val jsonString = Gson().toJson(entity)
+        Log.e("What", "entity ${entity.type.name}")
         val encodedString = Base64.getUrlEncoder()
 
         navController.navigate(
@@ -113,13 +117,15 @@ fun HomeTab(
 
             HeightGap(25)
 
-            HomeContentSection(
-                titleRes = R.string.section_recently_viewed,
-                listState = viewModel.topAnimationList.collectAsStateWithLifecycle(),
-                onItemLikeClick = { viewModel.toggleLike(entity = it) },
-                onItemClick = animeNavigationClick,
-                viewModel = viewModel
-            )
+            if(recentItems.isNotEmpty()) {
+                HomeContentSection(
+                    titleRes = R.string.section_recently_viewed,
+                    listState = viewModel.recentItemList.collectAsStateWithLifecycle(),
+                    onItemLikeClick = { viewModel.toggleLike(entity = it) },
+                    onItemClick = animeNavigationClick,
+                    viewModel = viewModel
+                )
+            }
 
             HomeContentSection(
                 titleRes = R.string.section_upcoming_anime,
