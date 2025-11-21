@@ -4,7 +4,7 @@ import androidx.annotation.StringRes
 import com.artem.animationjikan.R
 
 enum class FilterCategory(@StringRes val stringRes: Int) {
-    ALL(R.string.All),
+    ALL(R.string.all),
     ANIMATION(R.string.animation),
     MANGA(R.string.manga),
     VOICE_ACTOR(R.string.actor),

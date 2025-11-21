@@ -16,22 +16,14 @@ class LikeUseCase @Inject constructor(
     }
 
     suspend fun addLike(likeEntity: LikeEntity): Result<Unit> {
-        return try {
+        return runCatching {
             likeRepository.addLike(likeEntity = likeEntity)
-            Result.success(Unit)
-        } catch (e: Exception) {
-            Log.e(tag, e.message.toString())
-            Result.failure(e)
         }
     }
 
     suspend fun removeLike(mediaId: Int): Result<Unit> {
-        return try {
+        return runCatching {
             likeRepository.removeLike(mediaId = mediaId)
-            Result.success(Unit)
-        } catch (e: Exception) {
-            Log.e(tag, e.message.toString())
-            Result.failure(e)
         }
     }
 
