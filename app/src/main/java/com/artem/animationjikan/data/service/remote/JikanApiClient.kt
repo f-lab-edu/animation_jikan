@@ -49,4 +49,9 @@ class JikanApiClient @Inject constructor(
 
     suspend fun getMangaFullById(id: Int): MangaDetailResponseDTO =
         jikanApiService.getMangaFullById(id = id)
+
+    suspend fun searchAnime(query: String?): AnimationResponseDTO =
+        jikanApiService.searchAnime(query = query)
+
+
 }

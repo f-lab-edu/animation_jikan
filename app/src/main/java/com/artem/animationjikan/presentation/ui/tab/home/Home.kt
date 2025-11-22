@@ -45,6 +45,7 @@ import com.artem.animationjikan.R
 import com.artem.animationjikan.domain.entities.HomeCommonEntity
 import com.artem.animationjikan.presentation.ui.LocalNavScreenController
 import com.artem.animationjikan.presentation.ui.components.HeightGap
+import com.artem.animationjikan.presentation.ui.components.SearchView
 import com.artem.animationjikan.presentation.ui.components.WidthGap
 import com.artem.animationjikan.presentation.ui.tab.home.components.ContentSectionRow
 import com.artem.animationjikan.presentation.ui.tab.home.components.RecommendPager
@@ -101,7 +102,9 @@ fun HomeTab(
         Column {
             HeightGap(6)
 
-            SearchView()
+            SearchView(onClick = {
+                navController.navigate(NavRoutes.Search.router)
+            })
 
             HeightGap(6)
 
@@ -162,7 +165,7 @@ fun HomeTab(
     }
 
 }
-
+/*
 @Composable
 fun SearchView() {
     Box(
@@ -202,7 +205,7 @@ fun SearchView() {
         }
 
     }
-}
+}*/
 
 @Composable
 fun ChipSection() {
@@ -252,10 +255,4 @@ fun HomePreView() {
     AnimationJikanTheme {
         HomeTab(Modifier.fillMaxSize())
     }
-}
-
-@Composable
-@Preview
-fun SearchViewPreView() {
-    SearchView()
 }

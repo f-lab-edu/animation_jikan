@@ -117,7 +117,7 @@ fun LikeTab(
                     items = likeList,
                     key = { item -> item.mediaId }
                 ) { item ->
-                    GridItem(
+                    LikeGridItem(
                         model = item,
                         modifier = Modifier.animateItem(
                             fadeInSpec = tween(durationMillis = 250),
@@ -171,7 +171,7 @@ fun FilterBottomSheetContent(list: List<FilterCategory>, onItemClick: (FilterCat
 }
 
 @Composable
-fun GridItem(
+fun LikeGridItem(
     model: LikeEntity,
     onItemClick: (LikeEntity) -> Unit,
     modifier: Modifier

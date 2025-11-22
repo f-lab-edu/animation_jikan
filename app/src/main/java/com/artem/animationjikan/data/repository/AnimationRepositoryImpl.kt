@@ -1,5 +1,6 @@
 package com.artem.animationjikan.data.repository
 
+import android.util.Log
 import com.artem.animationjikan.data.dto.AnimationDetailDTO
 import com.artem.animationjikan.data.dto.AnimationResponseDTO
 import com.artem.animationjikan.data.dto.AnimeCharacterDTO
@@ -55,5 +56,12 @@ class AnimationRepositoryImpl @Inject constructor(
     override suspend fun fetchAnimeFullById(id: Int): AnimationDetailDTO {
         return client.getAnimeFullById(id = id).data
     }
+
+    override suspend fun searchAnime(query: String?): Flow<Result<List<AnimeDTO>>> =
+        flow {
+            val result = runCatching { client.searchAnime(query = query).data }
+            emit(result)
+        }
+
 
 }
