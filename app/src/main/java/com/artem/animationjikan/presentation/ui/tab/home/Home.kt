@@ -1,6 +1,6 @@
 package com.artem.animationjikan.presentation.ui.tab.home
 
-import android.util.Log
+
 import android.widget.Toast
 import androidx.annotation.StringRes
 import androidx.compose.foundation.border
