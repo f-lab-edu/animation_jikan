@@ -1,7 +1,6 @@
 package com.artem.animationjikan.domain.entities
 
 import android.os.Parcelable
-import com.artem.animationjikan.util.enums.FilterCategory
 import com.artem.animationjikan.util.enums.FilterType
 import kotlinx.parcelize.Parcelize
 

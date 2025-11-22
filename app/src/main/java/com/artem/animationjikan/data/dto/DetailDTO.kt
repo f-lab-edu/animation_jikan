@@ -27,7 +27,6 @@ data class AnimationDetailDTO(
 ) : DetailDTO
 
 
-
 @Serializable
 data class MangaDetailResponseDTO(
     val data: MangaDetailDTO,
@@ -36,9 +35,8 @@ data class MangaDetailResponseDTO(
 data class MangaDetailDTO(
     @SerializedName("mal_id")
     override val malId: Int,
-    @SerializedName("images")
     override val images: ImagesDTO,
     override val title: String,
     override val score: Double,
-    override val synopsis: String
+    override val synopsis: String,
 ) : DetailDTO

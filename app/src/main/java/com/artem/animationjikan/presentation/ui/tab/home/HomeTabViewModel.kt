@@ -9,7 +9,6 @@ import androidx.lifecycle.viewModelScope
 import com.artem.animationjikan.R
 import com.artem.animationjikan.domain.entities.HomeCommonEntity
 import com.artem.animationjikan.domain.entities.LikeEntity
-import com.artem.animationjikan.domain.entities.RecentEntity
 import com.artem.animationjikan.domain.usecase.GetRecommendAnimationUseCase
 import com.artem.animationjikan.domain.usecase.GetTopAnimationUseCase
 import com.artem.animationjikan.domain.usecase.GetTopCharacterUseCase

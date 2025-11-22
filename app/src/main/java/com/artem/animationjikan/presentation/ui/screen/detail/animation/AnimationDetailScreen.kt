@@ -19,6 +19,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -58,7 +59,10 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import coil3.compose.AsyncImage
 import com.artem.animationjikan.R
+import com.artem.animationjikan.domain.entities.AnimeCharacterEntity
 import com.artem.animationjikan.domain.entities.DetailEntity
+import com.artem.animationjikan.domain.entities.NewsEntity
+import com.artem.animationjikan.domain.entities.ReviewEntity
 import com.artem.animationjikan.presentation.ui.LocalNavScreenController
 import com.artem.animationjikan.presentation.ui.components.ErrorWidget
 import com.artem.animationjikan.presentation.ui.components.HeightGap
@@ -353,108 +357,13 @@ fun AnimationDetailContent(
 
         item { HeightGap(10) }
 
-        when (selectedDestination) {
-
-            DetailTabs.FIRST -> when (newsViewModel.state) {
-                ViewModelState.Idle, ViewModelState.Loading ->
-                    item {
-                        LoadingSpinner(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .height(200.dp)
-                        )
-                    }
-
-
-                ViewModelState.Success ->
-                    if (newsViewModel.newsList.isNotEmpty()) {
-                        items(
-                            count = newsViewModel.newsList.count(),
-                            key = { index -> "$index" }) {
-                            NewsItem(newsEntity = newsViewModel.newsList[it])
-                        }
-                    } else {
-                        item {
-                            ErrorWidget(
-                                messageStringResId = R.string.no_get_news_data,
-                                contentDescription = R.string.no_data,
-                            )
-                        }
-                    }
-
-
-                ViewModelState.Error -> {
-                    item { BuildErrorWidget() }
-                }
-            }
-
-            DetailTabs.SECOND -> when (reviewViewModel.state) {
-                ViewModelState.Idle, ViewModelState.Loading ->
-                    item {
-                        LoadingSpinner(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .height(200.dp)
-                        )
-                    }
-
-
-                ViewModelState.Success -> {
-                    if (reviewViewModel.reviewList.isNotEmpty()) {
-                        items(
-                            count = reviewViewModel.reviewList.count(),
-                            key = { index -> "$index" }) {
-                            ReviewTab(reviewModel = reviewViewModel.reviewList[it])
-                        }
-                    } else {
-                        item {
-                            ErrorWidget(
-                                messageStringResId = R.string.no_get_review_data,
-                                contentDescription = R.string.no_data,
-                            )
-                        }
-                    }
-
-                }
-
-
-                ViewModelState.Error -> {
-                    item { BuildErrorWidget() }
-                }
-            }
-
-            DetailTabs.THIRD -> when (characterViewModel.state) {
-                ViewModelState.Idle, ViewModelState.Loading -> {
-                    item {
-                        LoadingSpinner(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .height(200.dp)
-                        )
-                    }
-                }
-
-                ViewModelState.Success -> {
-                    if (characterViewModel.characterList.isNotEmpty()) {
-                        items(
-                            count = characterViewModel.characterList.count(),
-                            key = { index -> "$index" }) {
-                            CharacterTab(animeCharacterEntity = characterViewModel.characterList[it])
-                        }
-                    } else {
-                        item {
-                            ErrorWidget(
-                                messageStringResId = R.string.no_get_character_data,
-                                contentDescription = R.string.no_data,
-                            )
-                        }
-                    }
-                }
-
-                ViewModelState.Error -> {
-                    item { BuildErrorWidget() }
-                }
-            }
+        item(key = selectedDestination.name) {
+            this@LazyColumn.DetailTabContent(
+                selectedDestination = selectedDestination,
+                newsViewModel = newsViewModel,
+                reviewViewModel = reviewViewModel,
+                characterViewModel = characterViewModel,
+            )
         }
     }
 }
@@ -503,6 +412,81 @@ fun ExpandableText(
                 style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Bold)
             )
         }
+    }
+}
+
+@Composable
+fun LazyListScope.DetailTabContent(
+    selectedDestination: DetailTabs,
+    newsViewModel: NewsViewModel,
+    reviewViewModel: ReviewViewModel,
+    characterViewModel: CharacterViewModel,
+) {
+    when (selectedDestination) {
+        DetailTabs.FIRST -> {
+            TabContent(
+                status = newsViewModel.state,
+                list = newsViewModel.newsList,
+                errorMessageResId = R.string.no_get_news_data,
+            ) { list, index ->
+                NewsItem(newsEntity = list[index] as NewsEntity)
+            }
+        }
+
+        DetailTabs.SECOND -> {
+            TabContent(
+                status = reviewViewModel.state,
+                list = reviewViewModel.reviewList,
+                errorMessageResId = R.string.no_get_review_data,
+            ) { list, index ->
+                ReviewTab(reviewModel = list[index] as ReviewEntity)
+            }
+        }
+
+        DetailTabs.THIRD -> {
+            TabContent(
+                status = characterViewModel.state,
+                list = characterViewModel.characterList,
+                errorMessageResId = R.string.no_get_character_data,
+            ) { list, index ->
+                CharacterTab(animeCharacterEntity = list[index] as AnimeCharacterEntity)
+            }
+        }
+    }
+}
+
+@Composable
+fun LazyListScope.TabContent(
+    status: ViewModelState,
+    list: List<*>,
+    errorMessageResId: Int,
+    content: @Composable LazyListScope.(list: List<*>, index: Int) -> Unit,
+) {
+    when (status) {
+        ViewModelState.Idle, ViewModelState.Loading -> {
+            LoadingSpinner(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(200.dp)
+            )
+        }
+
+        ViewModelState.Success -> {
+            if (list.isNotEmpty()) {
+                Column {
+                    list.forEachIndexed { index, _ ->
+                        this@TabContent.content(list, index)
+                    }
+                }
+            } else {
+                ErrorWidget(
+                    messageStringResId = errorMessageResId,
+                    contentDescription = R.string.no_data,
+                )
+            }
+        }
+
+        ViewModelState.Error -> BuildErrorWidget()
     }
 }
 

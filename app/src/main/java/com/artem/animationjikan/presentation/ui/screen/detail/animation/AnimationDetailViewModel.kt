@@ -16,7 +16,6 @@ import com.artem.animationjikan.domain.entities.RecentEntity
 import com.artem.animationjikan.domain.usecase.DetailUseCase
 import com.artem.animationjikan.domain.usecase.LikeUseCase
 import com.artem.animationjikan.domain.usecase.RecentUseCase
-import com.artem.animationjikan.util.enums.FilterCategory
 import com.artem.animationjikan.util.enums.FilterType
 import com.artem.animationjikan.util.enums.ViewModelState
 import com.artem.animationjikan.util.event.UiEvent

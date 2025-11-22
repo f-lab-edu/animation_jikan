@@ -7,7 +7,7 @@ import com.artem.animationjikan.presentation.ui.theme.AnimationJikanTheme
 
 @Composable
 fun SearchTab() {
-
+    // Search 화면 구현 예정
 }
 
 

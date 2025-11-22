@@ -2,8 +2,8 @@ package com.artem.animationjikan.di
 
 import android.content.Context
 import androidx.room.Room
-import com.artem.animationjikan.data.service.local.LikeDao
 import com.artem.animationjikan.data.service.local.AppDatabase
+import com.artem.animationjikan.data.service.local.LikeDao
 import com.artem.animationjikan.data.service.local.RecentDao
 import dagger.Module
 import dagger.Provides

@@ -27,7 +27,6 @@ import com.artem.animationjikan.R
 import com.artem.animationjikan.domain.entities.HomeCommonEntity
 import com.artem.animationjikan.presentation.ui.components.ShimmerRecommendItem
 import com.artem.animationjikan.presentation.ui.theme.AnimationJikanTheme
-import com.artem.animationjikan.util.enums.FilterCategory
 import com.artem.animationjikan.util.enums.FilterType
 
 @Composable

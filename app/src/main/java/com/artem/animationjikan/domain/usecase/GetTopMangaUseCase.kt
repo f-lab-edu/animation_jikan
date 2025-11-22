@@ -3,7 +3,6 @@ package com.artem.animationjikan.domain.usecase
 import com.artem.animationjikan.data.mapper.toHomeCommonEntity
 import com.artem.animationjikan.domain.entities.HomeCommonEntity
 import com.artem.animationjikan.domain.repository.MangaRepository
-import com.artem.animationjikan.util.enums.FilterCategory
 import com.artem.animationjikan.util.enums.FilterType
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch

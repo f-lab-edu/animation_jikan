@@ -12,12 +12,11 @@ import com.artem.animationjikan.data.dto.RecommendationAnimationDTO
 import com.artem.animationjikan.data.dto.ReviewDTO
 import com.artem.animationjikan.data.dto.UpcomingDTO
 import com.artem.animationjikan.domain.entities.ActorEntity
-import com.artem.animationjikan.domain.entities.DetailEntity
 import com.artem.animationjikan.domain.entities.AnimeCharacterEntity
+import com.artem.animationjikan.domain.entities.DetailEntity
 import com.artem.animationjikan.domain.entities.HomeCommonEntity
 import com.artem.animationjikan.domain.entities.NewsEntity
 import com.artem.animationjikan.domain.entities.ReviewEntity
-import com.artem.animationjikan.util.enums.FilterCategory
 import com.artem.animationjikan.util.enums.FilterType
 
 fun RecommendationAnimationDTO.toHomeCommonEntity(type: FilterType): HomeCommonEntity {

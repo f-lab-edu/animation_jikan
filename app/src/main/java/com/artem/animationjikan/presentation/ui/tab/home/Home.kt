@@ -69,7 +69,6 @@ fun HomeTab(
 
     val animeNavigationClick: (HomeCommonEntity) -> Unit = { entity ->
         val jsonString = Gson().toJson(entity)
-        Log.e("What", "entity ${entity.type.name}")
         val encodedString = Base64.getUrlEncoder()
 
         navController.navigate(
