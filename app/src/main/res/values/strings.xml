@@ -16,7 +16,10 @@
     <string name="news_en">news</string>
     <string name="review_en">review</string>
 
-    <string name="All">ALL</string>
+    <string name="image">이미지</string>
+    <string name="appearance_info">등장정보</string>
+
+    <string name="all">ALL</string>
     <string name="animation">애니메이션</string>
     <string name="manga">만화</string>
     <string name="actor">성우</string>
@@ -35,15 +38,18 @@
     <string name="news">뉴스</string>
     <string name="review">리뷰</string>
 
-    <string name="less"> less</string>
-    <string name="more">…more</string>
+    <string name="less"> 접기</string>
+    <string name="more">…더 보기</string>
 
-    <string name="search_default_txt">Search Contents</string>
+    <string name="no_data">데이터 없음</string>
+    <string name="no_get_news_data">등록된 NEWS가 없어요.</string>
+    <string name="no_get_review_data">등록된 리뷰가 없어요.</string>
+    <string name="no_get_character_data">등록된 캐릭터가 없어요.</string>
+
+    <string name="fail_load_data">데이터를 불러오는 데 실패했습니다.</string>
+
+    <string name="search_default_txt">검색어를 입력해 주세요.</string>
 
     <string name="fail_message">요청하신 작업을 처리하는 도중 오류가 발생했습니다.\n다시 시도 하시거나 잠시 후 다시 접속해주세요.</string>
-
-    <string name="sampleStr">
-        Here are the North American anime, manga, and light novel releases for September. Week 1: October 6 - 13 Anime Releases Odd Taxi Blu-ray Ookami to Koushinryou: Merch…"
-    </string>
 
 </resources>

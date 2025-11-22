@@ -1,40 +1,41 @@
 package com.artem.animationjikan.data.service.remote
 
-import com.artem.animationjikan.data.dto.AnimationDetailResponse
-import com.artem.animationjikan.data.dto.AnimationResponse
+import com.artem.animationjikan.data.dto.AnimationDetailResponseDTO
+import com.artem.animationjikan.data.dto.AnimationResponseDTO
 import com.artem.animationjikan.data.dto.AnimeCharacterResponse
-import com.artem.animationjikan.data.dto.CharacterResponse
-import com.artem.animationjikan.data.dto.MangaCharacterResponse
+import com.artem.animationjikan.data.dto.CharacterResponseDTO
+import com.artem.animationjikan.data.dto.MangaCharacterResponseDTO
+import com.artem.animationjikan.data.dto.MangaDetailResponseDTO
 import com.artem.animationjikan.data.dto.MangaPictureResponse
-import com.artem.animationjikan.data.dto.MangaResponse
-import com.artem.animationjikan.data.dto.NewsResponse
-import com.artem.animationjikan.data.dto.RecommendationAnimationResponse
-import com.artem.animationjikan.data.dto.ReviewResponse
-import com.artem.animationjikan.data.dto.UpcomingResponse
+import com.artem.animationjikan.data.dto.MangaResponseDTO
+import com.artem.animationjikan.data.dto.NewsResponseDTO
+import com.artem.animationjikan.data.dto.RecommendationAnimationResponseDTO
+import com.artem.animationjikan.data.dto.ReviewResponseDTO
+import com.artem.animationjikan.data.dto.UpcomingResponseDTO
 import retrofit2.http.GET
 import retrofit2.http.Path
 
 interface JikanApiService {
     @GET("recommendations/anime")
-    suspend fun getRecommendationAnimations(): RecommendationAnimationResponse
+    suspend fun getRecommendationAnimations(): RecommendationAnimationResponseDTO
 
     @GET("top/anime")
-    suspend fun getTopAnimation(): AnimationResponse
+    suspend fun getTopAnimation(): AnimationResponseDTO
 
     @GET("top/manga")
-    suspend fun getTopManga(): MangaResponse
+    suspend fun getTopManga(): MangaResponseDTO
 
     @GET("top/characters")
-    suspend fun getTopCharacters(): CharacterResponse
+    suspend fun getTopCharacters(): CharacterResponseDTO
 
     @GET("seasons/upcoming")
-    suspend fun getUpcoming(): UpcomingResponse
+    suspend fun getUpcoming(): UpcomingResponseDTO
 
     @GET("anime/{id}/news")
-    suspend fun getAnimeNews(@Path("id") id: Int): NewsResponse
+    suspend fun getAnimeNews(@Path("id") id: Int): NewsResponseDTO
 
     @GET("anime/{id}/reviews")
-    suspend fun getAnimeReviews(@Path("id") id: Int): ReviewResponse
+    suspend fun getAnimeReviews(@Path("id") id: Int): ReviewResponseDTO
 
     @GET("anime/{id}/characters")
     suspend fun getAnimeCharacters(@Path("id") id: Int): AnimeCharacterResponse
@@ -43,12 +44,16 @@ interface JikanApiService {
     suspend fun getMangaPictures(@Path("id") id: Int): MangaPictureResponse
 
     @GET("manga/{id}/characters")
-    suspend fun getMangaCharacters(@Path("id") id: Int): MangaCharacterResponse
+    suspend fun getMangaCharacters(@Path("id") id: Int): MangaCharacterResponseDTO
 
     @GET("manga/{id}/reviews")
-    suspend fun getMangaReviews(@Path("id") id: Int): ReviewResponse
+    suspend fun getMangaReviews(@Path("id") id: Int): ReviewResponseDTO
 
     @GET("anime/{id}/full")
-    suspend fun getAnimeFullById(@Path("id") id: Int): AnimationDetailResponse
+    suspend fun getAnimeFullById(@Path("id") id: Int): AnimationDetailResponseDTO
+
+    @GET("manga/{id}/full")
+    suspend fun getMangaFullById(@Path("id") id: Int): MangaDetailResponseDTO
+
 
 }

@@ -4,7 +4,7 @@ import com.google.gson.annotations.SerializedName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class ReviewResponse(
+data class ReviewResponseDTO(
     val pagination: Pagination,
     val data: List<ReviewDTO>,
 )

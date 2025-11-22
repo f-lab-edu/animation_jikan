@@ -1,6 +1,6 @@
 package com.artem.animationjikan.data.dto
 
-data class MangaCharacterResponse(
+data class MangaCharacterResponseDTO(
     val pagination: Pagination,
     val data: List<MangaCharacterDTO>,
 )

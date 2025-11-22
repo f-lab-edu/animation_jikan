@@ -27,7 +27,7 @@ import com.artem.animationjikan.R
 import com.artem.animationjikan.domain.entities.HomeCommonEntity
 import com.artem.animationjikan.presentation.ui.components.ShimmerRecommendItem
 import com.artem.animationjikan.presentation.ui.theme.AnimationJikanTheme
-import com.artem.animationjikan.util.enums.FilterCategory
+import com.artem.animationjikan.util.enums.FilterType
 
 @Composable
 fun RecommendPager(recommendationAnimations: List<HomeCommonEntity>, isLoading: Boolean) {
@@ -94,7 +94,7 @@ fun RecommendPagerPreview() {
     AnimationJikanTheme {
         RecommendPager(
             recommendationAnimations = listOf(
-                HomeCommonEntity(type = FilterCategory.ANIMATION)
+                HomeCommonEntity(type = FilterType.ANIMATION)
             ),
             isLoading = false,
         )

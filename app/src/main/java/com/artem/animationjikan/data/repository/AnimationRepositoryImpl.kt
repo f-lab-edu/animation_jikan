@@ -1,14 +1,14 @@
 package com.artem.animationjikan.data.repository
 
 import com.artem.animationjikan.data.dto.AnimationDetailDTO
-import com.artem.animationjikan.data.dto.AnimationResponse
+import com.artem.animationjikan.data.dto.AnimationResponseDTO
 import com.artem.animationjikan.data.dto.AnimeCharacterDTO
 import com.artem.animationjikan.data.dto.AnimeDTO
 import com.artem.animationjikan.data.dto.NewsDTO
 import com.artem.animationjikan.data.dto.RecommendationAnimationDTO
 import com.artem.animationjikan.data.dto.ReviewDTO
 import com.artem.animationjikan.data.dto.UpcomingDTO
-import com.artem.animationjikan.data.dto.UpcomingResponse
+import com.artem.animationjikan.data.dto.UpcomingResponseDTO
 import com.artem.animationjikan.data.service.remote.JikanApiClient
 import com.artem.animationjikan.domain.repository.AnimationRepository
 import com.artem.animationjikan.util.network.retryOnRateLimit
@@ -28,14 +28,14 @@ class AnimationRepositoryImpl @Inject constructor(
         }.retryOnRateLimit()
 
     override suspend fun fetchTopAnimation(): Flow<List<AnimeDTO>> = flow {
-        val response: AnimationResponse = client.getTopAnimation()
+        val response: AnimationResponseDTO = client.getTopAnimation()
         val result = response.data
         emit(result)
     }.retryOnRateLimit()
 
 
     override suspend fun fetchUpcoming(): Flow<List<UpcomingDTO>> = flow {
-        val response: UpcomingResponse = client.getUpcoming()
+        val response: UpcomingResponseDTO = client.getUpcoming()
         val result = response.data
         emit(result)
     }.retryOnRateLimit()

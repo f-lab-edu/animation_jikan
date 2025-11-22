@@ -9,11 +9,14 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.artem.animationjikan.R
-import com.artem.animationjikan.domain.entities.AnimationDetailEntity
+import com.artem.animationjikan.domain.entities.DetailEntity
 import com.artem.animationjikan.domain.entities.HomeCommonEntity
 import com.artem.animationjikan.domain.entities.LikeEntity
-import com.artem.animationjikan.domain.usecase.AnimationDetailUseCase
+import com.artem.animationjikan.domain.entities.RecentEntity
+import com.artem.animationjikan.domain.usecase.DetailUseCase
 import com.artem.animationjikan.domain.usecase.LikeUseCase
+import com.artem.animationjikan.domain.usecase.RecentUseCase
+import com.artem.animationjikan.util.enums.FilterType
 import com.artem.animationjikan.util.enums.ViewModelState
 import com.artem.animationjikan.util.event.UiEvent
 import com.google.gson.Gson
@@ -31,8 +34,9 @@ import javax.inject.Inject
 @HiltViewModel
 class AnimationDetailViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
-    private val animationDetailUseCase: AnimationDetailUseCase,
+    private val detailUseCase: DetailUseCase,
     private val likeUseCase: LikeUseCase,
+    private val recentUseCase: RecentUseCase,
 ) : ViewModel() {
 
     companion object {
@@ -41,7 +45,7 @@ class AnimationDetailViewModel @Inject constructor(
 
     val encodedEntityString: String? = savedStateHandle.get<String>("entityData")
     var paramEntity: HomeCommonEntity? = null
-    var animationDetailEntity by mutableStateOf(AnimationDetailEntity())
+    var detailEntity by mutableStateOf(DetailEntity())
         private set
 
     var state by mutableStateOf(ViewModelState.Idle)
@@ -73,7 +77,18 @@ class AnimationDetailViewModel @Inject constructor(
         paramEntity?.let {
             val animeId = it.id
             state = ViewModelState.Loading
-            animationDetailEntity = AnimationDetailEntity()
+
+            viewModelScope.launch {
+                addRecentItem(
+                    RecentEntity(
+                        mediaId = animeId,
+                        imageUrl = it.imageUrl,
+                        mediaType = it.type.name
+                    )
+                )
+            }
+
+            detailEntity = DetailEntity()
 
             likeUseCase.getLikeStatus(mediaId = animeId)
                 .onEach { isLiked ->
@@ -83,18 +98,44 @@ class AnimationDetailViewModel @Inject constructor(
                     emit(false)
                 }.launchIn(viewModelScope)
 
-            viewModelScope.launch(Dispatchers.IO) {
-                animationDetailUseCase.execute(id = animeId).onSuccess { detailEntity ->
-                    state = ViewModelState.Success
-                    animationDetailEntity = detailEntity
-                }.onFailure {
-                    Log.e("AnimationDetailViewModel", "onFailure")
-                    state = ViewModelState.Error
-                }
+            when (it.type) {
+                FilterType.ANIMATION -> fetchAnimationDetailInfo(animeId = animeId)
+                FilterType.MANGA -> fetchAnimationDetailInfo(animeId = animeId)
+                FilterType.CHARACTER -> fetchAnimationDetailInfo(animeId = animeId)
+                FilterType.VOICE_ACTOR -> fetchAnimationDetailInfo(animeId = animeId)
             }
+
         } ?: run {
             Log.e("AnimationDetailViewModel", "animeId == null")
             state = ViewModelState.Error
+        }
+    }
+
+    suspend fun addRecentItem(recentEntity: RecentEntity) {
+        recentUseCase.addRecent(recentEntity = recentEntity)
+    }
+
+    fun fetchAnimationDetailInfo(animeId: Int) {
+        viewModelScope.launch(Dispatchers.IO) {
+            detailUseCase.getAnimationDetailInfo(id = animeId).onSuccess { detailEntity ->
+                state = ViewModelState.Success
+                this@AnimationDetailViewModel.detailEntity = detailEntity
+            }.onFailure {
+                Log.e("AnimationDetailViewModel", "onFailure")
+                state = ViewModelState.Error
+            }
+        }
+    }
+
+    fun fetchManaDetailInfo(mangaId: Int) {
+        viewModelScope.launch(Dispatchers.IO) {
+            detailUseCase.getMangaDetailInfo(id = mangaId).onSuccess {
+                state = ViewModelState.Success
+                this@AnimationDetailViewModel.detailEntity = detailEntity
+            }.onFailure {
+                Log.e("AnimationDetailViewModel", "onFailure")
+                state = ViewModelState.Error
+            }
         }
     }
 

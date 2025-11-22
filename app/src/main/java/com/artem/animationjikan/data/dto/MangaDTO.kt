@@ -5,7 +5,7 @@ import kotlinx.serialization.Serializable
 
 
 @Serializable
-data class MangaResponse(
+data class MangaResponseDTO(
     val pagination: Pagination,
     val data: List<MangaDTO>,
 )

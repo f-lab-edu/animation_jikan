@@ -6,19 +6,20 @@ import com.artem.animationjikan.data.dto.AnimeCharacterDTO
 import com.artem.animationjikan.data.dto.AnimeDTO
 import com.artem.animationjikan.data.dto.CharacterDTO
 import com.artem.animationjikan.data.dto.MangaDTO
+import com.artem.animationjikan.data.dto.MangaDetailDTO
 import com.artem.animationjikan.data.dto.NewsDTO
 import com.artem.animationjikan.data.dto.RecommendationAnimationDTO
 import com.artem.animationjikan.data.dto.ReviewDTO
 import com.artem.animationjikan.data.dto.UpcomingDTO
 import com.artem.animationjikan.domain.entities.ActorEntity
-import com.artem.animationjikan.domain.entities.AnimationDetailEntity
 import com.artem.animationjikan.domain.entities.AnimeCharacterEntity
+import com.artem.animationjikan.domain.entities.DetailEntity
 import com.artem.animationjikan.domain.entities.HomeCommonEntity
 import com.artem.animationjikan.domain.entities.NewsEntity
 import com.artem.animationjikan.domain.entities.ReviewEntity
-import com.artem.animationjikan.util.enums.FilterCategory
+import com.artem.animationjikan.util.enums.FilterType
 
-fun RecommendationAnimationDTO.toHomeCommonEntity(type: FilterCategory): HomeCommonEntity {
+fun RecommendationAnimationDTO.toHomeCommonEntity(type: FilterType): HomeCommonEntity {
     return HomeCommonEntity(
         id = this.malId,
         type = type,
@@ -26,7 +27,7 @@ fun RecommendationAnimationDTO.toHomeCommonEntity(type: FilterCategory): HomeCom
     )
 }
 
-fun AnimeDTO.toHomeCommonEntity(type: FilterCategory): HomeCommonEntity {
+fun AnimeDTO.toHomeCommonEntity(type: FilterType): HomeCommonEntity {
     return HomeCommonEntity(
         id = this.malId,
         type = type,
@@ -34,7 +35,7 @@ fun AnimeDTO.toHomeCommonEntity(type: FilterCategory): HomeCommonEntity {
     )
 }
 
-fun MangaDTO.toHomeCommonEntity(type: FilterCategory): HomeCommonEntity {
+fun MangaDTO.toHomeCommonEntity(type: FilterType): HomeCommonEntity {
     return HomeCommonEntity(
         id = this.malId,
         type = type,
@@ -42,7 +43,7 @@ fun MangaDTO.toHomeCommonEntity(type: FilterCategory): HomeCommonEntity {
     )
 }
 
-fun UpcomingDTO.toHomeCommonEntity(type: FilterCategory): HomeCommonEntity {
+fun UpcomingDTO.toHomeCommonEntity(type: FilterType): HomeCommonEntity {
     return HomeCommonEntity(
         id = this.malId,
         type = type,
@@ -50,7 +51,7 @@ fun UpcomingDTO.toHomeCommonEntity(type: FilterCategory): HomeCommonEntity {
     )
 }
 
-fun CharacterDTO.toHomeCommonEntity(type: FilterCategory): HomeCommonEntity {
+fun CharacterDTO.toHomeCommonEntity(type: FilterType): HomeCommonEntity {
     return HomeCommonEntity(
         id = this.malId,
         type = type,
@@ -98,8 +99,18 @@ fun ActorDTO.toActorEntity(): ActorEntity {
     )
 }
 
-fun AnimationDetailDTO.toAnimationDetailEntity(): AnimationDetailEntity {
-    return AnimationDetailEntity(
+fun AnimationDetailDTO.toAnimationDetailEntity(): DetailEntity {
+    return DetailEntity(
+        malId = this.malId,
+        title = this.title,
+        imageUrl = this.images.jpg.largeImageUrl,
+        synopsis = this.synopsis,
+        score = this.score,
+    )
+}
+
+fun MangaDetailDTO.toMangaDetailEntity(): DetailEntity {
+    return DetailEntity(
         malId = this.malId,
         title = this.title,
         imageUrl = this.images.jpg.largeImageUrl,

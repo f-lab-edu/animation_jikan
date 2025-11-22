@@ -77,9 +77,9 @@ fun LikeTab(
     }
 
     Box(modifier = modifier
-        .padding(horizontal = 16.dp)
+        .fillMaxWidth()
         .background(color = Color.Black)) {
-        Column {
+        Column(modifier = Modifier.padding(horizontal = 16.dp)) {
             Box(
                 modifier = Modifier.padding(vertical = 6.dp)
             ) {

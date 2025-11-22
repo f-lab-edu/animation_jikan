@@ -15,6 +15,8 @@ import com.artem.animationjikan.domain.usecase.GetTopCharacterUseCase
 import com.artem.animationjikan.domain.usecase.GetTopMangaUseCase
 import com.artem.animationjikan.domain.usecase.GetUpcomingUseCase
 import com.artem.animationjikan.domain.usecase.LikeUseCase
+import com.artem.animationjikan.domain.usecase.RecentUseCase
+import com.artem.animationjikan.util.enums.FilterType
 import com.artem.animationjikan.util.enums.ViewModelState
 import com.artem.animationjikan.util.event.UiEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -31,6 +33,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class HomeTabViewModel @Inject constructor(
+    private val recentUseCase: RecentUseCase,
     private val recommendAnimationUseCase: GetRecommendAnimationUseCase,
     private val topAnimationUseCase: GetTopAnimationUseCase,
     private val topTopMangaUseCase: GetTopMangaUseCase,
@@ -46,6 +49,8 @@ class HomeTabViewModel @Inject constructor(
     private val likeList = MutableStateFlow<List<Int>>(emptyList())
 
     val recommendationAnimationList = MutableStateFlow<List<HomeCommonEntity>>(emptyList())
+
+    val recentItemList = MutableStateFlow<List<HomeCommonEntity>>(emptyList())
 
     val topAnimationList = MutableStateFlow<List<HomeCommonEntity>>(emptyList())
 
@@ -66,6 +71,23 @@ class HomeTabViewModel @Inject constructor(
         /// 중복되는 코드가 많음
         likeUseCase.execute().onEach { result ->
             likeList.value = result.map { entity -> entity.mediaId }.toList()
+        }.launchIn(viewModelScope)
+
+        recentUseCase.execute().onEach { result ->
+            recentItemList.value = result.map { item ->
+                HomeCommonEntity(
+                    id = item.mediaId,
+                    type = FilterType.valueOf(item.mediaType),
+                    imageUrl = item.imageUrl
+                )
+            }
+        }.launchIn(viewModelScope)
+
+        combine(recentItemList, likeList) { entities, likes ->
+            val likeIdx = likes.toSet()
+            entities.map { it.copy(likeStatus = likeIdx.contains(it.id)) }
+        }.onEach { recentList ->
+            recentItemList.value = recentList
         }.launchIn(viewModelScope)
 
         combine(recommendationAnimationList, likeList) { entities, likes ->

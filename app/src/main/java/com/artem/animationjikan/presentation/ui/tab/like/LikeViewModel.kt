@@ -42,7 +42,7 @@ class LikeViewModel @Inject constructor(
         currentMediaType.flatMapLatest { mediaType ->
             var type: String? = mediaType.name
 
-            if (mediaType.stringRes == R.string.All) {
+            if (mediaType.stringRes == R.string.all) {
                 type = null
             }
 
