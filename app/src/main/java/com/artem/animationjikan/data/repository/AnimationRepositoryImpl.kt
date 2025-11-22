@@ -1,6 +1,5 @@
 package com.artem.animationjikan.data.repository
 
-import android.util.Log
 import com.artem.animationjikan.data.dto.AnimationDetailDTO
 import com.artem.animationjikan.data.dto.AnimationResponseDTO
 import com.artem.animationjikan.data.dto.AnimeCharacterDTO

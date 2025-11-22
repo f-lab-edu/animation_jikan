@@ -8,7 +8,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.artem.animationjikan.domain.entities.HomeCommonEntity
 import com.artem.animationjikan.domain.usecase.SearchUseCase
-import com.artem.animationjikan.presentation.ui.tab.home.HomeTabViewModel
 import com.artem.animationjikan.util.enums.FilterType
 import com.artem.animationjikan.util.enums.ViewModelState
 import dagger.hilt.android.lifecycle.HiltViewModel

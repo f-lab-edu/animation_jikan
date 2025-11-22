@@ -9,7 +9,6 @@ import com.artem.animationjikan.util.enums.FilterType
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
-import kotlin.fold
 
 class SearchUseCase @Inject constructor(
     private val animationRepository: AnimationRepository,
