@@ -50,7 +50,7 @@ class SearchViewModel @Inject constructor(
         combine(query, searchFilter) {
             Pair(query, searchFilter)
         }.debounce(300L)
-            .onEach { (query, filter) ->
+            .onEach {
                 status.value = ViewModelState.Loading
             }
             .flatMapLatest { (query, filter) ->

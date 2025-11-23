@@ -4,5 +4,5 @@ import com.artem.animationjikan.data.dto.VoiceActorDTO
 import kotlinx.coroutines.flow.Flow
 
 interface VoiceActorRepository {
-    suspend fun searchAnime(query: String?): Flow<Result<List<VoiceActorDTO>>>
+    suspend fun searchVoiceActors(query: String?): Flow<Result<List<VoiceActorDTO>>>
 }

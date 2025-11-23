@@ -10,7 +10,7 @@ import javax.inject.Inject
 class VoiceActorRepositoryImpl @Inject constructor(
     private val client: JikanApiClient
 ) : VoiceActorRepository {
-    override suspend fun searchAnime(query: String?): Flow<Result<List<VoiceActorDTO>>> =
+    override suspend fun searchVoiceActors(query: String?): Flow<Result<List<VoiceActorDTO>>> =
         flow {
             val result = runCatching { client.searchVoiceActor(query = query).data }
             emit(result)

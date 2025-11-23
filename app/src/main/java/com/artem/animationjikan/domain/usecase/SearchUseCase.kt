@@ -41,7 +41,7 @@ class SearchUseCase @Inject constructor(
             }
 
             FilterType.VOICE_ACTOR -> {
-                voiceActorRepository.searchAnime(query = query).map { result ->
+                voiceActorRepository.searchVoiceActors(query = query).map { result ->
                     result.map { list ->
                         list.map {
                             it.toHomeCommonEntity(type = FilterType.VOICE_ACTOR)
