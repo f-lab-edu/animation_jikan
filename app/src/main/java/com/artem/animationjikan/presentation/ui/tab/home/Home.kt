@@ -140,48 +140,6 @@ fun HomeTab(
     }
 
 }
-/*
-@Composable
-fun SearchView() {
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(40.dp)
-            .clip(shape = RoundedCornerShape(8.dp))
-            .border(
-                width = 1.dp,
-                color = colorResource(R.color.grey4),
-                shape = RoundedCornerShape(8.dp)
-            )
-
-    ) {
-        Row(
-            modifier = Modifier
-                .fillMaxSize()
-                .align(Alignment.Center)
-                .padding(horizontal = 10.dp),
-            horizontalArrangement = Arrangement.Center,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Icon(
-                painter = painterResource(R.drawable.ic_search_off),
-                tint = colorResource(R.color.grey4),
-                modifier = Modifier.size(18.dp),
-                contentDescription = stringResource(R.string.search)
-            )
-            WidthGap(8)
-            Text(
-                stringResource(R.string.search_default_txt),
-                modifier = Modifier.weight(1f),
-                fontSize = 11.sp,
-                fontWeight = FontWeight(400),
-                color = colorResource(R.color.grey4)
-            )
-        }
-
-    }
-}*/
-
 
 
 @Composable

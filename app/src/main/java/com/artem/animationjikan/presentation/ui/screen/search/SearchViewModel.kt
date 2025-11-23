@@ -1,9 +1,6 @@
 package com.artem.animationjikan.presentation.ui.screen.search
 
 import android.util.Log
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.artem.animationjikan.domain.entities.HomeCommonEntity
@@ -11,11 +8,19 @@ import com.artem.animationjikan.domain.usecase.SearchUseCase
 import com.artem.animationjikan.util.enums.FilterType
 import com.artem.animationjikan.util.enums.ViewModelState
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.stateIn
 import javax.inject.Inject
 
+@Suppress("TYPE_INTERSECTION_AS_REIFIED_WARNING")
 @HiltViewModel
 class SearchViewModel @Inject constructor(
     private val searchUseCase: SearchUseCase
@@ -26,37 +31,43 @@ class SearchViewModel @Inject constructor(
 
     val contentList = MutableStateFlow<List<HomeCommonEntity>>(emptyList())
 
-    var status by mutableStateOf(ViewModelState.Idle)
+    var status = MutableStateFlow(ViewModelState.Idle)
 
     private val searchFilter = MutableStateFlow(FilterType.ANIMATION)
 
-    private var query: String? = null
+    private var query = MutableStateFlow("")
 
-
-    init {
-        execute()
+    fun onQueryChange(query: String) {
+        this.query.value = query
     }
 
     fun updateFilter(type: FilterType) {
         searchFilter.value = type
-        execute(query = query)
     }
 
-    fun execute(query: String? = null) {
-        status = ViewModelState.Loading
-        this.query = query
-
-        viewModelScope.launch(Dispatchers.IO) {
-            searchUseCase.search(type = searchFilter.value, query = query).collect { result ->
+    @OptIn(ExperimentalCoroutinesApi::class, FlowPreview::class)
+    val searchResult: StateFlow<Result<List<HomeCommonEntity>>> =
+        combine(query, searchFilter) {
+            Pair(query, searchFilter)
+        }.debounce(300L)
+            .onEach { (query, filter) ->
+                status.value = ViewModelState.Loading
+            }
+            .flatMapLatest { (query, filter) ->
+                searchUseCase.search(type = filter.value, query = query.value)
+            }.onEach { result ->
                 result.onSuccess {
-                    status = ViewModelState.Success
+                    status.value = ViewModelState.Success
                     contentList.value = it
-                }.onFailure { error ->
-                    Log.e(TAG, error.message.toString())
-                    status = ViewModelState.Error
+                }.onFailure {
+                    status.value = ViewModelState.Error
+                    Log.e(TAG, it.message.toString())
                 }
             }
-        }
-    }
+            .stateIn(
+                scope = viewModelScope,
+                started = SharingStarted.WhileSubscribed(5000),
+                initialValue = Result.success(emptyList())
+            )
 
 }

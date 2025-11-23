@@ -47,6 +47,11 @@ fun SearchScreen(
 
     val navController = LocalNavScreenController.current
 
+    val resultState by searchViewModel.searchResult.collectAsStateWithLifecycle()
+
+    val status by searchViewModel.status.collectAsStateWithLifecycle()
+
+
     val animeNavigationClick: (HomeCommonEntity) -> Unit = { entity ->
         val jsonString = Gson().toJson(entity)
         val encodedString = Base64.getUrlEncoder()
@@ -74,8 +79,8 @@ fun SearchScreen(
             ) {
                 SearchView(
                     isShowTextField = true,
-                    onClick = {
-                        searchViewModel.execute(query = it)
+                    onValueChange = {
+                        searchViewModel.onQueryChange(it)
                     }
                 )
 
@@ -88,15 +93,30 @@ fun SearchScreen(
                 HeightGap(height = 16)
 
                 Box(modifier = Modifier.fillMaxSize()) {
-                    when (searchViewModel.status) {
-                        ViewModelState.Idle, ViewModelState.Loading -> LoadingSpinner(modifier = Modifier.fillMaxSize())
-                        ViewModelState.Success -> SearchGrid(
-                            searchList = searchItemList,
-                            onItemClick = { animeNavigationClick(it) })
+                    when (status) {
+                        ViewModelState.Idle, ViewModelState.Loading -> {
+                            LoadingSpinner(modifier = Modifier.fillMaxSize())
+                        }
 
-                        ViewModelState.Error -> ErrorWidget(
-                            messageStringResId = R.string.fail_load_data,
-                        )
+                        ViewModelState.Success -> {
+                            val list = resultState.getOrNull()
+                            if (!list.isNullOrEmpty()) {
+                                SearchGrid(
+                                    searchList = searchItemList,
+                                    onItemClick = { animeNavigationClick(it) }
+                                )
+                            } else {
+                                ErrorWidget(
+                                    messageStringResId = R.string.fail_load_data,
+                                )
+                            }
+                        }
+
+                        ViewModelState.Error -> {
+                            ErrorWidget(
+                                messageStringResId = R.string.fail_load_data,
+                            )
+                        }
                     }
                 }
 

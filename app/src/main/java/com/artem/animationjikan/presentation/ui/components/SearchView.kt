@@ -43,7 +43,8 @@ import com.artem.animationjikan.R
 fun SearchView(
     modifier: Modifier = Modifier,
     isShowTextField: Boolean = false,
-    onClick: (String?) -> Unit,
+    onClick: (String?) -> Unit = {},
+    onValueChange: (String) -> Unit = {},
 ) {
     var text by remember { mutableStateOf("") }
 
@@ -83,7 +84,10 @@ fun SearchView(
                 BasicTextField(
                     modifier = Modifier.fillMaxHeight(),
                     value = text,
-                    onValueChange = { text = it },
+                    onValueChange = {
+                        text = it
+                        onValueChange(it)
+                    },
                     singleLine = true,
                     textStyle = TextStyle(
                         fontSize = 18.sp,
@@ -136,5 +140,5 @@ fun SearchView(
 @Composable
 @Preview
 fun SearchViewPreView() {
-    SearchView(onClick = {})
+    SearchView(onClick = {}, onValueChange = {})
 }
