@@ -59,16 +59,14 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import coil3.compose.AsyncImage
 import com.artem.animationjikan.R
-import com.artem.animationjikan.domain.entities.AnimeCharacterEntity
 import com.artem.animationjikan.domain.entities.DetailEntity
-import com.artem.animationjikan.domain.entities.NewsEntity
-import com.artem.animationjikan.domain.entities.ReviewEntity
 import com.artem.animationjikan.presentation.ui.LocalNavScreenController
 import com.artem.animationjikan.presentation.ui.components.ErrorWidget
 import com.artem.animationjikan.presentation.ui.components.HeightGap
 import com.artem.animationjikan.presentation.ui.components.LoadingSpinner
 import com.artem.animationjikan.presentation.ui.components.WidthGap
 import com.artem.animationjikan.presentation.ui.components.showToast
+import com.artem.animationjikan.presentation.ui.screen.detail.animation.tabs.TabBaseViewModel
 import com.artem.animationjikan.presentation.ui.screen.detail.animation.tabs.character.CharacterTab
 import com.artem.animationjikan.presentation.ui.screen.detail.animation.tabs.character.CharacterViewModel
 import com.artem.animationjikan.presentation.ui.screen.detail.animation.tabs.news.NewsItem
@@ -112,9 +110,9 @@ fun AnimationDetailScreen(
         val animationId = animationDetailViewModel.paramEntity?.id ?: 0
 
         when (selectedDestination.value) {
-            DetailTabs.FIRST -> newsViewModel.fetchAnimeNews(malId = animationId)
-            DetailTabs.SECOND -> reviewViewModel.fetchReviews(malId = animationId)
-            DetailTabs.THIRD -> characterViewModel.fetchAnimeCharacters(malId = animationId)
+            DetailTabs.FIRST -> newsViewModel.execute(malId = animationId)
+            DetailTabs.SECOND -> reviewViewModel.execute(malId = animationId)
+            DetailTabs.THIRD -> characterViewModel.execute(malId = animationId)
         }
     }
 
@@ -217,6 +215,7 @@ fun AnimationDetailTopBar(
         }
     )
 }
+
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
@@ -357,24 +356,86 @@ fun AnimationDetailContent(
 
         item { HeightGap(10) }
 
-        item(key = selectedDestination.name) {
-            this@LazyColumn.DetailTabContent(
-                selectedDestination = selectedDestination,
-                newsViewModel = newsViewModel,
-                reviewViewModel = reviewViewModel,
-                characterViewModel = characterViewModel,
-            )
+        when (selectedDestination) {
+            DetailTabs.FIRST -> {
+                this@LazyColumn.renderTabContent(
+                    viewModel = newsViewModel,
+                    emptyMessageRedId = R.string.no_get_news_data,
+                ) { item ->
+                    NewsItem(newsEntity = item)
+                }
+            }
+
+            DetailTabs.SECOND -> {
+                this@LazyColumn.renderTabContent(
+                    viewModel = reviewViewModel,
+                    emptyMessageRedId = R.string.no_get_review_data
+                ) { item ->
+                    ReviewTab(reviewModel = item)
+                }
+            }
+
+            DetailTabs.THIRD -> {
+                this@LazyColumn.renderTabContent(
+                    viewModel = characterViewModel,
+                    emptyMessageRedId = R.string.no_get_character_data,
+                ) { item ->
+                    CharacterTab(animeCharacterEntity = item)
+                }
+            }
         }
     }
 }
 
-@Composable
-fun BuildErrorWidget() {
-    ErrorWidget(
-        messageStringResId = R.string.fail_load_data,
-    )
-}
+fun <T> LazyListScope.renderTabContent(
+    viewModel: TabBaseViewModel<T>,
+    emptyMessageRedId: Int,
+    itemContent: @Composable (item: T) -> Unit
+) {
+    when (viewModel.state.value) {
+        ViewModelState.Idle, ViewModelState.Loading -> {
+            item {
+                LoadingSpinner(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(200.dp)
+                )
+            }
+        }
 
+
+        ViewModelState.Success -> {
+            val currentList = viewModel.list.value
+            if (currentList.isNotEmpty()) {
+                items(currentList.count()) { index ->
+                    itemContent(currentList[index])
+                }
+            } else {
+                item {
+                    ErrorWidget(
+                        messageStringResId = emptyMessageRedId,
+                    )
+                }
+            }
+        }
+
+        ViewModelState.Error -> {
+            item {
+                Box(modifier = Modifier.fillMaxSize()) {
+                    Text(
+                        stringResource(R.string.fail_message),
+                        modifier = Modifier
+                            .align(alignment = Alignment.Center),
+                        fontSize = 11.sp,
+                        fontWeight = FontWeight(400),
+                        textAlign = TextAlign.Center,
+                        color = colorResource(R.color.grey4)
+                    )
+                }
+            }
+        }
+    }
+}
 
 @Composable
 fun ExpandableText(
@@ -414,82 +475,6 @@ fun ExpandableText(
         }
     }
 }
-
-@Composable
-fun LazyListScope.DetailTabContent(
-    selectedDestination: DetailTabs,
-    newsViewModel: NewsViewModel,
-    reviewViewModel: ReviewViewModel,
-    characterViewModel: CharacterViewModel,
-) {
-    when (selectedDestination) {
-        DetailTabs.FIRST -> {
-            TabContent(
-                status = newsViewModel.state,
-                list = newsViewModel.newsList,
-                errorMessageResId = R.string.no_get_news_data,
-            ) { list, index ->
-                NewsItem(newsEntity = list[index] as NewsEntity)
-            }
-        }
-
-        DetailTabs.SECOND -> {
-            TabContent(
-                status = reviewViewModel.state,
-                list = reviewViewModel.reviewList,
-                errorMessageResId = R.string.no_get_review_data,
-            ) { list, index ->
-                ReviewTab(reviewModel = list[index] as ReviewEntity)
-            }
-        }
-
-        DetailTabs.THIRD -> {
-            TabContent(
-                status = characterViewModel.state,
-                list = characterViewModel.characterList,
-                errorMessageResId = R.string.no_get_character_data,
-            ) { list, index ->
-                CharacterTab(animeCharacterEntity = list[index] as AnimeCharacterEntity)
-            }
-        }
-    }
-}
-
-@Composable
-fun LazyListScope.TabContent(
-    status: ViewModelState,
-    list: List<*>,
-    errorMessageResId: Int,
-    content: @Composable LazyListScope.(list: List<*>, index: Int) -> Unit,
-) {
-    when (status) {
-        ViewModelState.Idle, ViewModelState.Loading -> {
-            LoadingSpinner(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(200.dp)
-            )
-        }
-
-        ViewModelState.Success -> {
-            if (list.isNotEmpty()) {
-                Column {
-                    list.forEachIndexed { index, _ ->
-                        this@TabContent.content(list, index)
-                    }
-                }
-            } else {
-                ErrorWidget(
-                    messageStringResId = errorMessageResId,
-                    contentDescription = R.string.no_data,
-                )
-            }
-        }
-
-        ViewModelState.Error -> BuildErrorWidget()
-    }
-}
-
 
 @Composable
 @Preview

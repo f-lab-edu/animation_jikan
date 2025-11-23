@@ -1,12 +1,10 @@
 package com.artem.animationjikan.presentation.ui.screen.detail.animation.tabs.character
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.artem.animationjikan.domain.entities.AnimeCharacterEntity
 import com.artem.animationjikan.domain.usecase.AnimationCharacterUseCase
+import com.artem.animationjikan.presentation.ui.screen.detail.animation.tabs.TabBaseViewModel
+import com.artem.animationjikan.util.enums.DetailTabs
 import com.artem.animationjikan.util.enums.ViewModelState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -15,27 +13,23 @@ import javax.inject.Inject
 @HiltViewModel
 class CharacterViewModel @Inject constructor(
     private val characterUseCase: AnimationCharacterUseCase
-) : ViewModel() {
+) : TabBaseViewModel<AnimeCharacterEntity>() {
 
-    var characterList by mutableStateOf<List<AnimeCharacterEntity>>(value = emptyList())
-        private set
+    override val type: DetailTabs = DetailTabs.THIRD
 
-    var state by mutableStateOf(ViewModelState.Idle)
-        private set
+    override fun execute(malId: Int) {
+        if (_state.value == ViewModelState.Loading) return
 
-    fun fetchAnimeCharacters(malId: Int) {
-        if (state == ViewModelState.Loading) return
-
-        state = ViewModelState.Loading
-        characterList = emptyList()
+        _state.value = ViewModelState.Loading
+        _list.value = emptyList()
 
         viewModelScope.launch {
             characterUseCase.execute(id = malId)
                 .onSuccess {
-                    characterList = it
-                    state = ViewModelState.Success
+                    _list.value = it
+                    _state.value = ViewModelState.Success
                 }.onFailure {
-                    state = ViewModelState.Error
+                    _state.value = ViewModelState.Error
                 }
         }
     }
