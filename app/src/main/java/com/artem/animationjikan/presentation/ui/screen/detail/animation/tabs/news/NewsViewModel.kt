@@ -25,9 +25,7 @@ class NewsViewModel @Inject constructor(
         _list.value = emptyList()
         viewModelScope.launch(Dispatchers.IO) {
             val result = newsUseCase.execute(malId)
-            Log.e(TAG, "execute")
             result.onSuccess { list ->
-                Log.e(TAG, "onSuccess")
                 this@NewsViewModel._list.value = list
                 _state.value = ViewModelState.Success
             }.onFailure { error ->
