@@ -28,14 +28,26 @@ class SearchViewModel @Inject constructor(
 
     var status by mutableStateOf(ViewModelState.Idle)
 
+    private val searchFilter = MutableStateFlow(FilterType.ANIMATION)
+
+    private var query: String? = null
+
+
     init {
         execute()
     }
 
-    fun execute(type: FilterType = FilterType.ANIMATION, query: String? = null) {
+    fun updateFilter(type: FilterType) {
+        searchFilter.value = type
+        execute(query = query)
+    }
+
+    fun execute(query: String? = null) {
         status = ViewModelState.Loading
+        this.query = query
+
         viewModelScope.launch(Dispatchers.IO) {
-            searchUseCase.search(type = type, query = query).collect { result ->
+            searchUseCase.search(type = searchFilter.value, query = query).collect { result ->
                 result.onSuccess {
                     status = ViewModelState.Success
                     contentList.value = it

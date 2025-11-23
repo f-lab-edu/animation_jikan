@@ -32,7 +32,7 @@ import com.artem.animationjikan.presentation.ui.components.HeightGap
 import com.artem.animationjikan.presentation.ui.components.JikanNetworkCardImage
 import com.artem.animationjikan.presentation.ui.components.LoadingSpinner
 import com.artem.animationjikan.presentation.ui.components.SearchView
-import com.artem.animationjikan.util.enums.FilterType
+import com.artem.animationjikan.presentation.ui.components.TypeChip
 import com.artem.animationjikan.util.enums.ViewModelState
 import com.artem.animationjikan.util.router.NavRoutes
 import com.google.gson.Gson
@@ -75,9 +75,15 @@ fun SearchScreen(
                 SearchView(
                     isShowTextField = true,
                     onClick = {
-                        searchViewModel.execute(type = FilterType.ANIMATION, query = it)
+                        searchViewModel.execute(query = it)
                     }
                 )
+
+                HeightGap(height = 5)
+
+                TypeChip { type ->
+                    searchViewModel.updateFilter(type = type)
+                }
 
                 HeightGap(height = 16)
 

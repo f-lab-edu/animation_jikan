@@ -11,6 +11,7 @@ import com.artem.animationjikan.data.dto.MangaResponseDTO
 import com.artem.animationjikan.data.dto.NewsResponseDTO
 import com.artem.animationjikan.data.dto.ReviewResponseDTO
 import com.artem.animationjikan.data.dto.UpcomingResponseDTO
+import com.artem.animationjikan.data.dto.VoiceActorResponseDTO
 import javax.inject.Inject
 
 class JikanApiClient @Inject constructor(
@@ -52,6 +53,15 @@ class JikanApiClient @Inject constructor(
 
     suspend fun searchAnime(query: String?): AnimationResponseDTO =
         jikanApiService.searchAnime(query = query)
+
+    suspend fun searchManga(query: String?): MangaResponseDTO =
+        jikanApiService.searchManga(query = query)
+
+    suspend fun searchCharacter(query: String?): CharacterResponseDTO =
+        jikanApiService.searchCharacter(query = query)
+
+    suspend fun searchVoiceActor(query: String?): VoiceActorResponseDTO =
+        jikanApiService.searchVoiceActor(query = query)
 
 
 }

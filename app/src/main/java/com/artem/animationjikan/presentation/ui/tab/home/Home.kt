@@ -3,27 +3,19 @@ package com.artem.animationjikan.presentation.ui.tab.home
 
 import android.widget.Toast
 import androidx.annotation.StringRes
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.SuggestionChip
-import androidx.compose.material3.SuggestionChipDefaults
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
@@ -36,7 +28,6 @@ import com.artem.animationjikan.presentation.ui.components.SearchView
 import com.artem.animationjikan.presentation.ui.tab.home.components.ContentSectionRow
 import com.artem.animationjikan.presentation.ui.tab.home.components.RecommendPager
 import com.artem.animationjikan.presentation.ui.theme.AnimationJikanTheme
-import com.artem.animationjikan.util.CATEGORIES_LIST
 import com.artem.animationjikan.util.enums.ViewModelState
 import com.artem.animationjikan.util.event.UiEvent
 import com.artem.animationjikan.util.router.NavRoutes
@@ -92,9 +83,7 @@ fun HomeTab(
                 navController.navigate(NavRoutes.Search.router)
             })
 
-            HeightGap(6)
-
-            ChipSection()
+            //HeightGap(6)
 
             HeightGap(16)
 
@@ -193,25 +182,7 @@ fun SearchView() {
     }
 }*/
 
-@Composable
-fun ChipSection() {
-    LazyRow(
-        horizontalArrangement = Arrangement.spacedBy(8.dp)
-    ) {
-        items(CATEGORIES_LIST) { item ->
-            SuggestionChip(
-                onClick = {},
-                label = {
-                    Text(stringResource(item))
-                },
-                colors = SuggestionChipDefaults.suggestionChipColors(
-                    containerColor = Color.Black,
-                    labelColor = Color.White
-                )
-            )
-        }
-    }
-}
+
 
 @Composable
 private fun HomeContentSection(

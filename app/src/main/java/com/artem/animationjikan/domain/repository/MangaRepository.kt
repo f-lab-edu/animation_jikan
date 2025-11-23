@@ -18,4 +18,6 @@ interface MangaRepository {
 
     suspend fun fetchMangaFullById(id: Int): MangaDetailDTO
 
+    suspend fun searchManga(query: String?): Flow<Result<List<MangaDTO>>>
+
 }
