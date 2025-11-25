@@ -35,9 +35,15 @@ import com.artem.animationjikan.presentation.ui.components.JikanNetworkCardImage
 import com.artem.animationjikan.presentation.ui.components.WidthGap
 
 @Composable
-fun CharacterTab(animeCharacterEntity: AnimeCharacterEntity) {
+fun CharacterTab(
+    animeCharacterEntity: AnimeCharacterEntity,
+    onClick: (AnimeCharacterEntity) -> Unit,
+    onHeartClick: (AnimeCharacterEntity) -> Unit
+) {
     Row(
-        modifier = Modifier.height(175.dp).padding(all = 10.dp)
+        modifier = Modifier
+            .height(175.dp)
+            .padding(all = 10.dp)
     ) {
         Box {
             JikanNetworkCardImage(
@@ -56,11 +62,12 @@ fun CharacterTab(animeCharacterEntity: AnimeCharacterEntity) {
             IconButton(
                 modifier = Modifier.align(Alignment.TopEnd),
                 onClick = {
-
+                    onHeartClick(animeCharacterEntity)
                 }
             ) {
+
                 Icon(
-                    painter = painterResource(id = R.drawable.ic_favorite_red_on),
+                    painter = painterResource(id = if (animeCharacterEntity.likeStatus) R.drawable.ic_favorite_red_on else R.drawable.ic_favorite_off),
                     tint = Color.Unspecified,
                     contentDescription = null
                 )
@@ -70,7 +77,9 @@ fun CharacterTab(animeCharacterEntity: AnimeCharacterEntity) {
         WidthGap(10)
 
         Column(
-            modifier = Modifier.fillMaxHeight().height(175.dp),
+            modifier = Modifier
+                .fillMaxHeight()
+                .height(175.dp),
             verticalArrangement = Arrangement.SpaceBetween
         ) {
             Text(

@@ -380,7 +380,13 @@ fun AnimationDetailContent(
                     viewModel = characterViewModel,
                     emptyMessageRedId = R.string.no_get_character_data,
                 ) { item ->
-                    CharacterTab(animeCharacterEntity = item)
+                    CharacterTab(
+                        animeCharacterEntity = item,
+                        onClick = {},
+                        onHeartClick = {
+                            characterViewModel.toggleFavorite(it)
+                        }
+                    )
                 }
             }
         }
