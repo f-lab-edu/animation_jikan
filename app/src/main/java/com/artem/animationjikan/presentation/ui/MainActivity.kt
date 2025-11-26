@@ -19,7 +19,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.artem.animationjikan.presentation.ui.screen.MainScreen
-import com.artem.animationjikan.presentation.ui.screen.detail.animation.AnimationDetailScreen
+import com.artem.animationjikan.presentation.ui.screen.detail.animation.detail.animation.AnimationDetailScreen
 import com.artem.animationjikan.presentation.ui.screen.search.SearchScreen
 import com.artem.animationjikan.presentation.ui.theme.AnimationJikanTheme
 import com.artem.animationjikan.util.router.NavRoutes

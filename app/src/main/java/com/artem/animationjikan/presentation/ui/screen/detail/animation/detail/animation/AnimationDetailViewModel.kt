@@ -1,4 +1,4 @@
-package com.artem.animationjikan.presentation.ui.screen.detail.animation
+package com.artem.animationjikan.presentation.ui.screen.detail.animation.detail.animation
 
 import android.util.Base64
 import android.util.Log

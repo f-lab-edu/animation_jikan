@@ -1,4 +1,4 @@
-package com.artem.animationjikan.presentation.ui.screen.detail.animation
+package com.artem.animationjikan.presentation.ui.screen.detail.animation.detail.animation
 
 import android.annotation.SuppressLint
 import androidx.compose.animation.AnimatedVisibility
