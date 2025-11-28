@@ -1,12 +1,10 @@
 package com.artem.animationjikan.presentation.ui.screen.detail.animation.tabs.review
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.artem.animationjikan.domain.entities.ReviewEntity
 import com.artem.animationjikan.domain.usecase.ReviewUseCase
+import com.artem.animationjikan.presentation.ui.screen.detail.animation.tabs.TabBaseViewModel
+import com.artem.animationjikan.util.enums.DetailTabs
 import com.artem.animationjikan.util.enums.ViewModelState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -15,22 +13,19 @@ import javax.inject.Inject
 @HiltViewModel
 class ReviewViewModel @Inject constructor(
     private val reviewUseCase: ReviewUseCase
-) : ViewModel() {
+) : TabBaseViewModel<ReviewEntity>() {
 
-    var state by mutableStateOf(ViewModelState.Idle)
+    override val type: DetailTabs = DetailTabs.SECOND
 
-    var reviewList by mutableStateOf<List<ReviewEntity>>(emptyList())
-        private set
-
-    fun fetchReviews(malId: Int) {
+    override fun execute(malId: Int) {
         viewModelScope.launch {
-            state = ViewModelState.Loading
+            _state.value = ViewModelState.Loading
             val result = reviewUseCase.execute(malId = malId)
             result.onSuccess { reviews ->
-                reviewList = reviews
-                state = ViewModelState.Success
+                _list.value = reviews
+                _state.value = ViewModelState.Success
             }.onFailure {
-                state = ViewModelState.Error
+                _state.value = ViewModelState.Error
             }
         }
     }

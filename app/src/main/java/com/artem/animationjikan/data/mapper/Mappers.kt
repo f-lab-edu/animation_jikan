@@ -11,6 +11,7 @@ import com.artem.animationjikan.data.dto.NewsDTO
 import com.artem.animationjikan.data.dto.RecommendationAnimationDTO
 import com.artem.animationjikan.data.dto.ReviewDTO
 import com.artem.animationjikan.data.dto.UpcomingDTO
+import com.artem.animationjikan.data.dto.VoiceActorDTO
 import com.artem.animationjikan.domain.entities.ActorEntity
 import com.artem.animationjikan.domain.entities.AnimeCharacterEntity
 import com.artem.animationjikan.domain.entities.DetailEntity
@@ -42,16 +43,21 @@ fun MangaDTO.toHomeCommonEntity(type: FilterType): HomeCommonEntity {
         imageUrl = this.images.jpg.imageUrl,
     )
 }
-
-fun UpcomingDTO.toHomeCommonEntity(type: FilterType): HomeCommonEntity {
+fun CharacterDTO.toHomeCommonEntity(type: FilterType): HomeCommonEntity {
     return HomeCommonEntity(
         id = this.malId,
         type = type,
         imageUrl = this.images.jpg.imageUrl,
     )
 }
-
-fun CharacterDTO.toHomeCommonEntity(type: FilterType): HomeCommonEntity {
+fun VoiceActorDTO.toHomeCommonEntity(type: FilterType): HomeCommonEntity {
+    return HomeCommonEntity(
+        id = this.malId,
+        type = type,
+        imageUrl = this.images.jpg.imageUrl,
+    )
+}
+fun UpcomingDTO.toHomeCommonEntity(type: FilterType): HomeCommonEntity {
     return HomeCommonEntity(
         id = this.malId,
         type = type,

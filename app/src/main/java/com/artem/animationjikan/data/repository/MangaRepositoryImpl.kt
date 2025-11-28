@@ -35,4 +35,11 @@ class MangaRepositoryImpl @Inject constructor(
     override suspend fun fetchMangaFullById(id: Int): MangaDetailDTO {
         return client.getMangaFullById(id = id).data
     }
+
+    override suspend fun searchManga(query: String?): Flow<Result<List<MangaDTO>>> =
+        flow {
+            val result = runCatching { client.searchManga(query = query).data }
+            emit(result)
+        }
+
 }

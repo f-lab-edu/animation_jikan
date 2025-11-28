@@ -15,4 +15,11 @@ class CharacterRepositoryImpl @Inject constructor(
         val result = client.getTopCharacters()
         emit(result.data)
     }.retryOnRateLimit()
+
+    override suspend fun searchCharacter(query: String?): Flow<Result<List<CharacterDTO>>> =
+        flow {
+            val result = runCatching { client.searchCharacter(query = query).data }
+            emit(result)
+        }
+
 }

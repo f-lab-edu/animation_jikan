@@ -5,4 +5,6 @@ import kotlinx.coroutines.flow.Flow
 
 interface CharacterRepository {
     suspend fun fetchTopCharacters(): Flow<List<CharacterDTO>>
+
+    suspend fun searchCharacter(query: String?): Flow<Result<List<CharacterDTO>>>
 }

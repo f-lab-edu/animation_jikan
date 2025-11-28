@@ -12,8 +12,10 @@ import com.artem.animationjikan.data.dto.NewsResponseDTO
 import com.artem.animationjikan.data.dto.RecommendationAnimationResponseDTO
 import com.artem.animationjikan.data.dto.ReviewResponseDTO
 import com.artem.animationjikan.data.dto.UpcomingResponseDTO
+import com.artem.animationjikan.data.dto.VoiceActorResponseDTO
 import retrofit2.http.GET
 import retrofit2.http.Path
+import retrofit2.http.Query
 
 interface JikanApiService {
     @GET("recommendations/anime")
@@ -55,5 +57,24 @@ interface JikanApiService {
     @GET("manga/{id}/full")
     suspend fun getMangaFullById(@Path("id") id: Int): MangaDetailResponseDTO
 
+    @GET("anime")
+    suspend fun searchAnime(
+        @Query("q") query: String?
+    ): AnimationResponseDTO
+
+    @GET("manga")
+    suspend fun searchManga(
+        @Query("q") query: String?
+    ): MangaResponseDTO
+
+    @GET("characters")
+    suspend fun searchCharacter(
+        @Query("q") query: String?
+    ): CharacterResponseDTO
+
+    @GET("people")
+    suspend fun searchVoiceActor(
+        @Query("q") query: String?
+    ): VoiceActorResponseDTO
 
 }

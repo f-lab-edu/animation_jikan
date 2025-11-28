@@ -23,4 +23,7 @@ interface AnimationRepository {
     suspend fun fetchAnimeCharacters(id: Int): List<AnimeCharacterDTO>
 
     suspend fun fetchAnimeFullById(id: Int): AnimationDetailDTO
+
+    suspend fun searchAnime(query: String?): Flow<Result<List<AnimeDTO>>>
+
 }

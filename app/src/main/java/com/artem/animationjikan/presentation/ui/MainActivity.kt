@@ -20,6 +20,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.artem.animationjikan.presentation.ui.screen.MainScreen
 import com.artem.animationjikan.presentation.ui.screen.detail.animation.AnimationDetailScreen
+import com.artem.animationjikan.presentation.ui.screen.search.SearchScreen
 import com.artem.animationjikan.presentation.ui.theme.AnimationJikanTheme
 import com.artem.animationjikan.util.router.NavRoutes
 import dagger.hilt.android.AndroidEntryPoint
@@ -58,9 +59,28 @@ fun MyNavHost() {
         navController = LocalNavScreenController.current,
         startDestination = NavRoutes.Home.router
     ) {
-        /// Home 화면
+        // Home 화면
         composable(NavRoutes.Home.router) {
             MainScreen()
+        }
+
+        // 검색 화면
+        composable(
+            route = NavRoutes.Search.router,
+            enterTransition = {
+                slideInHorizontally(
+                    initialOffsetX = { fullWidth -> fullWidth },
+                    animationSpec = tween(durationMillis = 300)
+                ) + fadeIn(animationSpec = tween(durationMillis = 300))
+            },
+            popExitTransition = {
+                slideOutHorizontally(
+                    targetOffsetX = { fullWidth -> fullWidth },
+                    animationSpec = tween(durationMillis = 300)
+                ) + fadeOut(animationSpec = tween(durationMillis = 300))
+            }
+        ) {
+            SearchScreen()
         }
 
         /// 애니메이션 상세화면

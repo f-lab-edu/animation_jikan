@@ -56,4 +56,11 @@ class AnimationRepositoryImpl @Inject constructor(
         return client.getAnimeFullById(id = id).data
     }
 
+    override suspend fun searchAnime(query: String?): Flow<Result<List<AnimeDTO>>> =
+        flow {
+            val result = runCatching { client.searchAnime(query = query).data }
+            emit(result)
+        }
+
+
 }

@@ -6,6 +6,7 @@ data class AnimeCharacterEntity(
     val imageUrl: String?,
     val actors: List<ActorEntity>,
     val role: String,
+    val likeStatus: Boolean = false,
 )
 
 data class ActorEntity(
