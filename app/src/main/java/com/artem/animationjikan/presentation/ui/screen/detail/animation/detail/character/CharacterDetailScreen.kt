@@ -221,7 +221,7 @@ fun CharacterDetailContent(
 ) {
 
     val tabTitles = listOf(
-        R.string.actor, R.string.image, R.string.appearance_info
+        R.string.actor, R.string.appearance_info, R.string.image
     )
 
     LazyColumn(
