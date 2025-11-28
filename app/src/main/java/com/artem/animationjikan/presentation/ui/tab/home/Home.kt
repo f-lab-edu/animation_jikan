@@ -28,6 +28,7 @@ import com.artem.animationjikan.presentation.ui.components.SearchView
 import com.artem.animationjikan.presentation.ui.tab.home.components.ContentSectionRow
 import com.artem.animationjikan.presentation.ui.tab.home.components.RecommendPager
 import com.artem.animationjikan.presentation.ui.theme.AnimationJikanTheme
+import com.artem.animationjikan.util.enums.FilterType
 import com.artem.animationjikan.util.enums.ViewModelState
 import com.artem.animationjikan.util.event.UiEvent
 import com.artem.animationjikan.util.router.NavRoutes
@@ -45,12 +46,19 @@ fun HomeTab(
     val navController = LocalNavScreenController.current
     val recentItems by viewModel.recentItemList.collectAsStateWithLifecycle()
 
-    val animeNavigationClick: (HomeCommonEntity) -> Unit = { entity ->
+    val navigationClick: (HomeCommonEntity) -> Unit = { entity ->
         val jsonString = Gson().toJson(entity)
         val encodedString = Base64.getUrlEncoder()
 
+        val router = when(entity.type) {
+            FilterType.ANIMATION -> NavRoutes.AnimationDetail.router
+            FilterType.MANGA -> NavRoutes.MangaDetail.router
+            FilterType.VOICE_ACTOR -> NavRoutes.VoiceActorDetail.router
+            FilterType.CHARACTER -> NavRoutes.CharacterDetail.router
+        }
+
         navController.navigate(
-            NavRoutes.AnimationDetail.router + "/" + encodedString.encodeToString(
+            "$router/" + encodedString.encodeToString(
                 jsonString.toByteArray(
                     Charsets.UTF_8
                 )
@@ -99,7 +107,7 @@ fun HomeTab(
                     titleRes = R.string.section_recently_viewed,
                     listState = viewModel.recentItemList.collectAsStateWithLifecycle(),
                     onItemLikeClick = { viewModel.toggleLike(entity = it) },
-                    onItemClick = animeNavigationClick,
+                    onItemClick = navigationClick,
                     viewModel = viewModel
                 )
             }
@@ -108,7 +116,7 @@ fun HomeTab(
                 titleRes = R.string.section_upcoming_anime,
                 listState = viewModel.upcomingList.collectAsStateWithLifecycle(),
                 onItemLikeClick = { viewModel.toggleLike(entity = it) },
-                onItemClick = animeNavigationClick,
+                onItemClick = navigationClick,
                 viewModel = viewModel
             )
 
@@ -116,7 +124,7 @@ fun HomeTab(
                 titleRes = R.string.section_top_anime,
                 listState = viewModel.topAnimationList.collectAsStateWithLifecycle(),
                 onItemLikeClick = { viewModel.toggleLike(entity = it) },
-                onItemClick = animeNavigationClick,
+                onItemClick = navigationClick,
                 viewModel = viewModel
             )
 
@@ -132,7 +140,7 @@ fun HomeTab(
                 titleRes = R.string.section_top_character,
                 listState = viewModel.topCharacterList.collectAsStateWithLifecycle(),
                 onItemLikeClick = { viewModel.toggleLike(entity = it) },
-                onItemClick = { _ -> },
+                onItemClick = navigationClick,
                 viewModel = viewModel
             )
 

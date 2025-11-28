@@ -3,7 +3,10 @@ package com.artem.animationjikan.data.service.remote
 import com.artem.animationjikan.data.dto.AnimationDetailResponseDTO
 import com.artem.animationjikan.data.dto.AnimationResponseDTO
 import com.artem.animationjikan.data.dto.AnimeCharacterResponse
+import com.artem.animationjikan.data.dto.CharacterDetailResponseDTO
+import com.artem.animationjikan.data.dto.CharacterPicturesResponseDTO
 import com.artem.animationjikan.data.dto.CharacterResponseDTO
+import com.artem.animationjikan.data.dto.CharacterVoidActorResponseDTO
 import com.artem.animationjikan.data.dto.MangaCharacterResponseDTO
 import com.artem.animationjikan.data.dto.MangaDetailResponseDTO
 import com.artem.animationjikan.data.dto.MangaPictureResponse
@@ -56,6 +59,17 @@ interface JikanApiService {
 
     @GET("manga/{id}/full")
     suspend fun getMangaFullById(@Path("id") id: Int): MangaDetailResponseDTO
+
+    @GET("characters/{id}/full")
+    suspend fun getCharacterFullById(@Path("id") id: Int): CharacterDetailResponseDTO
+
+    @GET("characters/{id}/voices")
+    suspend fun getCharacterVoiceActors(
+        @Path("id") id: Int
+    ): CharacterVoidActorResponseDTO
+
+    @GET("characters/{id}/pictures")
+    suspend fun getCharacterPictures(@Path("id") id: Int): CharacterPicturesResponseDTO
 
     @GET("anime")
     suspend fun searchAnime(

@@ -15,3 +15,11 @@ data class ActorEntity(
     val name: String,
     val language: String,
 )
+
+
+data class CharacterDetailEntity(
+    val malId: Int,
+    val characterName: String,
+    val imageUrl: String?,
+    val likeCount: Int,
+)

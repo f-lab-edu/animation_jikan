@@ -1,6 +1,8 @@
 package com.artem.animationjikan.data.repository
 
 import com.artem.animationjikan.data.dto.CharacterDTO
+import com.artem.animationjikan.data.dto.CharacterDetailDTO
+import com.artem.animationjikan.data.dto.ImagesDTO
 import com.artem.animationjikan.data.service.remote.JikanApiClient
 import com.artem.animationjikan.domain.repository.CharacterRepository
 import com.artem.animationjikan.util.network.retryOnRateLimit
@@ -21,5 +23,13 @@ class CharacterRepositoryImpl @Inject constructor(
             val result = runCatching { client.searchCharacter(query = query).data }
             emit(result)
         }
+
+    override suspend fun fetchCharacterFullById(id: Int): Result<CharacterDetailDTO> =
+        runCatching { client.getCharacterFullById(id = id).data }
+
+
+    override suspend fun fetchCharacterPictures(id: Int): Result<List<ImagesDTO>> =
+        runCatching { client.getCharacterPictures(id = id).data }
+
 
 }

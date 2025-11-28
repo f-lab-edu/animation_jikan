@@ -60,24 +60,28 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import coil3.compose.AsyncImage
 import com.artem.animationjikan.R
 import com.artem.animationjikan.domain.entities.DetailEntity
+import com.artem.animationjikan.domain.entities.HomeCommonEntity
 import com.artem.animationjikan.presentation.ui.LocalNavScreenController
 import com.artem.animationjikan.presentation.ui.components.ErrorWidget
 import com.artem.animationjikan.presentation.ui.components.HeightGap
 import com.artem.animationjikan.presentation.ui.components.LoadingSpinner
 import com.artem.animationjikan.presentation.ui.components.WidthGap
 import com.artem.animationjikan.presentation.ui.components.showToast
-import com.artem.animationjikan.presentation.ui.screen.detail.animation.tabs.TabBaseViewModel
-import com.artem.animationjikan.presentation.ui.screen.detail.animation.tabs.character.CharacterTab
-import com.artem.animationjikan.presentation.ui.screen.detail.animation.tabs.character.CharacterViewModel
-import com.artem.animationjikan.presentation.ui.screen.detail.animation.tabs.news.NewsItem
-import com.artem.animationjikan.presentation.ui.screen.detail.animation.tabs.news.NewsViewModel
-import com.artem.animationjikan.presentation.ui.screen.detail.animation.tabs.review.ReviewTab
-import com.artem.animationjikan.presentation.ui.screen.detail.animation.tabs.review.ReviewViewModel
+import com.artem.animationjikan.presentation.ui.screen.detail.animation.detail.TabBaseViewModel
+import com.artem.animationjikan.presentation.ui.screen.detail.animation.detail.animation.tabs.character.CharacterTab
+import com.artem.animationjikan.presentation.ui.screen.detail.animation.detail.animation.tabs.character.CharacterViewModel
+import com.artem.animationjikan.presentation.ui.screen.detail.animation.detail.animation.tabs.news.NewsItem
+import com.artem.animationjikan.presentation.ui.screen.detail.animation.detail.animation.tabs.news.NewsViewModel
+import com.artem.animationjikan.presentation.ui.screen.detail.animation.detail.animation.tabs.review.ReviewTab
+import com.artem.animationjikan.presentation.ui.screen.detail.animation.detail.animation.tabs.review.ReviewViewModel
 import com.artem.animationjikan.presentation.ui.theme.AnimationJikanTheme
 import com.artem.animationjikan.util.enums.DetailTabs
 import com.artem.animationjikan.util.enums.FilterType
 import com.artem.animationjikan.util.enums.ViewModelState
 import com.artem.animationjikan.util.event.UiEvent
+import com.artem.animationjikan.util.router.NavRoutes
+import com.google.gson.Gson
+import java.util.Base64
 
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -139,7 +143,19 @@ fun AnimationDetailScreen(
                         detailEntity = animationDetailViewModel.detailEntity,
                         selectedDestination = selectedDestination.value,
                         onTabClick = { selectedDestination.value = it },
-                        type = animationDetailViewModel.paramEntity?.type
+                        type = animationDetailViewModel.paramEntity?.type,
+                        onCharacterClick = { entity ->
+                            val jsonString = Gson().toJson(entity)
+                            val encodedString = Base64.getUrlEncoder()
+
+                            navController.navigate(
+                                "${NavRoutes.CharacterDetail.router}/" + encodedString.encodeToString(
+                                    jsonString.toByteArray(
+                                        Charsets.UTF_8
+                                    )
+                                )
+                            )
+                        }
                     )
                 }
 
@@ -229,6 +245,7 @@ fun AnimationDetailContent(
     characterViewModel: CharacterViewModel = hiltViewModel(),
     selectedDestination: DetailTabs,
     onTabClick: (DetailTabs) -> Unit,
+    onCharacterClick: (HomeCommonEntity) -> Unit
 ) {
 
     val tabTitles = listOf(
@@ -382,7 +399,16 @@ fun AnimationDetailContent(
                 ) { item ->
                     CharacterTab(
                         animeCharacterEntity = item,
-                        onClick = {},
+                        onClick = {
+                            onCharacterClick(
+                                HomeCommonEntity(
+                                    id = it.malId,
+                                    type = FilterType.CHARACTER,
+                                    imageUrl = it.imageUrl,
+                                    likeStatus = it.likeStatus
+                                )
+                            )
+                        },
                         onHeartClick = {
                             characterViewModel.toggleFavorite(it)
                         }

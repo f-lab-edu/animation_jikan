@@ -1,4 +1,4 @@
-package com.artem.animationjikan.presentation.ui.screen.detail.animation.tabs.news
+package com.artem.animationjikan.presentation.ui.screen.detail.animation.detail.animation.tabs.news
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column

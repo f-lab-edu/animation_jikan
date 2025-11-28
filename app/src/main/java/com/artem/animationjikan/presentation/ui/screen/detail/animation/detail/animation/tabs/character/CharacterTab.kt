@@ -1,4 +1,4 @@
-package com.artem.animationjikan.presentation.ui.screen.detail.animation.tabs.character
+package com.artem.animationjikan.presentation.ui.screen.detail.animation.detail.animation.tabs.character
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -38,7 +38,7 @@ import com.artem.animationjikan.presentation.ui.components.WidthGap
 fun CharacterTab(
     animeCharacterEntity: AnimeCharacterEntity,
     onClick: (AnimeCharacterEntity) -> Unit,
-    onHeartClick: (AnimeCharacterEntity) -> Unit
+    onHeartClick: (AnimeCharacterEntity) -> Unit,
 ) {
     Row(
         modifier = Modifier
@@ -54,9 +54,7 @@ fun CharacterTab(
                     .clip(RoundedCornerShape(4.dp))
                     .background(color = Color.LightGray),
                 result = animeCharacterEntity,
-                onClick = {
-
-                },
+                onClick = { onClick(animeCharacterEntity) },
             )
 
             IconButton(
@@ -65,7 +63,6 @@ fun CharacterTab(
                     onHeartClick(animeCharacterEntity)
                 }
             ) {
-
                 Icon(
                     painter = painterResource(id = if (animeCharacterEntity.likeStatus) R.drawable.ic_favorite_red_on else R.drawable.ic_favorite_off),
                     tint = Color.Unspecified,
