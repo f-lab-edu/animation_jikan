@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -28,12 +27,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.artem.animationjikan.R
-import com.artem.animationjikan.domain.entities.DetailEntity
 import com.artem.animationjikan.domain.entities.HomeCommonEntity
 import com.artem.animationjikan.presentation.ui.LocalNavScreenController
 import com.artem.animationjikan.presentation.ui.components.LoadingSpinner
 import com.artem.animationjikan.presentation.ui.components.showToast
+import com.artem.animationjikan.presentation.ui.screen.detail.animation.detail.DetailActions
 import com.artem.animationjikan.presentation.ui.screen.detail.animation.detail.DetailTopBar
+import com.artem.animationjikan.presentation.ui.screen.detail.animation.detail.DetailUiState
 import com.artem.animationjikan.presentation.ui.screen.detail.animation.detail.animation.tabs.character.CharacterTab
 import com.artem.animationjikan.presentation.ui.screen.detail.animation.detail.animation.tabs.character.CharacterViewModel
 import com.artem.animationjikan.presentation.ui.screen.detail.animation.detail.animation.tabs.news.NewsItem
@@ -110,23 +110,27 @@ fun AnimationDetailScreen(
 
                 ViewModelState.Success -> {
                     AnimationDetailContent(
-                        scrollState = scrollState,
                         paddingValues = paddingValues,
-                        detailEntity = animationDetailViewModel.detailEntity,
-                        selectedDestination = selectedDestination.value,
-                        onTabClick = { selectedDestination.value = it },
-                        onCharacterClick = { entity ->
-                            val jsonString = Gson().toJson(entity)
-                            val encodedString = Base64.getUrlEncoder()
+                        detailUiState = DetailUiState(
+                            detailEntity = animationDetailViewModel.detailEntity,
+                            selectedDestination = selectedDestination.value,
+                            scrollState = scrollState
+                        ),
+                        detailActions = DetailActions(
+                            onTabClick = { selectedDestination.value = it },
+                            onCharacterClick = { entity ->
+                                val jsonString = Gson().toJson(entity)
+                                val encodedString = Base64.getUrlEncoder()
 
-                            navController.navigate(
-                                "${NavRoutes.CharacterDetail.router}/" + encodedString.encodeToString(
-                                    jsonString.toByteArray(
-                                        Charsets.UTF_8
+                                navController.navigate(
+                                    "${NavRoutes.CharacterDetail.router}/" + encodedString.encodeToString(
+                                        jsonString.toByteArray(
+                                            Charsets.UTF_8
+                                        )
                                     )
                                 )
-                            )
-                        }
+                            }
+                        ),
                     )
                 }
 
@@ -147,108 +151,49 @@ fun AnimationDetailScreen(
     )
 }
 
-/*@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun AnimationDetailTopBar(
-    title: String,
-    showTitle: Boolean,
-    favoriteState: Boolean,
-    onBackPressed: () -> Unit,
-    onFavoriteClick: () -> Unit,
-) {
-    val containerColor by animateColorAsState(
-        targetValue = if (showTitle) colorResource(R.color.black) else Color.Transparent,
-    )
-
-    TopAppBar(
-        title = {
-            AnimatedVisibility(
-                visible = showTitle,
-                enter = fadeIn(),
-                exit = fadeOut()
-            ) {
-                Text(
-                    text = title,
-                    color = Color.White,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis
-                )
-            }
-        },
-        colors = TopAppBarDefaults.topAppBarColors(
-            containerColor = containerColor,
-            navigationIconContentColor = colorResource(R.color.white),
-            actionIconContentColor = colorResource(R.color.white)
-        ),
-        navigationIcon = {
-            IconButton(
-                onClick = { onBackPressed() }
-            ) {
-                Icon(
-                    painter = painterResource(R.drawable.ic_arrow_back),
-                    contentDescription = null,
-                    tint = Color.Unspecified
-                )
-            }
-        },
-        actions = {
-            IconButton(onClick = { onFavoriteClick() }) {
-                Icon(
-                    painter = painterResource(if (favoriteState) R.drawable.ic_favorite_red_on else R.drawable.ic_favorite_off),
-                    contentDescription = null,
-                    tint = Color.Unspecified
-                )
-            }
-        }
-    )
-}*/
-
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun AnimationDetailContent(
-    scrollState: LazyListState,
     paddingValues: PaddingValues,
-    detailEntity: DetailEntity,
+    detailUiState: DetailUiState,
+    detailActions: DetailActions,
     newsViewModel: NewsViewModel = hiltViewModel(),
     reviewViewModel: ReviewViewModel = hiltViewModel(),
     characterViewModel: CharacterViewModel = hiltViewModel(),
-    selectedDestination: DetailTabs,
-    onTabClick: (DetailTabs) -> Unit,
-    onCharacterClick: (HomeCommonEntity) -> Unit
 ) {
 
     val tabTitles = listOf(R.string.news, R.string.review, R.string.character)
 
     LazyColumn(
-        state = scrollState,
+        state = detailUiState.scrollState,
         modifier = Modifier
             .fillMaxSize()
             .padding(paddingValues)
     ) {
 
-        detailImage(imageUrl = detailEntity.imageUrl)
+        detailImage(imageUrl = detailUiState.detailEntity.imageUrl)
 
         detailDefaultGap()
 
-        detailTitle(title = detailEntity.title)
+        detailTitle(title = detailUiState.detailEntity.title)
 
         detailScore(
             icon = R.drawable.ic_star_full,
-            score = detailEntity.score.toString()
+            score = detailUiState.detailEntity.score.toString()
         )
 
-        detailContent(synopsis = detailEntity.synopsis)
+        detailContent(synopsis = detailUiState.detailEntity.synopsis)
 
         header(
-            onTabClick =   onTabClick,
+            onTabClick = detailActions.onTabClick,
             tabTitles = tabTitles,
-            selectedDestination = selectedDestination
+            selectedDestination = detailUiState.selectedDestination
         )
 
         detailDefaultGap()
 
-        when (selectedDestination) {
+        when (detailUiState.selectedDestination) {
             DetailTabs.FIRST -> {
                 renderTabContent(
                     viewModel = newsViewModel,
@@ -275,7 +220,7 @@ fun AnimationDetailContent(
                     CharacterTab(
                         animeCharacterEntity = item,
                         onClick = {
-                            onCharacterClick(
+                            detailActions.onCharacterClick(
                                 HomeCommonEntity(
                                     id = it.malId,
                                     type = FilterType.CHARACTER,

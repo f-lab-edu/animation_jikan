@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -33,11 +32,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.artem.animationjikan.R
-import com.artem.animationjikan.domain.entities.DetailEntity
 import com.artem.animationjikan.presentation.ui.LocalNavScreenController
 import com.artem.animationjikan.presentation.ui.components.LoadingSpinner
 import com.artem.animationjikan.presentation.ui.components.showToast
 import com.artem.animationjikan.presentation.ui.screen.detail.animation.detail.DetailTopBar
+import com.artem.animationjikan.presentation.ui.screen.detail.animation.detail.DetailUiState
 import com.artem.animationjikan.presentation.ui.screen.detail.animation.detail.character.tabs.actor.ActorTab
 import com.artem.animationjikan.presentation.ui.screen.detail.animation.detail.character.tabs.actor.ActorViewModel
 import com.artem.animationjikan.presentation.ui.screen.detail.animation.detail.character.tabs.character_image.CharacterImageTab
@@ -105,10 +104,13 @@ fun CharacterDetailScreen(
 
                 ViewModelState.Success -> {
                     CharacterDetailContent(
-                        scrollState = scrollState,
                         paddingValues = paddingValues,
-                        detailEntity = characterDetailViewModel.detailEntity,
-                        selectedDestination = selectedDestination.value,
+                        detailUiState = DetailUiState(
+                            scrollState = scrollState,
+                            detailEntity = characterDetailViewModel.detailEntity,
+                            selectedDestination = selectedDestination.value
+
+                        ),
                         onTabClick = { selectedDestination.value = it },
                     )
                 }
@@ -134,45 +136,43 @@ fun CharacterDetailScreen(
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun CharacterDetailContent(
-    scrollState: LazyListState,
     paddingValues: PaddingValues,
-    detailEntity: DetailEntity,
+    detailUiState: DetailUiState,
+    onTabClick: (DetailTabs) -> Unit,
     actorViewModel: ActorViewModel = hiltViewModel(),
     characterImageViewModel: CharacterImageViewModel = hiltViewModel(),
-    selectedDestination: DetailTabs,
-    onTabClick: (DetailTabs) -> Unit,
 ) {
 
     val tabTitles = listOf(R.string.actor, R.string.appearance_info, R.string.image)
 
     LazyColumn(
-        state = scrollState,
+        state = detailUiState.scrollState,
         modifier = Modifier
             .fillMaxSize()
             .padding(paddingValues)
     ) {
-        detailImage(imageUrl = detailEntity.imageUrl)
+        detailImage(imageUrl = detailUiState.detailEntity.imageUrl)
 
         detailDefaultGap()
 
-        detailTitle(title = detailEntity.title)
+        detailTitle(title = detailUiState.detailEntity.title)
 
         detailScore(
             icon = R.drawable.ic_favorite_red_on,
-            score = detailEntity.score.toInt().toString()
+            score = detailUiState.detailEntity.score.toInt().toString()
         )
 
-        detailContent(synopsis = detailEntity.synopsis)
+        detailContent(synopsis = detailUiState.detailEntity.synopsis)
 
         header(
             onTabClick = onTabClick,
             tabTitles = tabTitles,
-            selectedDestination = selectedDestination
+            selectedDestination = detailUiState.selectedDestination
         )
 
         detailDefaultGap()
 
-        when (selectedDestination) {
+        when (detailUiState.selectedDestination) {
             DetailTabs.FIRST -> {
                 renderTabContent(
                     viewModel = actorViewModel,
