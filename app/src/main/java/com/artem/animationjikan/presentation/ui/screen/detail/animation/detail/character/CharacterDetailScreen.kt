@@ -92,9 +92,8 @@ fun CharacterDetailScreen(
 
     LaunchedEffect(key1 = Unit) {
         characterDetailViewModel.eventFlow.collect { event ->
-            when (event) {
-                is UiEvent.ShowToast -> showToast(context = context, event.message)
-                else -> {}
+            if(event is UiEvent.ShowToast) {
+                showToast(context = context, event.message)
             }
         }
     }
@@ -117,7 +116,7 @@ fun CharacterDetailScreen(
                 showTitle = showTitle,
                 favoriteState = favoriteState,
                 onBackPressed = { navController.popBackStack() },
-                onFavoriteClick = { /*characterDetailViewModel.toggleFavorite()*/ },
+                onFavoriteClick = { characterDetailViewModel.toggleFavorite() },
             )
         },
         content = { paddingValues ->

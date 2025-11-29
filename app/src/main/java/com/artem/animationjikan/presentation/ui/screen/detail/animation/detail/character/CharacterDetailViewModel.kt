@@ -5,15 +5,21 @@ import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.artem.animationjikan.R
 import com.artem.animationjikan.domain.entities.DetailEntity
 import com.artem.animationjikan.domain.entities.HomeCommonEntity
+import com.artem.animationjikan.domain.entities.LikeEntity
 import com.artem.animationjikan.domain.entities.RecentEntity
 import com.artem.animationjikan.domain.usecase.CharacterDetailUseCase
 import com.artem.animationjikan.domain.usecase.LikeUseCase
 import com.artem.animationjikan.domain.usecase.RecentUseCase
+import com.artem.animationjikan.presentation.ui.screen.detail.animation.detail.animation.AnimationDetailViewModel
+import com.artem.animationjikan.util.ENTITY_DATA
+import com.artem.animationjikan.util.enums.FilterType
 import com.artem.animationjikan.util.enums.ViewModelState
 import com.artem.animationjikan.util.event.UiEvent
 import com.google.gson.Gson
@@ -39,7 +45,7 @@ class CharacterDetailViewModel @Inject constructor(
         val TAG: String? = CharacterDetailViewModel::class.simpleName
     }
 
-    val encodedEntityString: String? = savedStateHandle.get<String>("entityData")
+    val encodedEntityString: String? = savedStateHandle.get<String>(ENTITY_DATA)
 
     var paramEntity: HomeCommonEntity? = null
 
@@ -76,16 +82,14 @@ class CharacterDetailViewModel @Inject constructor(
             state = ViewModelState.Loading
 
             viewModelScope.launch {
-                addRecentItem(
-                    RecentEntity(
+                recentUseCase.addRecent(
+                    recentEntity = RecentEntity(
                         mediaId = characterId,
                         imageUrl = it.imageUrl,
                         mediaType = it.type.name,
                     )
                 )
             }
-
-            detailEntity = DetailEntity()
 
             likeUseCase.getLikeStatus(mediaId = characterId)
                 .onEach { isLiked ->
@@ -111,7 +115,6 @@ class CharacterDetailViewModel @Inject constructor(
                 .onSuccess {
                     state = ViewModelState.Success
                     this@CharacterDetailViewModel.detailEntity = it
-                    Log.e("fetchCharacterInfo", "detailEntity ${it.imageUrl}")
                 }.onFailure {
                     Log.e(TAG, "onFailure ${it.message}")
                     state = ViewModelState.Error
@@ -119,8 +122,25 @@ class CharacterDetailViewModel @Inject constructor(
         }
     }
 
-    suspend fun addRecentItem(recentEntity: RecentEntity) {
-        recentUseCase.addRecent(recentEntity = recentEntity)
+    fun toggleFavorite() {
+        viewModelScope.launch {
+            if (!likeStatus.value) {
+                likeUseCase.addLike(
+                    likeEntity = LikeEntity(
+                        mediaId = detailEntity.malId,
+                        imageUrl = detailEntity.imageUrl,
+                        mediaType = FilterType.CHARACTER.name
+                    )
+                ).onSuccess {
+                    _eventFlow.emit(UiEvent.ShowToast(R.string.submitted_like))
+                }.onFailure { error ->
+                    Log.e(AnimationDetailViewModel.Companion.TAG, "${error.message}")
+                    likeStatus.value = false
+                }
+            } else {
+                likeUseCase.removeLike(mediaId = detailEntity.malId)
+            }
+        }
     }
 
 }

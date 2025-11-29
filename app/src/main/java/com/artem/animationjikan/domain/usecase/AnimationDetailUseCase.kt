@@ -8,17 +8,10 @@ import javax.inject.Inject
 
 class AnimationDetailUseCase @Inject constructor(
     private val animationRepository: AnimationRepository,
-    private val mangaRepository: MangaRepository
 ) {
     suspend fun getAnimationDetailInfo(id: Int): Result<DetailEntity> {
         return runCatching {
             animationRepository.fetchAnimeFullById(id = id).toAnimationDetailEntity()
         }
     }
-
-    /*suspend fun getMangaDetailInfo(id: Int): Result<DetailEntity> {
-        return runCatching {
-            mangaRepository.fetchMangaFullById(id = id).toMangaDetailEntity()
-        }
-    }*/
 }

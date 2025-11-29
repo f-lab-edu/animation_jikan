@@ -92,7 +92,6 @@ class AnimationDetailViewModel @Inject constructor(
                 )
             }
 
-            detailEntity = DetailEntity()
 
             likeUseCase.getLikeStatus(mediaId = animeId)
                 .onEach { isLiked ->
@@ -102,13 +101,7 @@ class AnimationDetailViewModel @Inject constructor(
                     emit(false)
                 }.launchIn(viewModelScope)
 
-            //TODO When 제거 fetchAnimationDetailInfo(animeId = animeId) 만 적용
-            when (it.type) {
-                FilterType.ANIMATION -> fetchAnimationDetailInfo(animeId = animeId)
-                FilterType.MANGA -> fetchAnimationDetailInfo(animeId = animeId)
-                FilterType.CHARACTER -> fetchAnimationDetailInfo(animeId = animeId)
-                FilterType.VOICE_ACTOR -> fetchAnimationDetailInfo(animeId = animeId)
-            }
+            fetchAnimationDetailInfo(animeId = animeId)
 
         } ?: run {
             Log.e("AnimationDetailViewModel", "animeId == null")
@@ -127,18 +120,6 @@ class AnimationDetailViewModel @Inject constructor(
             }
         }
     }
-
-    /*fun fetchManaDetailInfo(mangaId: Int) {
-        viewModelScope.launch(Dispatchers.IO) {
-            animationDetailUseCase.getMangaDetailInfo(id = mangaId).onSuccess {
-                state = ViewModelState.Success
-                this@AnimationDetailViewModel.detailEntity = detailEntity
-            }.onFailure {
-                Log.e("AnimationDetailViewModel", "onFailure")
-                state = ViewModelState.Error
-            }
-        }
-    }*/
 
     fun toggleFavorite() {
         paramEntity?.let { entity ->

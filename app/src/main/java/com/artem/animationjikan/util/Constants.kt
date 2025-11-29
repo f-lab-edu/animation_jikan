@@ -9,13 +9,6 @@ object Route {
     const val SEARCH = "search"
 }
 
-val CATEGORIES_LIST = listOf(
-    R.string.animation_en,
-    R.string.manga_en,
-    R.string.character_en,
-    R.string.voice_actor_en,
-)
-
 val FILTER_OPTION: List<FilterCategory> = listOf(
     FilterCategory.ALL,
     FilterCategory.ANIMATION,
@@ -25,3 +18,5 @@ val FILTER_OPTION: List<FilterCategory> = listOf(
 )
 
 const val NO_ERROR_MESSAGE = "empty Error message"
+
+const val ENTITY_DATA = "entityData"

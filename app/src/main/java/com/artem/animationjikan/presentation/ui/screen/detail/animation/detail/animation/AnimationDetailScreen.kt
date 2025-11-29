@@ -103,9 +103,8 @@ fun AnimationDetailScreen(
 
     LaunchedEffect(key1 = Unit) {
         animationDetailViewModel.eventFlow.collect { event ->
-            when (event) {
-                is UiEvent.ShowToast -> showToast(context = context, event.message)
-                else -> {}
+            if(event is UiEvent.ShowToast) {
+                showToast(context = context, event.message)
             }
         }
     }
