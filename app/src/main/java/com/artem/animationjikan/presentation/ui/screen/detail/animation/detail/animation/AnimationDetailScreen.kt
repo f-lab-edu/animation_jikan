@@ -1,38 +1,15 @@
 package com.artem.animationjikan.presentation.ui.screen.detail.animation.detail.animation
 
 import android.annotation.SuppressLint
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.animateColorAsState
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.aspectRatio
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.PrimaryTabRow
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Tab
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -40,40 +17,36 @@ import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
-import coil3.compose.AsyncImage
 import com.artem.animationjikan.R
 import com.artem.animationjikan.domain.entities.DetailEntity
 import com.artem.animationjikan.domain.entities.HomeCommonEntity
 import com.artem.animationjikan.presentation.ui.LocalNavScreenController
-import com.artem.animationjikan.presentation.ui.components.ErrorWidget
-import com.artem.animationjikan.presentation.ui.components.HeightGap
 import com.artem.animationjikan.presentation.ui.components.LoadingSpinner
-import com.artem.animationjikan.presentation.ui.components.WidthGap
 import com.artem.animationjikan.presentation.ui.components.showToast
-import com.artem.animationjikan.presentation.ui.screen.detail.animation.detail.TabBaseViewModel
+import com.artem.animationjikan.presentation.ui.screen.detail.animation.detail.DetailTopBar
 import com.artem.animationjikan.presentation.ui.screen.detail.animation.detail.animation.tabs.character.CharacterTab
 import com.artem.animationjikan.presentation.ui.screen.detail.animation.detail.animation.tabs.character.CharacterViewModel
 import com.artem.animationjikan.presentation.ui.screen.detail.animation.detail.animation.tabs.news.NewsItem
 import com.artem.animationjikan.presentation.ui.screen.detail.animation.detail.animation.tabs.news.NewsViewModel
 import com.artem.animationjikan.presentation.ui.screen.detail.animation.detail.animation.tabs.review.ReviewTab
 import com.artem.animationjikan.presentation.ui.screen.detail.animation.detail.animation.tabs.review.ReviewViewModel
+import com.artem.animationjikan.presentation.ui.screen.detail.animation.detail.detailContent
+import com.artem.animationjikan.presentation.ui.screen.detail.animation.detail.detailDefaultGap
+import com.artem.animationjikan.presentation.ui.screen.detail.animation.detail.detailImage
+import com.artem.animationjikan.presentation.ui.screen.detail.animation.detail.detailScore
+import com.artem.animationjikan.presentation.ui.screen.detail.animation.detail.detailTitle
+import com.artem.animationjikan.presentation.ui.screen.detail.animation.detail.header
+import com.artem.animationjikan.presentation.ui.screen.detail.animation.detail.renderTabContent
 import com.artem.animationjikan.presentation.ui.theme.AnimationJikanTheme
 import com.artem.animationjikan.util.enums.DetailTabs
 import com.artem.animationjikan.util.enums.FilterType
@@ -103,7 +76,7 @@ fun AnimationDetailScreen(
 
     LaunchedEffect(key1 = Unit) {
         animationDetailViewModel.eventFlow.collect { event ->
-            if(event is UiEvent.ShowToast) {
+            if (event is UiEvent.ShowToast) {
                 showToast(context = context, event.message)
             }
         }
@@ -122,7 +95,7 @@ fun AnimationDetailScreen(
     Scaffold(
         containerColor = colorResource(R.color.black),
         topBar = {
-            AnimationDetailTopBar(
+            DetailTopBar(
                 title = animationDetailViewModel.detailEntity.title,
                 showTitle = showTitle,
                 favoriteState = favoriteState,
@@ -142,7 +115,6 @@ fun AnimationDetailScreen(
                         detailEntity = animationDetailViewModel.detailEntity,
                         selectedDestination = selectedDestination.value,
                         onTabClick = { selectedDestination.value = it },
-                        type = animationDetailViewModel.paramEntity?.type,
                         onCharacterClick = { entity ->
                             val jsonString = Gson().toJson(entity)
                             val encodedString = Base64.getUrlEncoder()
@@ -175,7 +147,7 @@ fun AnimationDetailScreen(
     )
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
+/*@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AnimationDetailTopBar(
     title: String,
@@ -229,13 +201,12 @@ fun AnimationDetailTopBar(
             }
         }
     )
-}
+}*/
 
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun AnimationDetailContent(
-    type: FilterType?,
     scrollState: LazyListState,
     paddingValues: PaddingValues,
     detailEntity: DetailEntity,
@@ -247,15 +218,7 @@ fun AnimationDetailContent(
     onCharacterClick: (HomeCommonEntity) -> Unit
 ) {
 
-    val tabTitles = listOf(
-        when (type) {
-            FilterType.ANIMATION -> R.string.news
-            FilterType.MANGA -> R.string.image
-            FilterType.CHARACTER -> R.string.appearance_info
-            FilterType.VOICE_ACTOR -> R.string.animation
-            else -> R.string.news
-        }, R.string.review, R.string.character
-    )
+    val tabTitles = listOf(R.string.news, R.string.review, R.string.character)
 
     LazyColumn(
         state = scrollState,
@@ -263,139 +226,52 @@ fun AnimationDetailContent(
             .fillMaxSize()
             .padding(paddingValues)
     ) {
-        item {
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .aspectRatio(2.5f / 3f)
-            ) {
-                AsyncImage(
-                    model = detailEntity.imageUrl,
-                    contentDescription = stringResource(R.string.poster),
-                    modifier = Modifier
-                        .fillMaxHeight()
-                        .align(Alignment.Center)
-                        .clip(RoundedCornerShape(12.dp)),
-                    contentScale = ContentScale.FillHeight
-                )
-            }
-        }
 
-        item {
-            HeightGap(10)
-        }
+        detailImage(imageUrl = detailEntity.imageUrl)
 
-        item {
-            Text(
-                modifier = Modifier.padding(horizontal = 10.dp, vertical = 8.dp),
-                text = detailEntity.title,
-                color = colorResource(R.color.white),
-                fontSize = 18.sp,
-                lineHeight = 20.sp,
-                fontWeight = FontWeight(600)
-            )
-        }
+        detailDefaultGap()
 
-        item {
-            Row(
-                modifier = Modifier.padding(all = 5.dp),
-                verticalAlignment = Alignment.CenterVertically,
-            ) {
-                Image(
-                    painter = painterResource(R.drawable.ic_star_full),
-                    contentDescription = null
-                )
-                WidthGap(5)
-                Text(
-                    detailEntity.score.toString(),
-                    fontSize = 14.sp,
-                    lineHeight = 18.sp,
-                    fontWeight = FontWeight(400),
-                    color = colorResource(R.color.white)
-                )
-            }
-        }
+        detailTitle(title = detailEntity.title)
 
-        item {
-            Column {
-                HeightGap(16)
-                ExpandableText(
-                    fullText = detailEntity.synopsis,
-                )
-                HeightGap(11)
-            }
-        }
+        detailScore(
+            icon = R.drawable.ic_star_full,
+            score = detailEntity.score.toString()
+        )
 
-        stickyHeader {
-            PrimaryTabRow(
-                selectedTabIndex = 0,
-                containerColor = colorResource(R.color.black),
-                contentColor = colorResource(R.color.red),
-                divider = {
-                    HeightGap()
-                },
-                indicator = {
-                    Box(
-                        modifier = Modifier
-                            .tabIndicatorOffset(selectedTabIndex = selectedDestination.ordinal)
-                            .height(4.dp)
-                            .padding(horizontal = 20.dp)
-                            .background(
-                                color = colorResource(
-                                    id = R.color.red
-                                )
-                            )
-                    )
-                }
-            ) {
-                val tabs = DetailTabs.entries.toTypedArray()
-                tabs.forEachIndexed { index, tab ->
-                    Tab(
-                        selected = index == tabs.indexOf(tab),
-                        selectedContentColor = colorResource(R.color.white),
-                        unselectedContentColor = colorResource(R.color.white),
-                        onClick = {
-                            onTabClick(tab)
-                        },
-                        text = {
-                            Text(
-                                text = stringResource(tabTitles[index]),
-                                maxLines = 2,
-                                overflow = TextOverflow.Ellipsis
-                            )
-                        }
-                    )
-                }
+        detailContent(synopsis = detailEntity.synopsis)
 
-            }
-        }
+        header(
+            onTabClick =   onTabClick,
+            tabTitles = tabTitles,
+            selectedDestination = selectedDestination
+        )
 
-        item { HeightGap(10) }
+        detailDefaultGap()
 
         when (selectedDestination) {
             DetailTabs.FIRST -> {
-                this@LazyColumn.renderTabContent(
+                renderTabContent(
                     viewModel = newsViewModel,
                     emptyMessageRedId = R.string.no_get_news_data,
-                ) { item ->
+                ) { item, _ ->
                     NewsItem(newsEntity = item)
                 }
             }
 
             DetailTabs.SECOND -> {
-                this@LazyColumn.renderTabContent(
+                renderTabContent(
                     viewModel = reviewViewModel,
                     emptyMessageRedId = R.string.no_get_review_data
-                ) { item ->
+                ) { item, _ ->
                     ReviewTab(reviewModel = item)
                 }
             }
 
             DetailTabs.THIRD -> {
-                this@LazyColumn.renderTabContent(
+                renderTabContent(
                     viewModel = characterViewModel,
                     emptyMessageRedId = R.string.no_get_character_data,
-                ) { item ->
+                ) { item, _ ->
                     CharacterTab(
                         animeCharacterEntity = item,
                         onClick = {
@@ -418,94 +294,6 @@ fun AnimationDetailContent(
     }
 }
 
-fun <T> LazyListScope.renderTabContent(
-    viewModel: TabBaseViewModel<T>,
-    emptyMessageRedId: Int,
-    itemContent: @Composable (item: T) -> Unit
-) {
-    when (viewModel.state.value) {
-        ViewModelState.Idle, ViewModelState.Loading -> {
-            item {
-                LoadingSpinner(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(200.dp)
-                )
-            }
-        }
-
-
-        ViewModelState.Success -> {
-            val currentList = viewModel.list.value
-            if (currentList.isNotEmpty()) {
-                items(currentList.count()) { index ->
-                    itemContent(currentList[index])
-                }
-            } else {
-                item {
-                    ErrorWidget(
-                        messageStringResId = emptyMessageRedId,
-                    )
-                }
-            }
-        }
-
-        ViewModelState.Error -> {
-            item {
-                Box(modifier = Modifier.fillMaxSize()) {
-                    Text(
-                        stringResource(R.string.fail_message),
-                        modifier = Modifier
-                            .align(alignment = Alignment.Center),
-                        fontSize = 11.sp,
-                        fontWeight = FontWeight(400),
-                        textAlign = TextAlign.Center,
-                        color = colorResource(R.color.grey4)
-                    )
-                }
-            }
-        }
-    }
-}
-
-@Composable
-fun ExpandableText(
-    fullText: String,
-    minimizedMaxLines: Int = 3
-) {
-    var expanded by remember { mutableStateOf(false) }
-
-    val maxLines = if (expanded) Int.MAX_VALUE else minimizedMaxLines
-
-    val toggleExpanded: () -> Unit = { expanded = !expanded }
-
-    var isTextClipped by remember { mutableStateOf(false) }
-
-    Column(modifier = Modifier.padding(horizontal = 10.dp)) {
-        Text(
-            text = fullText,
-            maxLines = maxLines,
-            onTextLayout = { textLayoutResult ->
-                if (!expanded) {
-                    isTextClipped = textLayoutResult.hasVisualOverflow
-                }
-            },
-            modifier = Modifier.clickable(onClick = {
-                toggleExpanded()
-            }),
-            color = Color.White
-        )
-
-        if (isTextClipped || expanded) {
-            Text(
-                text = if (expanded) stringResource(R.string.less) else stringResource(R.string.more),
-                modifier = Modifier.clickable(onClick = toggleExpanded),
-                color = colorResource(R.color.TransparencyWhite),
-                style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Bold)
-            )
-        }
-    }
-}
 
 @Composable
 @Preview

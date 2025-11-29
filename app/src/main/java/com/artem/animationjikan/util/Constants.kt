@@ -1,6 +1,5 @@
 package com.artem.animationjikan.util
 
-import com.artem.animationjikan.R
 import com.artem.animationjikan.util.enums.FilterCategory
 
 object Route {

@@ -113,7 +113,8 @@ class AnimationDetailViewModel @Inject constructor(
         viewModelScope.launch(Dispatchers.IO) {
             animationDetailUseCase.getAnimationDetailInfo(id = animeId).onSuccess { detailEntity ->
                 state = ViewModelState.Success
-                this@AnimationDetailViewModel.detailEntity = detailEntity
+                this@AnimationDetailViewModel.detailEntity =
+                    detailEntity.copy(type = FilterType.ANIMATION)
             }.onFailure {
                 Log.e("AnimationDetailViewModel", "onFailure")
                 state = ViewModelState.Error
