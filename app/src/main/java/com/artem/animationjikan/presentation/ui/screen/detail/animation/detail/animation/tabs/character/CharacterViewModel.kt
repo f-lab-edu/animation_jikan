@@ -1,4 +1,4 @@
-package com.artem.animationjikan.presentation.ui.screen.detail.animation.tabs.character
+package com.artem.animationjikan.presentation.ui.screen.detail.animation.detail.animation.tabs.character
 
 import android.util.Log
 import androidx.lifecycle.viewModelScope
@@ -7,7 +7,7 @@ import com.artem.animationjikan.domain.entities.AnimeCharacterEntity
 import com.artem.animationjikan.domain.entities.LikeEntity
 import com.artem.animationjikan.domain.usecase.AnimationCharacterUseCase
 import com.artem.animationjikan.domain.usecase.LikeUseCase
-import com.artem.animationjikan.presentation.ui.screen.detail.animation.tabs.TabBaseViewModel
+import com.artem.animationjikan.presentation.ui.screen.detail.animation.detail.TabBaseViewModel
 import com.artem.animationjikan.util.enums.DetailTabs
 import com.artem.animationjikan.util.enums.FilterType
 import com.artem.animationjikan.util.enums.ViewModelState

@@ -1,4 +1,4 @@
-package com.artem.animationjikan.presentation.ui.screen.detail.animation.tabs.review
+package com.artem.animationjikan.presentation.ui.screen.detail.animation.detail.animation.tabs.review
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable

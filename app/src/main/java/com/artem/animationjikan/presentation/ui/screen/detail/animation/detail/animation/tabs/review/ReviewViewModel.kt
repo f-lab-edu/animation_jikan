@@ -1,9 +1,9 @@
-package com.artem.animationjikan.presentation.ui.screen.detail.animation.tabs.review
+package com.artem.animationjikan.presentation.ui.screen.detail.animation.detail.animation.tabs.review
 
 import androidx.lifecycle.viewModelScope
 import com.artem.animationjikan.domain.entities.ReviewEntity
 import com.artem.animationjikan.domain.usecase.ReviewUseCase
-import com.artem.animationjikan.presentation.ui.screen.detail.animation.tabs.TabBaseViewModel
+import com.artem.animationjikan.presentation.ui.screen.detail.animation.detail.TabBaseViewModel
 import com.artem.animationjikan.util.enums.DetailTabs
 import com.artem.animationjikan.util.enums.ViewModelState
 import dagger.hilt.android.lifecycle.HiltViewModel

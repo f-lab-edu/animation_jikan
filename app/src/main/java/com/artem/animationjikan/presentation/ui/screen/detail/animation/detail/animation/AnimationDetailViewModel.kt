@@ -1,4 +1,4 @@
-package com.artem.animationjikan.presentation.ui.screen.detail.animation
+package com.artem.animationjikan.presentation.ui.screen.detail.animation.detail.animation
 
 import android.util.Base64
 import android.util.Log
@@ -13,7 +13,7 @@ import com.artem.animationjikan.domain.entities.DetailEntity
 import com.artem.animationjikan.domain.entities.HomeCommonEntity
 import com.artem.animationjikan.domain.entities.LikeEntity
 import com.artem.animationjikan.domain.entities.RecentEntity
-import com.artem.animationjikan.domain.usecase.DetailUseCase
+import com.artem.animationjikan.domain.usecase.AnimationDetailUseCase
 import com.artem.animationjikan.domain.usecase.LikeUseCase
 import com.artem.animationjikan.domain.usecase.RecentUseCase
 import com.artem.animationjikan.util.enums.FilterType
@@ -34,7 +34,7 @@ import javax.inject.Inject
 @HiltViewModel
 class AnimationDetailViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
-    private val detailUseCase: DetailUseCase,
+    private val animationDetailUseCase: AnimationDetailUseCase,
     private val likeUseCase: LikeUseCase,
     private val recentUseCase: RecentUseCase,
 ) : ViewModel() {
@@ -57,6 +57,10 @@ class AnimationDetailViewModel @Inject constructor(
 
     val eventFlow = _eventFlow.asSharedFlow()
 
+
+    suspend fun addRecentItem(recentEntity: RecentEntity) {
+        recentUseCase.addRecent(recentEntity = recentEntity)
+    }
 
     init {
         if (encodedEntityString != null) {
@@ -88,7 +92,6 @@ class AnimationDetailViewModel @Inject constructor(
                 )
             }
 
-            detailEntity = DetailEntity()
 
             likeUseCase.getLikeStatus(mediaId = animeId)
                 .onEach { isLiked ->
@@ -98,12 +101,7 @@ class AnimationDetailViewModel @Inject constructor(
                     emit(false)
                 }.launchIn(viewModelScope)
 
-            when (it.type) {
-                FilterType.ANIMATION -> fetchAnimationDetailInfo(animeId = animeId)
-                FilterType.MANGA -> fetchAnimationDetailInfo(animeId = animeId)
-                FilterType.CHARACTER -> fetchAnimationDetailInfo(animeId = animeId)
-                FilterType.VOICE_ACTOR -> fetchAnimationDetailInfo(animeId = animeId)
-            }
+            fetchAnimationDetailInfo(animeId = animeId)
 
         } ?: run {
             Log.e("AnimationDetailViewModel", "animeId == null")
@@ -111,27 +109,12 @@ class AnimationDetailViewModel @Inject constructor(
         }
     }
 
-    suspend fun addRecentItem(recentEntity: RecentEntity) {
-        recentUseCase.addRecent(recentEntity = recentEntity)
-    }
-
     fun fetchAnimationDetailInfo(animeId: Int) {
         viewModelScope.launch(Dispatchers.IO) {
-            detailUseCase.getAnimationDetailInfo(id = animeId).onSuccess { detailEntity ->
+            animationDetailUseCase.getAnimationDetailInfo(id = animeId).onSuccess { detailEntity ->
                 state = ViewModelState.Success
-                this@AnimationDetailViewModel.detailEntity = detailEntity
-            }.onFailure {
-                Log.e("AnimationDetailViewModel", "onFailure")
-                state = ViewModelState.Error
-            }
-        }
-    }
-
-    fun fetchManaDetailInfo(mangaId: Int) {
-        viewModelScope.launch(Dispatchers.IO) {
-            detailUseCase.getMangaDetailInfo(id = mangaId).onSuccess {
-                state = ViewModelState.Success
-                this@AnimationDetailViewModel.detailEntity = detailEntity
+                this@AnimationDetailViewModel.detailEntity =
+                    detailEntity.copy(type = FilterType.ANIMATION)
             }.onFailure {
                 Log.e("AnimationDetailViewModel", "onFailure")
                 state = ViewModelState.Error

@@ -19,7 +19,8 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.artem.animationjikan.presentation.ui.screen.MainScreen
-import com.artem.animationjikan.presentation.ui.screen.detail.animation.AnimationDetailScreen
+import com.artem.animationjikan.presentation.ui.screen.detail.animation.detail.animation.AnimationDetailScreen
+import com.artem.animationjikan.presentation.ui.screen.detail.animation.detail.character.CharacterDetailScreen
 import com.artem.animationjikan.presentation.ui.screen.search.SearchScreen
 import com.artem.animationjikan.presentation.ui.theme.AnimationJikanTheme
 import com.artem.animationjikan.util.router.NavRoutes
@@ -105,8 +106,32 @@ fun MyNavHost() {
             }
         ) {
             AnimationDetailScreen()
-
         }
+
+
+        composable(
+            NavRoutes.CharacterDetail.router + "/{entityData}",
+            arguments = listOf(
+                navArgument("entityData") {
+                    type = NavType.StringType
+                    nullable = false
+                }
+            ),
+            enterTransition = {
+                slideInHorizontally(
+                    initialOffsetX = { fullWidth -> fullWidth },
+                    animationSpec = tween(durationMillis = 300)
+                ) + fadeIn(animationSpec = tween(durationMillis = 300))
+            }, popExitTransition = {
+                slideOutHorizontally(
+                    targetOffsetX = { fullWidth -> fullWidth },
+                    animationSpec = tween(durationMillis = 300)
+                ) + fadeOut(animationSpec = tween(durationMillis = 300))
+            }
+        ) {
+            CharacterDetailScreen()
+        }
+
 
         /// 만화 상세화면
         composable(NavRoutes.MangaDetail.router) {

@@ -1,10 +1,10 @@
-package com.artem.animationjikan.presentation.ui.screen.detail.animation.tabs.news
+package com.artem.animationjikan.presentation.ui.screen.detail.animation.detail.animation.tabs.news
 
 import android.util.Log
 import androidx.lifecycle.viewModelScope
 import com.artem.animationjikan.domain.entities.NewsEntity
 import com.artem.animationjikan.domain.usecase.NewsUsecase
-import com.artem.animationjikan.presentation.ui.screen.detail.animation.tabs.TabBaseViewModel
+import com.artem.animationjikan.presentation.ui.screen.detail.animation.detail.TabBaseViewModel
 import com.artem.animationjikan.util.NO_ERROR_MESSAGE
 import com.artem.animationjikan.util.enums.DetailTabs
 import com.artem.animationjikan.util.enums.ViewModelState

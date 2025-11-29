@@ -1,5 +1,6 @@
 package com.artem.animationjikan.data.repository
 
+import com.artem.animationjikan.data.dto.CharacterVoiceActorDTO
 import com.artem.animationjikan.data.dto.VoiceActorDTO
 import com.artem.animationjikan.data.service.remote.JikanApiClient
 import com.artem.animationjikan.domain.repository.VoiceActorRepository
@@ -15,4 +16,8 @@ class VoiceActorRepositoryImpl @Inject constructor(
             val result = runCatching { client.searchVoiceActor(query = query).data }
             emit(result)
         }
+
+    override suspend fun fetchCharacterVoiceActors(id: Int): Result<List<CharacterVoiceActorDTO>> {
+        return runCatching { client.getCharacterVoiceActors(id = id).data }
+    }
 }

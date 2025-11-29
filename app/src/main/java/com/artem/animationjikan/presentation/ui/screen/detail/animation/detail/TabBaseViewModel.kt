@@ -1,4 +1,4 @@
-package com.artem.animationjikan.presentation.ui.screen.detail.animation.tabs
+package com.artem.animationjikan.presentation.ui.screen.detail.animation.detail
 
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State

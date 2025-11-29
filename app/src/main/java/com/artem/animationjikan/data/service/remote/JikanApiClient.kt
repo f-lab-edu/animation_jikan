@@ -3,7 +3,10 @@ package com.artem.animationjikan.data.service.remote
 import com.artem.animationjikan.data.dto.AnimationDetailResponseDTO
 import com.artem.animationjikan.data.dto.AnimationResponseDTO
 import com.artem.animationjikan.data.dto.AnimeCharacterResponse
+import com.artem.animationjikan.data.dto.CharacterDetailResponseDTO
+import com.artem.animationjikan.data.dto.CharacterPicturesResponseDTO
 import com.artem.animationjikan.data.dto.CharacterResponseDTO
+import com.artem.animationjikan.data.dto.CharacterVoidActorResponseDTO
 import com.artem.animationjikan.data.dto.MangaCharacterResponseDTO
 import com.artem.animationjikan.data.dto.MangaDetailResponseDTO
 import com.artem.animationjikan.data.dto.MangaPictureResponse
@@ -51,6 +54,12 @@ class JikanApiClient @Inject constructor(
     suspend fun getMangaFullById(id: Int): MangaDetailResponseDTO =
         jikanApiService.getMangaFullById(id = id)
 
+    suspend fun getCharacterFullById(id: Int): CharacterDetailResponseDTO =
+        jikanApiService.getCharacterFullById(id = id)
+
+    suspend fun getCharacterVoiceActors(id: Int): CharacterVoidActorResponseDTO =
+        jikanApiService.getCharacterVoiceActors(id = id)
+
     suspend fun searchAnime(query: String?): AnimationResponseDTO =
         jikanApiService.searchAnime(query = query)
 
@@ -62,6 +71,9 @@ class JikanApiClient @Inject constructor(
 
     suspend fun searchVoiceActor(query: String?): VoiceActorResponseDTO =
         jikanApiService.searchVoiceActor(query = query)
+
+    suspend fun getCharacterPictures(id: Int): CharacterPicturesResponseDTO =
+        jikanApiService.getCharacterPictures(id = id)
 
 
 }

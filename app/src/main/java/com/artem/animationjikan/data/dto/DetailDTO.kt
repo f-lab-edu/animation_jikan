@@ -8,7 +8,6 @@ interface DetailDTO {
     val malId: Int
     val images: ImagesDTO
     val title: String
-    val score: Double
     val synopsis: String
 }
 
@@ -22,7 +21,7 @@ data class AnimationDetailDTO(
     @SerializedName("images")
     override val images: ImagesDTO,
     override val title: String,
-    override val score: Double,
+    val score: Double,
     override val synopsis: String,
 ) : DetailDTO
 
@@ -37,6 +36,28 @@ data class MangaDetailDTO(
     override val malId: Int,
     override val images: ImagesDTO,
     override val title: String,
-    override val score: Double,
+    val score: Double,
     override val synopsis: String,
+) : DetailDTO
+
+
+@Serializable
+data class CharacterDetailResponseDTO(
+    val data: CharacterDetailDTO
+)
+
+data class CharacterDetailDTO(
+    @SerializedName("mal_id")
+    override val malId: Int,
+
+    override val images: ImagesDTO,
+
+    @SerializedName("name")
+    override val title: String,
+
+    val favorites: Int,
+
+    @SerializedName("about")
+    override val synopsis: String,
+
 ) : DetailDTO
